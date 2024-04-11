@@ -252,8 +252,8 @@ body {
     display: block;
     float: left;
     /* background-color: white; */
-    max-width: 48%;
-    min-width: 48%;
+    max-width: 50%;
+    min-width: 50%;
     height: 56vh;
     padding: 0 0 0;
     border-top-left-radius: 22px;
@@ -430,8 +430,8 @@ body {
     height: 56vh;
     max-height: 56vh;
     min-height: 56vh;
-    width: 24%;
-    min-width: 24%;
+    width: 25%;
+    min-width: 25%;
     padding-right: 1%;
 }
 
@@ -623,10 +623,9 @@ body {
     height: 56vh;
     max-height: 56vh;
     min-height: 56vh;
-    width: 24%;
-    min-width: 24%;
+    width: 25%;
+    min-width: 25%;
     padding-left: 1%;
-    padding-right: 1%;
 }
 
 .friends .blockname {
@@ -724,10 +723,9 @@ body {
     height: 56vh;
     max-height: 56vh;
     min-height: 56vh;
-    width: 24%;
-    min-width: 24%;
+    width: 25%;
+    min-width: 25%;
     padding-left: 1%;
-    padding-right: 1%;
 }
 
 .searchfriends-content {

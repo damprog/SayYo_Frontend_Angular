@@ -5,15 +5,23 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { MainWindowComponent } from './main-window/main-window.component';
+import { MainWindowComponent } from './components/main-window/main-window.component';
 
-import { AccountService } from './account.service';
-import { CommunicatorService } from './communicator.service';
+import { AccountService } from './services/account.service';
+import { CommunicatorService } from './services/communicator.service';
+import { LoginWindowComponent } from './components/login-window/login-window.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { BackgroundComponent } from './components/background/background.component';
+import { RegistrationWindowComponent } from './components/registration-window/registration-window.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         MainWindowComponent,
+        BackgroundComponent,
+        NavigationComponent,
+        LoginWindowComponent,
+        RegistrationWindowComponent
     ],
     imports: [
         BrowserModule,
