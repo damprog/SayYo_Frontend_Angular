@@ -13,6 +13,7 @@ import { LoginWindowComponent } from './components/login-window/login-window.com
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { BackgroundComponent } from './components/background/background.component';
 import { RegistrationWindowComponent } from './components/registration-window/registration-window.component';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { RegistrationWindowComponent } from './components/registration-window/re
     ],
     imports: [
         BrowserModule,
+        AppRoutingModule,
         FormsModule,
         CommonModule,
         HttpClientModule
