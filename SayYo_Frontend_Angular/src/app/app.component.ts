@@ -1,3 +1,4 @@
+import { SpinnerService } from './services/spinner.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'SayYo';
+
+  constructor(public spinnerService: SpinnerService) {}
+
 }
