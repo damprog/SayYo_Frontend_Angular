@@ -1,15 +1,20 @@
 
 <header class="header">
-  <a href="#" class="logo">SayYo</a>
+  <a [routerLink]="['/main']" routerLinkActive="active"  class="logo">SayYo</a>
 
-  <input type="checkbox" id="check"/>
+  <input type="checkbox" id="check" [(ngModel)]="menuOpen" (click)="toggleMenu()"/>
   <label for="check" class="icons">
     <i class='bx bx-menu' id="menu-icon"></i>
     <i class='bx bx-x' id="close-icon"></i>
   </label>
 
   <nav class="navbar">
-    <a routerLink="/login" style="--i:0;">Login</a>
-    <a routerLink="/registration" style="--i:1;">Registration</a>
-  </nav>
+    <!-- <ng-container *ngIf="isLoggedIn"> -->
+       <a routerLink="/start/registration" routerLinkActive="active" aria-current="page" style="--i:1;" (click)="closeMenu()">Wyloguj</a>
+    <!-- </ng-container> -->
+    <!-- <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/start/login" routerLinkActive="active" aria-current="page" style="--i:0;" (click)="closeMenu()">Login</a>
+      <a routerLink="/start/registration" routerLinkActive="active" aria-current="page" style="--i:1;" (click)="closeMenu()">Registration</a>
+    </ng-container> -->
+</nav>
 </header>

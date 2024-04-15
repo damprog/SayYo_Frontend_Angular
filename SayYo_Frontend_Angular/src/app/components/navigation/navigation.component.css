@@ -60,6 +60,15 @@
   margin-left: 2.5rem;
 }
 
+.navbar a.active::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  border: 1px solid white;
+  border-radius: 50%;
+}
+
 #check {
   display: none;
 }
@@ -123,6 +132,11 @@
     transform: translateY(-50px);
     transition: 0.3s ease;
     opacity: 0;
+  }
+
+  .navbar a.active::after {
+    width: 10%;
+    margin: 0 auto;
   }
 
   #check:checked ~ .navbar a {
