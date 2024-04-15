@@ -1,65 +1,132 @@
+import { SY_RegisterDTO, SY_RegisterResponseDTO, SY_ResponseStatus, SY_LoginDTO, SY_UserDTO } from './../models/dto';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, of } from 'rxjs';
+import { ConnectionService } from './connection.service';
+import { UserAccount } from '../models/model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
+  constructor(private _http: HttpClient, private _conn: ConnectionService) {}
 
-  constructor(private http:HttpClient) { }
-
-  // Django - już nie działą
-  // readonly APIUrl = "https://polar-island-77389.herokuapp.com";
-  // readonly PhotoUrl = "https://polar-island-77389.herokuapp.com/media/";
-
-  // Django lokalnie - działa
-  // readonly APIUrl = "http://127.0.0.1:8000";
-  // readonly PhotoUrl = "http://127.0.0.1:8000/media/";
-
-
-  //readonly APIUrl = " https://bckend-python.onrender.com";
-  //readonly PhotoUrl = " https://bckend-python.onrender.com/media/";
-
-  // Express.js lokalnie
-  // readonly APIUrl = "http://localhost:3000";
-  // readonly PhotoUrl = "http://localhost:3000/media/";
-
-  // Express zdalnie
-  // readonly APIUrl = "https://backend-express-ma4q.onrender.com";
-  // readonly PhotoUrl = "https://backend-express-ma4q.onrender.com";
+   // ----------------------------------------------------------------------------------------------------------------------------------------------
+  // For testing
+  TEST_UserGuid = "d9d4b0ce-82cc-4e14-ae2d-007b51cbe4c9";
 
   // Default config for not logged in user
-  defaultUserId:any = 10; // default user id - 10
-  defaultPhoto:any = "default.png";
+  readonly DEFAULT_ACCOUNT_ID: string = '10'; // default user guid - 10 (that does not exist)
+  readonly DEFAULT_PHOTO: string = 'default.png';
+  readonly API_URL: string = this._conn.API_URL;
+
+  // SY_ - refers to DTO (data transfer object) from API
+  SY_LoginDTO: SY_LoginDTO = {
+    email: '',
+    password: '',
+  };
+
+  SY_RegisterDTO: SY_RegisterDTO = {
+    username: '',
+    password: '',
+    email: '',
+  };
 
   // Config for current logged in user
-  User:any;
-  loggedIn:any = false;
-  userId:any = this.defaultUserId;  //Instead of this - USER COULD BE ENOUGH
-  userName:any;
+  account: UserAccount = {
+    userGuid: this.DEFAULT_ACCOUNT_ID,
+    userName: 'użytkowniku',
+    email: "",
+    isAdmin: false,
+    photoFileName: this.DEFAULT_PHOTO,
+  };
+  isLoggedIn: boolean = false;
 
-  logout(){
-    this.User={
-      UserId:this.defaultUserId,  //default user that does not exists
-      UserName:"użytkowniku",
-      Admin:false,
-      PhotoFileName:this.defaultPhoto,
-      Password:""
-    }
+  logout(): void {
+    this.account = {
+      userGuid: this.DEFAULT_ACCOUNT_ID,
+      userName: 'użytkowniku',
+      email: "",
+      isAdmin: false,
+      photoFileName: this.DEFAULT_PHOTO,
+    };
+    this.isLoggedIn = false;
+  }
 
-    this.userName = "użytkowniku";
-    this.userId = this.defaultUserId;
-    this.loggedIn=false;
-}
+  login(email: string, password: string): Observable<SY_ResponseStatus> {
+    this.SY_LoginDTO.email = email;
+    this.SY_LoginDTO.password = password;
 
-//   // Users
-//   getUserList():Observable<any[]>{
-//     return this.http.get<any[]>(this.APIUrl+ '/user/');
-//   }
+    return this._loginToCommunicator().pipe(
+      map((userDTO: SY_UserDTO) => {
+        this.account = {
+          userGuid: userDTO.guid,
+          userName: userDTO.userName,
+          email: userDTO.email,
+          isAdmin: userDTO.isAdmin,
+          photoFileName: this.DEFAULT_PHOTO,
+        };
+        this.isLoggedIn = true;
+        console.log("Test1 guid: "+this.account.userGuid);
+        return  {
+          success: true,
+          message: "Pomyślnie zalogowano."
+        } as SY_ResponseStatus;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Login error:', error.message);
+        this.isLoggedIn = false;
+        return  of({
+          success: false,
+          message: error.error
+        } as SY_ResponseStatus);
+      })
+    );
+  }
 
-//   addUser(val:any){
-//     return this.http.post(this.APIUrl+ '/user/', val);
-//   }
+  register(username: string, email: string, password: string): Observable<SY_ResponseStatus> {
+    this.SY_RegisterDTO.username = username;
+    this.SY_RegisterDTO.email = email;
+    this.SY_RegisterDTO.password = password;
 
+    return this._registerToCommunicator().pipe(
+      map((response) => {
+        return  {
+          success: response.success,
+          message: response.message
+        } as SY_ResponseStatus;
+      }), // Map response to true/false depending on 'success' field
+      catchError((error: HttpErrorResponse) => {
+        console.error('Registration error:', error);
+        return  of({
+          success: false,
+          message: error.error
+        } as SY_ResponseStatus);
+      })
+    );
+  }
+
+  // ----------------------------------------------------------------------------------------------------------------------------------------------
+  // LoginController
+
+  // returns UserDTO
+  private _loginToCommunicator(): Observable<SY_UserDTO> {
+    return this._http.post<SY_UserDTO>(
+      this.API_URL + 'sayyo/user/login/',
+      this.SY_LoginDTO
+    );
+  }
+
+  // return GUID
+  private _registerToCommunicator(): Observable<SY_RegisterResponseDTO> {
+    return this._http.post<SY_RegisterResponseDTO>(
+      this.API_URL + 'sayyo/user/register/',
+      this.SY_RegisterDTO
+    );
+  }
+
+  // returns UserDTO
+  // getUser() {
+  //   return this.http.get(this.APIUrl + 'sayyo/user/id/', this.SY_UserGuid);
+  // }
 }
