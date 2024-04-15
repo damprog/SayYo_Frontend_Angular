@@ -1,0 +1,243 @@
+<div class="theme default">
+    <div class="communicator">
+      <!-- @@@@@@@@@@@@@@@ -->
+      <!--     LOGO        -->
+      <!-- @@@@@@@@@@@@@@@ -->
+      <div class="logo-container" *ngIf="activeFriend">
+          <div class="logo" (click)="logoClick()">
+              <div class="say">Say</div>
+              <div class="yo">Yo</div>
+          </div>
+      </div>
+
+      <!-- @@@@@@@@@@@@@@@ -->
+      <!--     GROUPS      -->
+      <!-- @@@@@@@@@@@@@@@ -->
+
+      <hr>
+      <div class="groupchats">
+          <ng-container *ngIf="groupsChats && groupsChats.length > 0 && !activeGroupChatCreator && !activeGroupOptions">
+              <p class="blockname">Rozmowy grupowe</p>
+              <!-- list of group chats -->
+              <div class="groupchats-content">
+                  <ng-container *ngFor="let chat of groupsChats">
+                      <div class="groupchat" (click)="groupChatClick(chat)" *ngIf="chat.chatType==1">
+                          <p class="groupname">{{chat.chatName}}
+                              <button class="options-btn" (click)="showGroupOptions(chat)">ooo</button>
+                          </p>
+                      </div>
+                      <div class="divider"></div>
+                  </ng-container>
+              </div>
+              <button class="wide-btn" (click)="toggleGroupChatCreator()">Stwórz</button>
+          </ng-container>
+
+          <!-- chat creator -->
+          <ng-container *ngIf="groupsChats && groupsChats.length > 0 && activeGroupChatCreator">
+              <p class="blockname">Kreator czatu grupowego</p>
+              <div class="groupcreator-content">
+                  <label>Group name</label><br>
+                  <input class="groupname-input" type="text" [(ngModel)]="groupName">
+                  <ng-container *ngFor="let friend of friends">
+                      <div class="friend-member" *ngIf="friend.status == 1">
+                          <input class="friend-checkbox" type="checkbox" [(ngModel)]="friend.isSelected">
+                          <label>{{ friend.name }}</label>
+                      </div>
+                  </ng-container>
+              </div>
+              <button class="groupcreator-btn confirm" (click)="createGroupChat()">Potwierdź</button>
+              <button class="groupcreator-btn cancel" (click)="toggleGroupChatCreator()">Anuluj</button>
+          </ng-container>
+
+          <!-- chat options -->
+          <ng-container *ngIf="groupsChats && groupsChats.length > 0 && activeGroupOptions">
+              <p class="blockname">{{currentGroupChat.chatName}}</p>
+              <div class="groupoptions-content">
+                  <div class="members">
+                      <p class="blockname">
+                          Członkowie grupy:
+                      </p>
+                      <ng-container *ngFor="let member of currentGroupChat.members">
+                          <div class="member">
+                              {{member.userName}}
+                              <button class="options-btn" (click)="showOptions(member)">...</button>
+                              <span class="role" *ngIf="member.chatRole == 2">Owner</span>
+                              <span class="role" *ngIf="member.chatRole == 1">Admin</span>
+
+                          </div>
+
+                          <div class="options-wrapper">
+                              <p class="options" *ngIf="member.options == 1">
+                                  <button *ngIf="member.friendshipStatus == 3" (click)="inviteFriend(member)">Zaproś do znajomych</button>
+                                  <button *ngIf="member.chatRole == 0 && isGroupAdmin && member.chatRole != 2" (click)="grantAdmin(member)">Nadaj uprawnienia admina</button>
+                                  <button *ngIf="member.chatRole == 1 && isGroupAdmin && member.chatRole != 2" (click)="denyAdmin(member)">Odbierz uprawnienia admina</button>
+                                  <button class="delete-btn" *ngIf="isGroupAdmin  && member.chatRole != 2" (click)="removeFromGroup(member.memberId)">Usuń z grupy</button>
+                              </p>
+                          </div>
+                      </ng-container>
+                  </div>
+                  <button class="invitetogroup-btn" (click)="openModalAddToGroup()">Dodaj do grupy</button>
+                  <button class="leavegroup-btn delete-btn" (click)="leaveGroup()">Opuść grupę</button>
+              </div>
+              <button class="wide-btn" (click)="hideGroupOptions()">Powrót</button>
+          </ng-container>
+      </div>
+
+
+
+      <!-- @@@@@@@@@@@@@@@ -->
+      <!--       CHAT      -->
+      <!-- @@@@@@@@@@@@@@@ -->
+
+      <div class="chat">
+          <ng-container *ngIf="activeChatContent && activeFriend">
+              <p class="blockname">{{activeChatContent.chatName}}</p>
+          </ng-container>
+          <ng-container *ngIf="!activeChatContent && activeFriend">
+              <p class="blockname">{{activeFriend.name}}</p>
+          </ng-container>
+          <ng-container *ngIf="!activeFriend">
+              <p class="blockname">SayYo</p>
+          </ng-container>
+          <div class="messages" *ngIf="activeChat">
+              <ng-container *ngFor="let message of activeChatMessages.messages">
+                  <div class="date" *ngIf="message.otherDate">
+                      <div class="date-line-left"></div>
+                      <div class="date-output">{{message.date}}</div>
+                      <div class="date-line-right"></div>
+                  </div>
+                  <div [ngClass]="{'left': message.senderId !== UserGuid, 'right': message.senderId === UserGuid}">
+                      <span class="time">{{message.time}}</span><br>
+                      <p class="{{ message.senderId === UserGuid ? 'right' : 'left'}}">{{ message.content }}</p>
+                  </div>
+                  <div class="next"></div>
+
+              </ng-container>
+          </div>
+          <div class="messages-start-screen" *ngIf="activeFriend && !activeChat">
+              <div class="start-chat-container">
+                  <p class="start-chat" type="button" (click)="startChatClick()">
+                      <b>Rozpocznij</b>
+                  </p>
+              </div>
+          </div>
+
+          <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+          <div class="hello-container" *ngIf="!activeFriend">
+              <div class="hello">
+                  <div class="say">Say</div>
+                  <div class="yo">Yo</div>
+              </div>
+              <p class="author">Copyright © 2023 Damian Filipiak</p>
+          </div>
+
+          <!-- ------------------------------------------------------------------------------------------------------------------ -->
+          <div class="writearea" *ngIf="activeChat && activeFriend.friendshipStatus != 2">
+              <input type="text" placeholder="Aa" [(ngModel)]="myMessage">
+              <button class="sendBtn" (click)="sendMessegeClick()">O></button>
+          </div>
+      </div>
+
+      <!-- @@@@@@@@@@@@@@@ -->
+      <!--     FRIENDS     -->
+      <!-- @@@@@@@@@@@@@@@ -->
+
+      <!-- list of friends -->
+      <div class="friends" *ngIf="!isSearchAreaActive">
+          <p class="blockname">Użytkownicy</p>
+          <div class="friends-content" *ngIf="friends && friends.length > 0">
+              <div class="divider"></div>
+              <div class="label"><b>Znajomi:</b></div>
+              <div class="divider"></div>
+              <ng-container *ngFor="let friend of friends">
+                  <div class="friend" (click)="friendClick(friend)" *ngIf="!friend.isBlockedFriend && friend.status != 0">
+                      <p class="friendname">{{ friend.name }}
+                          <button class="options-btn" (click)="showOptions(friend)">ooo</button>
+                      </p>
+                  </div>
+                  <div class="friend" *ngIf="friend.options == 1">
+                      <div class="options-wrapper options-wrapper-theme">
+                          <p class="options options-theme">
+                              <button class="delete-friend" (click)="deleteFriend(friend.id)">Usuń</button>
+                              <button class="block-friend" (click)="blockFriend(friend.id)">Zablokuj</button>
+                          </p>
+                      </div>
+                  </div>
+                  <div class="divider"></div>
+              </ng-container>
+
+              <div class="new-friends">
+                  <div class="divider"></div>
+                  <div class="label"><b>Zaproszenia:</b></div>
+                  <div class="divider"></div>
+                  <ng-container *ngFor="let friend of friends">
+                      <div class="friend" *ngIf="friend.status == 0">
+                          <p class="friendname">{{ friend.name }}
+                              <span class="awaiting-message" *ngIf="!friend.invitation">Oczekuje</span>
+                              <button class="rejectFriend delete-btn" *ngIf="friend.invitation" (click)="rejectInvitation(friend)">X</button>
+                              <button class="acceptFriend" *ngIf="friend.invitation" (click)="acceptInvitation(friend)">OK</button>
+                          </p>
+                      </div>
+                      <div class="divider"></div>
+                  </ng-container>
+              </div>
+
+              <div class="blocked-friends">
+                  <div class="divider"></div>
+                  <div class="label"><b>Zablokowani:</b></div>
+                  <div class="divider"></div>
+                  <ng-container *ngFor="let friend of friends">
+                      <div class="friend" *ngIf="friend.isBlockedFriend" (click)="friendClick(friend)">
+                          <p class="friendname">{{ friend.name }}
+                              <button class="unlockFriend" (click)="unlockFriend(friend)">Odblokuj</button>
+                          </p>
+                      </div>
+                      <div class="divider"></div>
+                  </ng-container>
+              </div>
+          </div>
+          <button class="searchfriend-btn" (click)="toggleSearchArea()">Dodaj znajomych</button>
+      </div>
+
+      <div class="searchfriends" *ngIf="isSearchAreaActive">
+          <p class="blockname">Dodawanie znajomych</p>
+          <!-- list of friends -->
+          <div class="searchfriends-content" *ngIf="strangersDTOList && strangersDTOList.length > 0">
+              <ng-container *ngFor="let stranger of strangersDTOList">
+                  <div class="user">
+                      <p class="username">{{ stranger.userName }}
+                          <button class="addfriend-btn" (click)="inviteFriend(stranger)">+</button>
+                      </p>
+                  </div>
+                  <div class="divider"></div>
+              </ng-container>
+          </div>
+          <div class="searchfriends-nullcontent" *ngIf="strangersDTOList.length == 0">
+              Brak wyników
+          </div>
+          <button class="searchfriend-btn" (click)="toggleSearchArea()">Powrót</button>
+      </div>
+  </div>
+
+      <div class="my-modal-background" [class.hidden]="!isModalBackgroundActive" (click)="hideModalWindows()">
+      </div>
+
+      <!-- Add to the group form -->
+      <div class="my-modal" [class.hidden]="!isModalAddToGroupActive" *ngIf="currentGroupChat">
+          <div class="blockname">Dodaj do grupy: {{currentGroupChat.chatName}}</div>
+          <div class="content" *ngIf="friendsExcludingCurrentGroupMembers && friendsExcludingCurrentGroupMembers.length > 0">
+              <ng-container *ngFor="let friend of friendsExcludingCurrentGroupMembers">
+                  <div class="item" *ngIf="friend.status == 1">
+                      <input class="friend-checkbox" type="checkbox" [(ngModel)]="friend.isSelected">
+                      <label>{{ friend.name }}</label>
+                  </div>
+              </ng-container>
+          </div>
+          <ng-container *ngIf="!friendsExcludingCurrentGroupMembers || friendsExcludingCurrentGroupMembers.length == 0">
+              <p>Brak wyników</p>
+          </ng-container>
+          <button class="cancel cancel-btn" (click)="toggleModalAddToGroup()">Anuluj</button>
+          <button class="confirm" (click)="addToGroup()">Potwierdź</button>
+      </div>
+  </div>
