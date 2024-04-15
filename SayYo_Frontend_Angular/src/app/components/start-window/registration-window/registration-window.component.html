@@ -1,60 +1,74 @@
-<app-background>
+
 <div class="form-container container col-11 col-md-6">
-  <form class="form form_default-theme" autocomplete="off">
+  <form
+  class="form form_default-theme"
+  [formGroup]="registerForm"
+  (ngSubmit)="onRegister()"
+  autocomplete="off"
+  >
+
     <div class="form_icon-section col-11 col-md-10">
       <div class="form_icon form_icon_default-theme" aria-hidden="true"></div>
       <label for="form" class="form-type_label">Registration</label>
     </div>
+
     <div class="form_input-container">
       <input
-        id="user"
-        class="form_input form_input_default-theme col-11"
-        aria-label="User"
+        id="username"
         type="text"
+        formControlName="username"
+        class="form_input form_input_default-theme col-11"
+        aria-label="Username"
         placeholder=""
       />
-      <label for="user" class="form_label form_label_default-theme"
+      <label for="username" class="form_label form_label_default-theme"
         >Username</label
       >
     </div>
+
     <div class="form_input-container">
       <input
         id="email"
+        type="email"
+        formControlName="email"
         class="form_input form_input_default-theme col-11"
         aria-label="Email"
-        type="text"
         placeholder=""
       />
       <label for="email" class="form_label form_label_default-theme"
         >Email</label
       >
     </div>
+
     <div class="form_input-container">
       <input
         id="password"
+        type="password"
+        formControlName="password"
         class="form_input form_input_default-theme col-11"
         aria-label="Password"
-        type="password"
         placeholder=""
       />
       <label for="password" class="form_label form_label_default-theme"
         >Password</label
       >
     </div>
+
     <div class="form_input-container">
       <input
-        id="repeat_password"
-        class="form_input form_input_default-theme col-11"
-        aria-label="Repeat password"
+        id="confirmPassword"
         type="password"
+        formControlName="confirmPassword"
+        class="form_input form_input_default-theme col-11"
+        aria-label="Confirm password"
         placeholder=""
       />
-      <label for="repeat_password" class="form_label form_label_default-theme"
-        >Repeat password</label
+      <label for="confirmPassword" class="form_label form_label_default-theme"
+        >Confirm password</label
       >
     </div>
+
     <div class="form_spacer form_spacer_default-theme" aria-hidden="true"></div>
-    <button class="form_button form_button_default-theme">Register</button>
+    <button type="submit" class="form_button form_button_default-theme">Register</button>
   </form>
 </div>
-</app-background>

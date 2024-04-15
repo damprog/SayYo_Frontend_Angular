@@ -1,20 +1,32 @@
-<app-background>
 <div class="form-container container col-11 col-md-6">
-  <form class="form form_default-theme" autocomplete="off">
+  <form
+    class="form form_default-theme"
+    [formGroup]="loginForm"
+    (ngSubmit)="onLogin()"
+    autocomplete="off"
+  >
     <div class="form_icon form_icon_default-theme" aria-hidden="true"></div>
+
     <div class="form_input-container">
       <input
-        id="user"
+        id="email"
+        type="email"
+        formControlName="email"
         class="form_input form_input_default-theme col-11"
-        aria-label="User"
+        aria-label="Email"
         type="text"
         placeholder=""
       />
-      <label for="user" class="form_label form_label_default-theme">Username</label>
+      <label for="email" class="form_label form_label_default-theme"
+        >Email</label
+      >
     </div>
+
     <div class="form_input-container">
       <input
         id="password"
+        type="password"
+        formControlName="password"
         class="form_input form_input_default-theme col-11"
         aria-label="Password"
         type="password"
@@ -24,8 +36,15 @@
         >Password</label
       >
     </div>
+
     <div class="form_spacer form_spacer_default-theme" aria-hidden="true"></div>
-    <button class="form_button form_button_default-theme">Log in</button>
+
+    <button
+      type="submit"
+      class="form_button form_button_default-theme"
+      (click)="onLogin()"
+    >
+      Log in
+    </button>
   </form>
 </div>
-</app-background>
