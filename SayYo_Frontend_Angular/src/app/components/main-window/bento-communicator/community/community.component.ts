@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentsNavService } from '../../../../services/components-nav.service';
+import { ComponentsStateService } from '../../../../services/components-state.service';
 
 @Component({
   selector: 'app-community',
@@ -7,12 +7,8 @@ import { ComponentsNavService } from '../../../../services/components-nav.servic
   styleUrl: './community.component.css'
 })
 export class CommunityComponent {
-  community:any;
+  community$ = this._stateService.community$;
 
-  constructor(private _cmpNav: ComponentsNavService){
-    this.community = _cmpNav.community;
-  }
-
-
+  constructor(private _stateService: ComponentsStateService){}
 
 }

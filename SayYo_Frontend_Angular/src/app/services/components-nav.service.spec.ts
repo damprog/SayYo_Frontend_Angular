@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ComponentsNavService } from './components-nav.service';
+import { ComponentsStateService } from './components-state.service';
 
 describe('ComponentsNavService', () => {
-  let service: ComponentsNavService;
+  let service: ComponentsStateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ComponentsNavService);
+    service = TestBed.inject(ComponentsStateService);
   });
 
   it('should be created', () => {

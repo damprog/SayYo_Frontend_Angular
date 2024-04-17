@@ -16,6 +16,56 @@
 
 }
 
+.community-type{
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.friendship-status {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.btn-icon{
+  background: transparent;
+  border-style: none;
+  color: white;
+  font-size: 1.1rem;
+  max-width: 24px;
+  max-height: 24px;
+  cursor: pointer;
+}
+
+.status-icon-container {
+  width:100%;
+  align-self: center;
+  margin:  1px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.status-icon-container.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.status-icon-container:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#search.btn-icon {
+  margin-left: 5px;
+}
+
+#add.btn-icon {
+  margin-right: 5px;
+}
+
 .item{
   display: flex;
   position: relative;
@@ -39,9 +89,7 @@
   height: 100%;
   width: 100%;
 }
-.community-type{
-  margin-bottom: 10px;
-}
+
 
 .photo-container {
   width: 40px;

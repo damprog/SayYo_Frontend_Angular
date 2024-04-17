@@ -5,13 +5,15 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
+import { ModalBaseComponent } from '../components/modal-windows/modal-base/modal-base.component';
 
 @NgModule({
   declarations: [
     NavigationComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    ModalBaseComponent
   ],
   imports: [CommonModule, FormsModule, RouterModule, BrowserModule],
-  exports: [NavigationComponent, SpinnerComponent]
+  exports: [NavigationComponent, SpinnerComponent, ModalBaseComponent]
 })
 export class SharedModule {}

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ComponentsNavService } from '../../../../services/components-nav.service';
+import { ComponentsStateService } from '../../../../services/components-state.service';
 
 @Component({
   selector: 'app-management',
@@ -7,27 +7,18 @@ import { ComponentsNavService } from '../../../../services/components-nav.servic
   styleUrl: './management.component.css'
 })
 export class ManagementComponent {
-  community:any;
 
-  constructor(private _cmpNav: ComponentsNavService){
-    this.community = _cmpNav.community;
-  }
+  constructor(private _stateService: ComponentsStateService){}
 
   showAccount(){
-    this._cmpNav.community.account = true;
-    this._cmpNav.community.friends = false;
-    this._cmpNav.community.groups = false;
+    this._stateService.showAccount();
   }
 
   showFriends(){
-    this._cmpNav.community.account = false;
-    this._cmpNav.community.friends = true;
-    this._cmpNav.community.groups = false;
+    this._stateService.showFriends();
   }
 
   showGroups(){
-    this._cmpNav.community.account = false;
-    this._cmpNav.community.friends = false;
-    this._cmpNav.community.groups = true;
+    this._stateService.showGroups();
   }
 }

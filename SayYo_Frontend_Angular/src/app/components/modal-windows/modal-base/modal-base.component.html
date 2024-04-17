@@ -1,0 +1,13 @@
+<!-- Modal -->
+<div class="modal" [class.show]="isOpen" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <i class='bx bx-x close' (click)="close()"></i>
+    <ng-content></ng-content>
+    <p>dziala</p>
+  </div>
+</div>
+
+
+<!-- How to use -->
+<!-- <app-modal-base #modal></app-modal-base>
+<button id="search" class="btn-icon" (click)="modal.open()"> -->
