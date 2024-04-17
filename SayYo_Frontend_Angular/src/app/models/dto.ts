@@ -55,3 +55,12 @@ export interface SY_FriendMemberDTO {
   blockFromUser: Int16Array;
   blockFromFriend: Int16Array;
 }
+
+export interface SY_GroupChatDTO {
+  chatGuid: string;
+  chatType: Int16Array;
+  chatName: string;
+  members: Array<SY_FriendMemberDTO>;
+}
+
+

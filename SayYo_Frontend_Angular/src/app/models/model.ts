@@ -1,4 +1,5 @@
-import { SY_FriendChatDTO } from "./dto";
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { SY_FriendChatDTO, SY_GroupChatDTO } from "./dto";
 
 
 // --------------------------------------
@@ -19,4 +20,8 @@ export interface UserAccount {
 
 export interface FriendsChats {
   items: Array<SY_FriendChatDTO>;
+}
+
+export interface GroupChats {
+  items: Array<SY_GroupChatDTO>;
 }

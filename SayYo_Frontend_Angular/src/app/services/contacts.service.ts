@@ -3,8 +3,8 @@ import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
-import { SY_FriendChatDTO, SY_FriendMemberDTO, SY_ResponseStatus } from '../models/dto';
-import { FriendsChats } from '../models/model';
+import { SY_FriendChatDTO, SY_GroupChatDTO, SY_ResponseStatus } from '../models/dto';
+import { FriendsChats, GroupChats } from '../models/model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,10 @@ export class ContactsService {
   }
 
   friendsChats: FriendsChats = {
+    items: [],
+  };
+
+  groupsChats: GroupChats = {
     items: [],
   };
 
@@ -43,7 +47,37 @@ export class ContactsService {
         } as SY_ResponseStatus;
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('While getting friends chats:', error.message);
+        console.error('While getting friends chats: ', error.message);
+        return of({
+          success: false,
+          message: error.error,
+        } as SY_ResponseStatus);
+      })
+    );
+  }
+
+  getGroupsChats(): Observable<SY_ResponseStatus>{
+    this.groupsChats.items = [];
+    return this._getGroupChatsEDP().pipe(
+      map((response: Array<SY_GroupChatDTO>) => {
+        response.forEach((x) => {
+          const newChat: SY_GroupChatDTO = {
+            chatGuid: x.chatGuid,
+            chatType: x.chatType,
+            chatName: x.chatName,
+            members: x.members,
+          };
+
+          this.groupsChats.items.push(newChat);
+        });
+
+        return{
+          success: true,
+          message: '',
+        } as SY_ResponseStatus;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('While getting groups chats: ', error.message);
         return of({
           success: false,
           message: error.error,
@@ -65,4 +99,12 @@ export class ContactsService {
         this._account.TEST_UserGuid
     );
   }
+
+  private _getGroupChatsEDP(): Observable<Array<SY_GroupChatDTO>> {
+    return this._http.get<Array<SY_GroupChatDTO>>(
+      this._conn.API_URL +
+      "sayyo/misc/getGroupChats?userId=" +
+      this._account.TEST_UserGuid);
+  }
+
 }
