@@ -23,6 +23,7 @@ export class ContactsService {
   };
 
   getFriendsChats(): Observable<SY_ResponseStatus> {
+    this.friendsChats.items = [];
     return this._getFriendsChatsEDP().pipe(
       map((response: Array<SY_FriendChatDTO>) => {
         response.forEach((x) => {

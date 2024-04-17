@@ -27,7 +27,6 @@ export class FriendsComponent implements OnInit {
     this._contacts.getFriendsChats().subscribe({
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
-          console.log("Pobrano czaty");
           this.friendsChats = this._contacts.friendsChats.items;
         } else {
           alert(result.message);
