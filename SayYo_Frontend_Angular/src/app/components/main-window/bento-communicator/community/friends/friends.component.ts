@@ -4,23 +4,26 @@ import { SpinnerService } from '../../../../../services/spinner.service';
 import { SY_FriendChatDTO, SY_ResponseStatus } from '../../../../../models/dto';
 import { ComponentsStateService } from '../../../../../services/components-state.service';
 
-
 @Component({
   selector: 'app-friends',
   templateUrl: './friends.component.html',
-  styleUrl: './friends.component.css'
+  styleUrl: './friends.component.css',
 })
 export class FriendsComponent implements OnInit {
-
+  searchOpen: boolean = false;
+  searchPattern: string = "";
   // templateList:any  = [1,2,3,1,2,2,2,2,2,2,2,0,223,12,312,312,3,123,123,123,12,312,312,31,23,1212,3];
-  friendsChats: Array<SY_FriendChatDTO> = [];
+  friendsChats_Ok: Array<SY_FriendChatDTO> = [];
+  friendsChats_Invitation: Array<SY_FriendChatDTO> = [];
+  friendsChats_Blocked: Array<SY_FriendChatDTO> = [];
+
   friendsStatusComp$ = this._stateService.friendsStatus$;
 
   constructor(
     private _contacts: ContactsService,
     private _stateService: ComponentsStateService,
     public spinnerService: SpinnerService
-  ) { }
+  ) {}
 
   showFriends_StatusOk() {
     this._stateService.showFriends_StatusOk();
@@ -34,13 +37,18 @@ export class FriendsComponent implements OnInit {
     this._stateService.showFriends_StatusBlocked();
   }
 
+  toggleSearch() {
+    this.searchOpen = !this.searchOpen;
+    this.searchPattern="";
+  }
+
   ngOnInit() {
     this.spinnerService.show();
-    this.friendsChats = [];
+    this.friendsChats_Ok = [];
     this._contacts.getFriendsChats().subscribe({
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
-          this.friendsChats = this._contacts.friendsChats.items;
+          this.friendsChats_Ok = this._contacts.friendsChats_Ok.items;
         } else {
           alert(result.message);
         }
@@ -52,7 +60,7 @@ export class FriendsComponent implements OnInit {
       },
       complete: () => {
         this.spinnerService.hide();
-      }
+      },
     });
   }
 }

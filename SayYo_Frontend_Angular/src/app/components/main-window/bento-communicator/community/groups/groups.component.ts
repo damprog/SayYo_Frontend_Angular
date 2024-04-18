@@ -9,6 +9,8 @@ import { SY_GroupChatDTO, SY_ResponseStatus } from '../../../../../models/dto';
   styleUrl: './groups.component.css'
 })
 export class GroupsComponent implements OnInit{
+  searchOpen: boolean = false;
+  searchPattern: string = "";
   //templateList:any  = [1,2,3,1,2,2,2,2,2,2,2,0,223,12,312,312,3,123,123,123,12,312,312,31,23,1212,3];
   groupsChats: Array<SY_GroupChatDTO> = [];
 
@@ -17,6 +19,11 @@ export class GroupsComponent implements OnInit{
     public spinnerService: SpinnerService
   ) {
 
+  }
+
+  toggleSearch() {
+    this.searchOpen = !this.searchOpen;
+    this.searchPattern="";
   }
 
   ngOnInit() {

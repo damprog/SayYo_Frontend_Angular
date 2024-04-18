@@ -1,93 +1,121 @@
-
 <div class="items-container" *ngIf="friendsStatusComp$ | async as state">
   <div class="community-type">
-    <div id="search" class="btn-icon">
-      <i id="icon-search" class='bx bx-search'></i>
-    </div>
+    <input
+      type="checkbox"
+      id="searchCheckBox"
+      [(ngModel)]="searchOpen"
+      (click)="toggleSearch()"
+    />
+    <label for="searchCheckBox">
+      <div id="search" class="btn-icon">
+        <i id="icon-search" class="bx bx-search"></i>
+      </div>
+    </label>
+
     <span>ZNAJOMI</span>
+
     <div id="add" class="btn-icon">
-      <i id="icon-add" class='bx bxs-user-plus' ></i>
+      <i id="icon-add" class="bx bxs-user-plus"></i>
     </div>
   </div>
-    <div class="friendship-status" >
-      <div id="ok" class="status-icon-container" [class.active]="state.ok" (click)="showFriends_StatusOk()">
-        <i class='bx bxs-message-rounded-dots' ></i>
-      </div>
-      <div id="waiting" class="status-icon-container"  [class.active]="state.invitations" (click)="showFriends_StatusInvitations()">
-        <i class='bx bxs-hourglass-bottom' ></i>
-      </div>
-      <div id="blocked" class="status-icon-container"  [class.active]="state.blocked" (click)="showFriends_StatusBlocked()">
-        <i class='bx bx-block' ></i>
-      </div>
+
+  <ng-container *ngIf="searchOpen">
+    <div class="divider"></div>
+    <input type="text" class="searchPattern" [(ngModel)]="searchPattern"/>
+  </ng-container>
+
+  <div class="divider"></div>
+
+  <div class="friendship-status">
+    <div
+      id="ok"
+      class="status-icon-container"
+      [class.active]="state.ok"
+      (click)="showFriends_StatusOk()"
+    >
+      <i class="bx bxs-message-rounded-dots"></i>
     </div>
+    <div
+      id="waiting"
+      class="status-icon-container"
+      [class.active]="state.invitations"
+      (click)="showFriends_StatusInvitations()"
+    >
+      <i class="bx bxs-hourglass-bottom"></i>
+    </div>
+    <div
+      id="blocked"
+      class="status-icon-container"
+      [class.active]="state.blocked"
+      (click)="showFriends_StatusBlocked()"
+    >
+      <i class="bx bx-block"></i>
+    </div>
+  </div>
 
-    <div id="ok-friends"  *ngIf="state.ok">
-      <div class="item" *ngFor="let x of friendsChats">
-        <div class="content">
-          <div class="photo-container">
-            <div class="photo"></div>
-          </div>
+  <div id="ok-friends" *ngIf="state.ok">
+    <div class="item" *ngFor="let x of friendsChats_Ok">
+      <div class="content">
+        <div class="photo-container">
+          <div class="photo"></div>
+        </div>
 
-          <div class="name">
-            <span>
-              {{ x.chatName }}
-            </span>
-          </div>
+        <div class="name">
+          <span>
+            {{ x.chatName }}
+          </span>
+        </div>
 
-          <div class="options">
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-          </div>
+        <div class="options">
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="invitation-friends" *ngIf="state.invitations">
-      <div class="item" *ngFor="let x of friendsChats">
-        <div class="content">
-          <div class="photo-container">
-            <div class="photo"></div>
-          </div>
+  <div id="invitation-friends" *ngIf="state.invitations">
+    <div class="item" *ngFor="let x of friendsChats_Ok">
+      <div class="content">
+        <div class="photo-container">
+          <div class="photo"></div>
+        </div>
 
-          <div class="name">
-            <span>
-              {{ x.chatName }}
-            </span>
-          </div>
+        <div class="name">
+          <span>
+            {{ x.chatName }}
+          </span>
+        </div>
 
-          <div class="options">
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-          </div>
+        <div class="options">
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="blocked-friends" *ngIf="state.blocked">
-      <div class="item" *ngFor="let x of friendsChats">
-        <div class="content">
-          <div class="photo-container">
-            <div class="photo"></div>
-          </div>
+  <div id="blocked-friends" *ngIf="state.blocked">
+    <div class="item" *ngFor="let x of friendsChats_Ok">
+      <div class="content">
+        <div class="photo-container">
+          <div class="photo"></div>
+        </div>
 
-          <div class="name">
-            <span>
-              {{ x.chatName }}
-            </span>
-          </div>
+        <div class="name">
+          <span>
+            {{ x.chatName }}
+          </span>
+        </div>
 
-          <div class="options">
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-            <div class="option-dot"></div>
-          </div>
+        <div class="options">
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
+          <div class="option-dot"></div>
         </div>
       </div>
     </div>
-
-
-
-
+  </div>
 </div>

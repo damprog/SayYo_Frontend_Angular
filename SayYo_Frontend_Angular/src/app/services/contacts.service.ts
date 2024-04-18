@@ -15,10 +15,10 @@ export class ContactsService {
     private _account: AccountService,
     private _http: HttpClient
   ) {
-    this.friendsChats.items = new Array<SY_FriendChatDTO>();
+    this.friendsChats_Ok.items = new Array<SY_FriendChatDTO>();
   }
 
-  friendsChats: FriendsChats = {
+  friendsChats_Ok: FriendsChats = {
     items: [],
   };
 
@@ -27,7 +27,7 @@ export class ContactsService {
   };
 
   getFriendsChats(): Observable<SY_ResponseStatus> {
-    this.friendsChats.items = [];
+    this.friendsChats_Ok.items = [];
     return this._getFriendsChatsEDP().pipe(
       map((response: Array<SY_FriendChatDTO>) => {
         response.forEach((x) => {
@@ -38,7 +38,7 @@ export class ContactsService {
             friend: x.friend,
           };
 
-          this.friendsChats.items.push(newChat);
+          this.friendsChats_Ok.items.push(newChat);
         });
 
         return {

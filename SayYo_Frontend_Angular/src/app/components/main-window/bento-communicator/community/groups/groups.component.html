@@ -1,17 +1,33 @@
 <div class="items-container">
-
   <div class="community-type">
-    <button id="search" class="btn-icon">
-      <i class='bx bx-search'></i>
-    </button>
+
+    <input
+      type="checkbox"
+      id="searchCheckBox"
+      [(ngModel)]="searchOpen"
+      (click)="toggleSearch()"
+    />
+    <label for="searchCheckBox">
+    <div id="search" class="btn-icon">
+      <i class="bx bx-search"></i>
+    </div>
+    </label>
+
     <span>GRUPY</span>
-    <button id="add" class="btn-icon">
-      <i class='bx bxs-plus-circle' ></i>
-    </button>
+
+    <div id="add" class="btn-icon">
+      <i class="bx bxs-plus-circle"></i>
+    </div>
   </div>
 
-  <div class="item" *ngFor="let x of groupsChats">
+  <ng-container *ngIf="searchOpen">
+    <div class="divider"></div>
+    <input type="text" class="searchPattern" [(ngModel)]="searchPattern"/>
+  </ng-container>
 
+  <div class="divider"></div>
+
+  <div class="item" *ngFor="let x of groupsChats">
     <div class="content">
       <div class="photo-container">
         <div class="photo"></div>
@@ -19,7 +35,7 @@
 
       <div class="name">
         <span>
-         {{x.chatName}}
+          {{ x.chatName }}
         </span>
       </div>
 
@@ -28,6 +44,6 @@
         <div class="option-dot"></div>
         <div class="option-dot"></div>
       </div>
-
     </div>
   </div>
+</div>
