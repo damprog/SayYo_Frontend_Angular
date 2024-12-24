@@ -17,6 +17,9 @@ export class MainWindowComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if(!this._accountService.isLoggedIn){
+      this._router.navigate(['/start/login']);
+    }
     // throw new Error('Method not implemented.');
   }
 

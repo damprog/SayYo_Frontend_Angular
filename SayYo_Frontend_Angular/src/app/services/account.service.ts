@@ -54,8 +54,11 @@ export class AccountService {
   }
 
   login(email: string, password: string): Observable<SY_ResponseStatus> {
-    this.SY_LoginDTO.email = email;
-    this.SY_LoginDTO.password = password;
+    // this.SY_LoginDTO.email = email;
+    // this.SY_LoginDTO.password = password;
+
+    this.SY_LoginDTO.email = "jk@gmail.com";
+    this.SY_LoginDTO.password = "Kowal";
 
     return this._loginToCommunicator().pipe(
       map((userDTO: SY_UserDTO) => {
@@ -74,7 +77,7 @@ export class AccountService {
         } as SY_ResponseStatus;
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('Login error:', error.message);
+        console.error('Wystąpił błąd:', error.message);
         this.isLoggedIn = false;
         return  of({
           success: false,

@@ -8,7 +8,7 @@ import { AccountService } from './account.service';
 })
 export class CommunicatorService {
   constructor(private http: HttpClient, private accountService: AccountService) {
-    this.User = this.accountService.User;
+    this.User = this.accountService.account;
     this.SY_UserGuid = "d9d4b0ce-82cc-4e14-ae2d-007b51cbe4c9";
 }
 
@@ -170,33 +170,6 @@ getFriendship(friendGuid: string) {
       FriendId: friendGuid
   }
   return this.http.get(this.APIUrl + "sayyo/friendship/find/", this.SY_FindFriendshipDTO);
-}
-
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-// LoginController
-
-// returns UserDTO (UserDTO has GUID)
-loginToCommunicator() {
-  this.SY_LoginDTO = {
-      Email: this.User.UserName + "@behealthy.com",
-      Password: this.User.Password
-  }
-  return this.http.post(this.APIUrl + '/sayyo/user/login/', this.SY_LoginDTO);
-}
-
-// return GUID
-registerToCommunicator() {
-  this.SY_RegisterDTO = {
-      Username: this.User.UserName,
-      Password: this.User.Password,
-      Email: this.User.UserName + "@behealthy.com"
-  }
-  return this.http.post(this.APIUrl + 'sayyo/user/register/', this.SY_RegisterDTO);
-}
-
-// returns UserDTO (id, userName, email)
-getUser() {
-  return this.http.get(this.APIUrl + "sayyo/user/id/", this.SY_UserGuid);
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------

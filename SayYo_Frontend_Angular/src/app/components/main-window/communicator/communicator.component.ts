@@ -173,6 +173,23 @@ export class CommunicatorComponent {
     this.activeGroupChatCreator = false;
   }
 
+  createGroupChat1() {
+    let chatGuid = "";
+    this.communicator.createChat(1, this.groupName).subscribe(async res => {
+      chatGuid = String(res);
+      // Creator of the group chat is it's owner
+      this.communicator.addChatMember(chatGuid, this.UserGuid, 2).subscribe(_res => { });
+      this.friends.forEach((f: { isSelected: boolean; id: string; }) => {
+        if (f.isSelected) {
+          // Other members have "normal" status by default
+          this.communicator.addChatMember(chatGuid, f.id, 0).subscribe(_res => { });
+          f.isSelected = false;
+        }
+      });
+    });
+    this.activeGroupChatCreator = false;
+  }
+
   toggleSearchArea() {
     if (this.isSearchAreaActive) this.isSearchAreaActive = false;
     else {

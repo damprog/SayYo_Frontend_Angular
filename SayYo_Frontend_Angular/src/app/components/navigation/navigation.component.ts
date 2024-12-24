@@ -20,5 +20,6 @@ export class NavigationComponent {
 
   closeMenu() {
     this.menuOpen = false;
+    this._account.logout();
   }
 }
