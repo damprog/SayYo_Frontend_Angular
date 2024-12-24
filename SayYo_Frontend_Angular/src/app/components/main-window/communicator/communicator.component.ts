@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AccountService } from '../../../services/account.service';
 import { CommunicatorService } from '../../../services/communicator.service';
+import { ContactsService } from '../../../services/contacts.service';
 
 
 @Component({
@@ -15,6 +16,7 @@ export class CommunicatorComponent {
   constructor(
     private communicator: CommunicatorService,
     private _accountService: AccountService,
+    private _contactsService: ContactsService,
     private _router: Router
   ) { }
   UserGuid: string = ""; // logged in user needed for comparison in html for display properly messages
@@ -196,7 +198,7 @@ export class CommunicatorComponent {
       if (!this.strangersDTOList)
         this.strangersDTOList = [];
       if (Object.keys(this.strangersDTOList).length === 0) {
-        this.strangersDTOList = this.communicator.getStrangers().subscribe(data => {
+        this.strangersDTOList = this._contactsService.getStrangers().subscribe(data => {
           this.strangersDTOList = data;
           // console.log("refresh strangers");
         });
@@ -427,7 +429,7 @@ export class CommunicatorComponent {
       this.friendsChats = [];
 
     // Get friends chats for user
-    forkJoin([this.communicator.getFriendsChats()])
+    forkJoin([this._contactsService.getFriendsChats()])
       .subscribe(([chats]) => {
         this.friendsChats = chats;
       });
@@ -436,7 +438,7 @@ export class CommunicatorComponent {
       this.groupsChats = [];
 
     // Get groups chats for user
-    forkJoin([this.communicator.getGroupChats()])
+    forkJoin([this._contactsService.getGroupChats()])
       .subscribe(([chats]) => {
         this.groupsChats = chats;
       });

@@ -29,10 +29,10 @@ export class GroupsComponent implements OnInit{
   ngOnInit() {
     this.spinnerService.show();
     this.groupsChats = [];
-    this._contacts.getGroupsChats().subscribe({
+    this._contacts.getGroupChats().subscribe({
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
-          this.groupsChats = this._contacts.groupsChats.items;
+          this.groupsChats = this._contacts.groupChats.items;
         } else {
           alert(result.message);
         }

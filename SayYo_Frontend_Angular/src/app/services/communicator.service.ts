@@ -50,19 +50,19 @@ SY_RegisterDTO: any;
 // Events
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
-// UsersManipulate
+// UsersManipulate - NOTE ! moved to contacts.service - can be deleted
 //
 // FriendsChats: chatId, chatType, chatName, friend(id, userName, email,chatRole, friendshipStatus)
-getStrangers() {
-  return this.http.get(this.APIUrl + "sayyo/misc/getStrangers?userId=" + this.SY_UserGuid, this.httpOptions);
-}
-//  data is processed on server side - use this function to get private chats
-getFriendsChats() {
-  return this.http.get(this.APIUrl + "sayyo/misc/getFriendsChats?userId=" + this.SY_UserGuid, this.httpOptions);
-}
-getGroupChats() {
-  return this.http.get(this.APIUrl + "sayyo/misc/getGroupChats?userId=" + this.SY_UserGuid, this.httpOptions);
-}
+// getStrangers() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getStrangers?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
+// //  data is processed on server side - use this function to get private chats
+// getFriendsChats() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getFriendsChats?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
+// getGroupChats() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getGroupChats?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // ChatController

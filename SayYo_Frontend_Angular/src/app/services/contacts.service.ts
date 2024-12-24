@@ -22,9 +22,16 @@ export class ContactsService {
     items: [],
   };
 
-  groupsChats: GroupChats = {
+  groupChats: GroupChats = {
     items: [],
   };
+
+  getStrangers(): Observable<SY_ResponseStatus> {
+    return of({
+      success: false,
+      message: "Strangers",
+    } as SY_ResponseStatus);
+  }
 
   getFriendsChats(): Observable<SY_ResponseStatus> {
     this.friendsChats_Ok.items = [];
@@ -56,8 +63,8 @@ export class ContactsService {
     );
   }
 
-  getGroupsChats(): Observable<SY_ResponseStatus>{
-    this.groupsChats.items = [];
+  getGroupChats(): Observable<SY_ResponseStatus>{
+    this.groupChats.items = [];
     return this._getGroupChatsEDP().pipe(
       map((response: Array<SY_GroupChatDTO>) => {
         response.forEach((x) => {
@@ -68,7 +75,7 @@ export class ContactsService {
             members: x.members,
           };
 
-          this.groupsChats.items.push(newChat);
+          this.groupChats.items.push(newChat);
         });
 
         return{
@@ -95,7 +102,7 @@ export class ContactsService {
   private _getFriendsChatsEDP(): Observable<Array<SY_FriendChatDTO>> {
     return this._http.get<Array<SY_FriendChatDTO>>(
       this._conn.API_URL +
-        'sayyo/misc/getFriendsChats?userId=' +
+        'sayyo/misc/getFriendsChats?userGuid=' +
         this._account.TEST_UserGuid
     );
   }
@@ -103,8 +110,22 @@ export class ContactsService {
   private _getGroupChatsEDP(): Observable<Array<SY_GroupChatDTO>> {
     return this._http.get<Array<SY_GroupChatDTO>>(
       this._conn.API_URL +
-      "sayyo/misc/getGroupChats?userId=" +
+      "sayyo/misc/getGroupChats?userGuid=" +
       this._account.TEST_UserGuid);
   }
+
+  // NOTE! - moved from comunicator.service
+
+  // FriendsChats: chatId, chatType, chatName, friend(id, userName, email,chatRole, friendshipStatus)
+// getStrangers() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getStrangers?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
+// //  data is processed on server side - use this function to get private chats
+// getFriendsChats() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getFriendsChats?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
+// getGroupChats() {
+//   return this.http.get(this.APIUrl + "sayyo/misc/getGroupChats?userGuid=" + this.SY_UserGuid, this.httpOptions);
+// }
 
 }
