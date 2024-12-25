@@ -20,7 +20,7 @@ import { CommunicatorComponent } from './../components/main-window/communicator/
 import { BentoCommunicatorComponent } from '../components/main-window/bento-communicator/bento-communicator.component';
 import { ChatComponent } from '../components/main-window/bento-communicator/chat/chat.component';
 import { CommunityComponent } from '../components/main-window/bento-communicator/community/community.component';
-import { ManagementComponent } from '../components/main-window/bento-communicator/management/management.component';
+import { LeftMenuComponent } from '../components/main-window/bento-communicator/left-menu/left-menu.component';
 import { FriendsComponent } from '../components/main-window/bento-communicator/community/friends/friends.component';
 import { GroupsComponent } from '../components/main-window/bento-communicator/community/groups/groups.component';
 import { CommunicatorWindowComponent } from '../components/communicator-window/communicator-window.component';
@@ -40,7 +40,7 @@ import { AccountComponent } from '../components/main-window/bento-communicator/c
     AccountComponent,
     FriendsComponent,
     GroupsComponent,
-    ManagementComponent,
+    LeftMenuComponent,
     CommunicatorWindowComponent
   ],
   imports: [

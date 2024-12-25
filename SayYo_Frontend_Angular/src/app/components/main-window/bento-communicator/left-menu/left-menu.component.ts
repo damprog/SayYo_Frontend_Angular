@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { ComponentsStateService } from '../../../../services/components-state.service';
 
 @Component({
-  selector: 'app-management',
-  templateUrl: './management.component.html',
-  styleUrl: './management.component.css'
+  selector: 'app-left-menu',
+  templateUrl: './left-menu.component.html',
+  styleUrl: './left-menu.component.css'
 })
-export class ManagementComponent {
-
+export class LeftMenuComponent {
+// ManagementComponent
   constructor(private _stateService: ComponentsStateService){}
-
   showAccount(){
     this._stateService.showAccount();
   }

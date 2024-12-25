@@ -54,7 +54,7 @@
   </div>
 
   <div id="ok-friends" *ngIf="state.ok">
-    <div class="item" *ngFor="let x of friendsChats_Ok">
+    <div class="item" *ngFor="let x of friendsChats_Ok" (click)="showChat(x)">
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>
@@ -76,7 +76,7 @@
   </div>
 
   <div id="invitation-friends" *ngIf="state.invitations">
-    <div class="item" *ngFor="let x of friendsChats_Ok">
+    <div class="item" *ngFor="let x of friendsChats_Awaiting" (click)="showChat(x)">
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>
@@ -98,7 +98,7 @@
   </div>
 
   <div id="blocked-friends" *ngIf="state.blocked">
-    <div class="item" *ngFor="let x of friendsChats_Ok">
+    <div class="item" *ngFor="let x of friendsChats_Blocked" (click)="showChat(x)">
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>

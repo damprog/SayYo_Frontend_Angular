@@ -424,70 +424,71 @@ export class CommunicatorComponent {
     }
   }
 
-  loadChats() {
-    if (!this.friendsChats)
-      this.friendsChats = [];
+  // loadChats() {
+  //   if (!this.friendsChats)
+  //     this.friendsChats = [];
 
-    // Get friends chats for user
-    forkJoin([this._contactsService.getFriendsChats()])
-      .subscribe(([chats]) => {
-        this.friendsChats = chats;
-      });
+  //   // Get friends chats for user
+  //   forkJoin([this._contactsService.getFriendsChats()])
+  //     .subscribe(([chats]) => {
+  //       this.friendsChats = chats;
+  //     });
 
-    if (!this.groupsChats)
-      this.groupsChats = [];
+  //   if (!this.groupsChats)
+  //     this.groupsChats = [];
 
-    // Get groups chats for user
-    forkJoin([this._contactsService.getGroupChats()])
-      .subscribe(([chats]) => {
-        this.groupsChats = chats;
-      });
-  }
+  //   // Get groups chats for user
+  //   forkJoin([this._contactsService.getGroupChats()])
+  //     .subscribe(([chats]) => {
+  //       this.groupsChats = chats;
+  //     });
+  // }
 
   // TODO : maybe it should be done on server side (and as result only list of match)
-  loadFriends() {
-    if (this.friendshipList) {
-      let match: { id: any; invitation?: any; isBlockedFriend?: any; name?: any; status?: any; isSelected?: boolean; };
-      this.friendshipList.forEach((fs: { userId: string; status: any; friendId: string; blockFromUser: any; blockFromFriend: any; }) => {
-        this.usersDTOList.forEach((u: { id: any; userName: any; }) => {
-          if (u.id == fs.userId && this.communicator.SY_UserGuid != fs.userId) match = { id: fs.userId, name: u.userName, status: fs.status, isSelected: false };
-          if (u.id == fs.friendId && this.communicator.SY_UserGuid != fs.friendId) match = ({ id: fs.friendId, name: u.userName, status: fs.status, isSelected: false });
-        });
-        let addFriend: boolean = true;
-        if (match) {
-          this.friends.forEach((f: { id: any; }) => {
-            if (f.id === match.id)
-              addFriend = false;
-          })
-          // Check which user blocked his friend
-          // Check which user send invitation
-          if(fs.userId == this.UserGuid){
-            match.invitation = false;
-            if(fs.blockFromUser)
-              match.isBlockedFriend = true;
-          }
-          else if(fs.friendId == this.UserGuid){
-            match.invitation = true;
-            if(fs.blockFromFriend)
-              match.isBlockedFriend = true;
-          }
-          else{
-            match.invitation = false;
-            match.isBlockedFriend = true;
-          }
-          // Add friend to the list
-          if (addFriend){
-            this.friends.push(match);
-          }
-        }
-      });
-    }
-  }
+  // loadFriends() {
+  //   if (this.friendshipList) {
+  //     let match: { id: any; invitation?: any; isBlockedFriend?: any; name?: any; status?: any; isSelected?: boolean; };
+  //     this.friendshipList.forEach((fs: { userId: string; status: any; friendId: string; blockFromUser: any; blockFromFriend: any; }) => {
+  //       this.usersDTOList.forEach((u: { id: any; userName: any; }) => {
+  //         if (u.id == fs.userId && this.communicator.SY_UserGuid != fs.userId) match = { id: fs.userId, name: u.userName, status: fs.status, isSelected: false };
+  //         if (u.id == fs.friendId && this.communicator.SY_UserGuid != fs.friendId) match = ({ id: fs.friendId, name: u.userName, status: fs.status, isSelected: false });
+  //       });
+  //       let addFriend: boolean = true;
+  //       if (match) {
+  //         this.friends.forEach((f: { id: any; }) => {
+  //           if (f.id === match.id)
+  //             addFriend = false;
+  //         })
+  //         // Check which user blocked his friend
+  //         // Check which user send invitation
+  //         if(fs.userId == this.UserGuid){
+  //           match.invitation = false;
+  //           if(fs.blockFromUser)
+  //             match.isBlockedFriend = true;
+  //         }
+  //         else if(fs.friendId == this.UserGuid){
+  //           match.invitation = true;
+  //           if(fs.blockFromFriend)
+  //             match.isBlockedFriend = true;
+  //         }
+  //         else{
+  //           match.invitation = false;
+  //           match.isBlockedFriend = true;
+  //         }
+  //         // Add friend to the list
+  //         if (addFriend){
+  //           this.friends.push(match);
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
   ngOnInit(): void {
     if(!this._accountService.isLoggedIn){
       //this._router.navigate(['/start/login']);
     }
+    console.log("ngOnInit - communicator.component.ts");
 
     this.UserGuid = this.communicator.SY_UserGuid;
     if (!this.friends) this.friends = [];
@@ -501,8 +502,8 @@ export class CommunicatorComponent {
       // console.log("friendship:", this.friendshipList);
       // console.log("users:", this.usersList);
       // After fetch data invoke function refreshData()
-      this.loadFriends();
-      this.loadChats();
+      // this.loadFriends();
+      // this.loadChats();
     });
 
     // TODO: make better select with join - better api? if needed
