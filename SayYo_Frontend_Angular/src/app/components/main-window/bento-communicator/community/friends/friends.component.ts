@@ -3,6 +3,7 @@ import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import { SY_FriendChatDTO, SY_ResponseStatus, SY_UserDTO } from '../../../../../models/dto';
 import { ComponentsStateService } from '../../../../../services/components-state.service';
+import { ChatService } from '../../../../../services/chat.service';
 
 @Component({
   selector: 'app-friends',
@@ -12,7 +13,6 @@ import { ComponentsStateService } from '../../../../../services/components-state
 export class FriendsComponent implements OnInit {
   searchOpen: boolean = false;
   searchPattern: string = "";
-  emptyGuid: string = "00000000-0000-0000-0000-000000000000";
 
   // activeFriends: Array<SY_UserDTO> = [];
   // awaitingFriends: Array<SY_UserDTO> = [];
@@ -27,11 +27,13 @@ export class FriendsComponent implements OnInit {
   constructor(
     private _contacts: ContactsService,
     private _stateService: ComponentsStateService,
+    private _chatService: ChatService,
     public spinnerService: SpinnerService
   ) {}
 
-  showChat(friendChat: SY_FriendChatDTO ){
-    console.log('showChat(): ' + friendChat.chatGuid + " chatName: " + friendChat.chatName);
+  showChat(friendChat: SY_FriendChatDTO){
+    console.log('showChat(): ' + friendChat.chatGuid + ", chatName: " + friendChat.chatName + ", friendGuid: " + friendChat.friend.guid);
+    this._chatService.showChat(friendChat);
   }
 
   showFriends_StatusOk() {

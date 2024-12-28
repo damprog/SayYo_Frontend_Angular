@@ -1,12 +1,66 @@
-<div class="item">
-  jeden
-</div>
-<div class="item">
-  dwa
-</div>
-<!-- <div class="item">
-  jeden
-</div>
-<div class="item">
-  dwa
-</div> -->
+
+<!-- @@@@@@@@@@@@@@@ -->
+<!--       CHAT      -->
+<!-- @@@@@@@@@@@@@@@ -->
+
+  <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+      <div class="chat-item default"  *ngFor="let chat of chatService.activeChats; let i = index" [attr.data-index]="i">
+        <!-- <div class="chat-wrapper"> -->
+        <ng-container *ngIf="!chatService.helloContainerActive && chat">
+
+          <ng-container>
+            <div class="blockname-container">
+              <p class="blockname">{{chat.chatInfo.chatName}}</p>
+              <p class="close-chat" (click)="chatService.closeChat(chat.chatInfo.friend.guid)">X</p>
+            </div>
+          </ng-container>
+
+          <div class="chat-ok" *ngIf="chat.chatInfo.chatGuid != chatService.emptyGuid">
+
+            <div class="messages">
+                <ng-container *ngFor="let message of chat.messages">
+                  <!-- <ng-container *ngIf="message.chatGuid === chat.chatInfo.chatGuid"> -->
+                    <div class="date" *ngIf="message.otherDate">
+                        <div class="date-line-left"></div>
+                        <div class="date-output">{{message.date}}</div>
+                        <div class="date-line-right"></div>
+                    </div>
+                    <div [ngClass]="{'left': message.senderGuid !== accountService.account.userGuid, 'right': message.senderGuid === accountService.account.userGuid}">
+                        <span class="time">{{message.time}}</span><br>
+                        <p class="{{ message.senderGuid === accountService.account.userGuid ? 'right' : 'left'}}">{{ message.content }}</p>
+                    </div>
+                    <div class="next"></div>
+                  <!-- </ng-container> -->
+                </ng-container>
+            </div>
+
+            <div class="writearea" *ngIf="chat.chatInfo.friend.friendshipStatus != 2">
+                <input type="text" placeholder="Aa" [(ngModel)]="myMessage">
+                <button class="sendBtn" (click)="sendMessageClick(chat.chatInfo.chatGuid)">O></button>
+            </div>
+          </div>
+
+          <div class="messages-start-screen">
+            <div class="start-chat-container" *ngIf="chat.chatInfo.chatGuid == chatService.emptyGuid">
+              <p class="start-chat" type="button" (click)="startChatClick()">
+                <b>Rozpocznij</b>
+              </p>
+            </div>
+          </div>
+
+        </ng-container>
+      <!-- </div> -->
+      </div>
+
+  <!-- ------------------------------------------------------------------------------------------------------------------ -->
+
+    <div class="hello-container" *ngIf="chatService.helloContainerActive">
+      <div class="hello">
+          <div class="say">Say</div>
+          <div class="yo">Yo</div>
+      </div>
+      <p class="author">Copyright © 2024 Damian Filipiak</p>
+    </div>
+
+  <!-- ------------------------------------------------------------------------------------------------------------------ -->

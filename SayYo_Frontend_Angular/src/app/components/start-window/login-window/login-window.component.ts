@@ -20,8 +20,8 @@ export class LoginWindowComponent {
     public spinnerService: SpinnerService
   ) {
     this.loginForm = this._fb.group({
-      email: ['asd@gmail.com', [Validators.required, Validators.email]],
-      password: ['asd', [Validators.required, Validators.minLength(3)]],
+      email: ['jk@gmail.com', [Validators.required, Validators.email]],
+      password: ['Kowal', [Validators.required, Validators.minLength(3)]],
     });
   }
 

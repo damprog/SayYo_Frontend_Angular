@@ -1,4 +1,3 @@
-
 // --------------------------------------
 // GENERAL
 // --------------------------------------
@@ -36,31 +35,47 @@ export interface SY_RegisterResponseDTO {
   guid: string;
 }
 
-
 // --------------------------------------
 // CONTACTS SERVICE
 // --------------------------------------
 
 export interface SY_FriendChatDTO {
   chatGuid: string;
-  chatType: Int16Array;
+  chatType: number;
   chatName: string;
   friend: SY_FriendMemberDTO;
 }
 
 export interface SY_FriendMemberDTO {
-  memberGuid: string;
-  chatRole: Int16Array;
-  friendshipStatus: Int16Array;
-  blockFromUser: Int16Array;
-  blockFromFriend: Int16Array;
+  guid: string;
+  chatMemberGuid: string;
+  chatRole: number;
+  friendshipStatus: number;
+  blockFromUser: number;
+  blockFromFriend: number;
 }
 
 export interface SY_GroupChatDTO {
   chatGuid: string;
-  chatType: Int16Array;
+  chatType: number;
   chatName: string;
   members: Array<SY_FriendMemberDTO>;
 }
 
+// --------------------------------------
+// MESSEGES SERVICE
+// --------------------------------------
 
+export interface SY_SendMessageDTO {
+  ChatGuid: string;
+  SenderGuid: string;
+  Message: string;
+}
+
+export interface SY_MessageDTO {
+  guid: string;
+  chatGuid: string;
+  senderGuid: string;
+  content: string;
+  sentAt: string;
+}

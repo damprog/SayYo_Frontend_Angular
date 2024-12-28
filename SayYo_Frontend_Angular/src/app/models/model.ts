@@ -25,3 +25,23 @@ export interface FriendsChats {
 export interface GroupChats {
   items: Array<SY_GroupChatDTO>;
 }
+
+// --------------------------------------
+// CHAT SERVICE
+// --------------------------------------
+
+export interface ChatMessage {
+  guid: string;
+  chatGuid: string;
+  senderGuid: string;
+  content: string;
+  sentAt: string;
+  date: string;
+  time: string;
+  otherDate: number;
+}
+
+export interface Chat {
+  chatInfo: SY_FriendChatDTO;
+  messages: Array<ChatMessage>;
+}

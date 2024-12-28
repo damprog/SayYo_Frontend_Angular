@@ -1,0 +1,55 @@
+/* Aditionaly styles are taken from: */
+/* @import url("../../account/buttons-account.css");
+button {
+    color:white;
+    /* background-color: #66ccff;
+    background-color: #7a7a7a;
+    border-color: #dfe2e4;
+    /* background: linear-gradient(to bottom, #60d0f1, #3e76c9);
+}
+
+button:hover {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+    /* background: linear-gradient(to bottom, #60d0f1, #60d0f1 ,#3e76c9);
+}
+
+button:focus {
+    background-color: #ffcc00;
+    border-color: #ffcc00;
+} */
+
+
+.default button {
+  color: white;
+  border-radius: 4px;
+  background-color: #66ccff;
+  border-color: #66ccff;
+}
+
+.default button:hover {
+  background-color: #ffcc00;
+  border-color: #ffcc00;
+}
+
+.default .delete-btn {
+  border-color: crimson;
+  background-color: crimson;
+}
+
+.default .delete-btn:hover {
+  background-color: maroon;
+  border-color: maroon;
+}
+
+.default .cancel-btn {
+  border-color: black;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.801);
+}
+
+.default .cancel-btn:hover {
+  border-color: black;
+  color: black;
+  background-color: rgba(221, 221, 221, 0.801);
+}

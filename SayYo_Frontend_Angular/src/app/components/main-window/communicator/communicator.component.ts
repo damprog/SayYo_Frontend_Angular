@@ -310,12 +310,13 @@ export class CommunicatorComponent {
     this.communicator.inviteFriend(stranger.id).subscribe(_res => {});
   }
 
+  // already moved to friends component
   friendClick(friend: { id: any; }) {
     this.activeFriend = friend;
     this.activeChat = false;
     this.activeChatContent = this.friendsChats.find((fc: { friend: { id: any; }; }) => fc.friend.id == friend.id);
     if (this.activeChatContent) {
-      this.chatClicked(this.activeChatContent);
+      //this.chatClicked(this.activeChatContent);
     }
   }
 
@@ -338,91 +339,91 @@ export class CommunicatorComponent {
 
   //TODO: refreshing messages
 
-  chatClicked(chat: { friend: any; chatId: string; }) {
-    // console.log("friendsChats: ",this.friendsChats);
-    delete this.activeChatMessages;
-    this.activeChat = false;
-    this.activeChatContent = chat;
-    this.activeFriend = chat.friend;
+  // chatClicked(chat: { friend: any; chatId: string; }) {
+  //   // console.log("friendsChats: ",this.friendsChats);
+  //   delete this.activeChatMessages;
+  //   this.activeChat = false;
+  //   this.activeChatContent = chat;
+  //   this.activeFriend = chat.friend;
 
-    if (!this.chatsMessages)
-      this.chatsMessages = [];
-    this.activeChatMessages = this.chatsMessages.find((ch: { chatId: any; }) => ch.chatId == this.activeChatContent.chatId);
-    if (this.activeChatMessages != null)
-      this.activeChat = true;
+  //   if (!this.chatsMessages)
+  //     this.chatsMessages = [];
+  //   this.activeChatMessages = this.chatsMessages.find((ch: { chatId: any; }) => ch.chatId == this.activeChatContent.chatId);
+  //   if (this.activeChatMessages != null)
+  //     this.activeChat = true;
 
-    if (!this.activeChat) {
-      // Load messages for the chat
-      forkJoin(this.communicator.getMesseges(chat.chatId))
-        .subscribe(data => {
-          let cMessages = data.flatMap((message: any) => message);
-          // Sort messages
-          cMessages = cMessages.sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime());
-          let chatMessages = {
-            chatId: chat.chatId,
-            messages: cMessages
-          };
-          // Update messages for chat
-          let addContent: Boolean = true;
-          this.chatsMessages.forEach((con: { chatId: any; messages: any[]; }) => {
-            if (con.chatId == chatMessages.chatId) {
-              con.messages = chatMessages.messages;
-              addContent = false;
-            }
-          });
-          // If chat not in cache then add messages
-          if (addContent) {
-            this.activeChatMessages = chatMessages;
-            // =this.chatsMessages.find(ch => ch.chatId == this.activeChatContent.chatId);
+  //   if (!this.activeChat) {
+  //     // Load messages for the chat
+  //     forkJoin(this.communicator.getMesseges(chat.chatId))
+  //       .subscribe(data => {
+  //         let cMessages = data.flatMap((message: any) => message);
+  //         // Sort messages
+  //         cMessages = cMessages.sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime());
+  //         let chatMessages = {
+  //           chatId: chat.chatId,
+  //           messages: cMessages
+  //         };
+  //         // Update messages for chat
+  //         let addContent: Boolean = true;
+  //         this.chatsMessages.forEach((con: { chatId: any; messages: any[]; }) => {
+  //           if (con.chatId == chatMessages.chatId) {
+  //             con.messages = chatMessages.messages;
+  //             addContent = false;
+  //           }
+  //         });
+  //         // If chat not in cache then add messages
+  //         if (addContent) {
+  //           this.activeChatMessages = chatMessages;
+  //           // =this.chatsMessages.find(ch => ch.chatId == this.activeChatContent.chatId);
 
-            // Make messages to have separated time
-            let listOfMessages = this.activeChatMessages.messages;
-            let listOfNewMessages: { id: any; chatId: any; senderId: any; content: any; sentAt: any; date: string; time: string; otherDate: number; }[] = [];
-            let previousDate = "";
-            listOfMessages.forEach((m: { sentAt: string | number | Date; id: any; chatId: any; senderId: any; content: any; }) => {
-              let date = new Date(m.sentAt);
-              // date
-              let day = String(date.getDate()).padStart(2, '0');
-              let month = String(date.getMonth() + 1).padStart(2, '0');;
-              let year = String(date.getFullYear()).padStart(2, '0');;
-              // time
-              let hours = String(date.getHours()).padStart(2, '0');;
-              let minutes = String(date.getMinutes()).padStart(2, '0');;
+  //           // Make messages to have separated time
+  //           let listOfMessages = this.activeChatMessages.messages;
+  //           let listOfNewMessages: { id: any; chatId: any; senderId: any; content: any; sentAt: any; date: string; time: string; otherDate: number; }[] = [];
+  //           let previousDate = "";
+  //           listOfMessages.forEach((m: { sentAt: string | number | Date; id: any; chatId: any; senderId: any; content: any; }) => {
+  //             let date = new Date(m.sentAt);
+  //             // date
+  //             let day = String(date.getDate()).padStart(2, '0');
+  //             let month = String(date.getMonth() + 1).padStart(2, '0');;
+  //             let year = String(date.getFullYear()).padStart(2, '0');;
+  //             // time
+  //             let hours = String(date.getHours()).padStart(2, '0');;
+  //             let minutes = String(date.getMinutes()).padStart(2, '0');;
 
-              let othDate = 0;
-              if (previousDate !== day + "." + month + "." + year)
-                othDate = 1;
-              previousDate = day + "." + month + "." + year;
+  //             let othDate = 0;
+  //             if (previousDate !== day + "." + month + "." + year)
+  //               othDate = 1;
+  //             previousDate = day + "." + month + "." + year;
 
-              let message = {
-                id: m.id,
-                chatId: m.chatId,
-                senderId: m.senderId,
-                content: m.content,
-                sentAt: m.sentAt,
-                date: day + "." + month + "." + year,
-                time: hours + ":" + minutes,
-                otherDate: othDate
-              }
-              listOfNewMessages.push(message);
-            });
-            this.activeChatMessages.messages = listOfNewMessages;
-            // Add sorted messages to list
-            this.chatsMessages.push(this.activeChatMessages);
-            this.activeChat = true;
-          }
-        });
-    }
-  }
+  //             let message = {
+  //               id: m.id,
+  //               chatId: m.chatId,
+  //               senderId: m.senderId,
+  //               content: m.content,
+  //               sentAt: m.sentAt,
+  //               date: day + "." + month + "." + year,
+  //               time: hours + ":" + minutes,
+  //               otherDate: othDate
+  //             }
+  //             listOfNewMessages.push(message);
+  //           });
+  //           this.activeChatMessages.messages = listOfNewMessages;
+  //           // Add sorted messages to list
+  //           this.chatsMessages.push(this.activeChatMessages);
+  //           this.activeChat = true;
+  //         }
+  //       });
+  //   }
+  // }
 
-  sendMessegeClick() {
-    if (this.myMessage && this.myMessage.length > 0) {
-      this.communicator.sendMessage(this.activeChatContent.chatId, this.myMessage).subscribe(_res => {
-        this.chatClicked(this.activeChatContent);
-      });
-      this.myMessage = "";
-    }
-  }
+  // sendMessegeClick() {
+  //   if (this.myMessage && this.myMessage.length > 0) {
+  //     this.communicator.sendMessage(this.activeChatContent.chatId, this.myMessage).subscribe(_res => {
+  //       this.chatClicked(this.activeChatContent);
+  //     });
+  //     this.myMessage = "";
+  //   }
+  // }
 
   // loadChats() {
   //   if (!this.friendsChats)
@@ -485,26 +486,26 @@ export class CommunicatorComponent {
   // }
 
   ngOnInit(): void {
-    if(!this._accountService.isLoggedIn){
-      //this._router.navigate(['/start/login']);
-    }
-    console.log("ngOnInit - communicator.component.ts");
+    // if(!this._accountService.isLoggedIn){
+    //   //this._router.navigate(['/start/login']);
+    // }
+    // console.log("ngOnInit - communicator.component.ts");
 
-    this.UserGuid = this.communicator.SY_UserGuid;
-    if (!this.friends) this.friends = [];
-    // simultaneous downloading of data from both sources
-    forkJoin([this.communicator.getFriendsList(),
-    this.communicator.getUsersSearchList("")
-    ]).subscribe(([friendsData, usersData]) => {
-      this.friendshipList = friendsData;
-      this.usersDTOList = usersData;
+    // this.UserGuid = this.communicator.SY_UserGuid;
+    // if (!this.friends) this.friends = [];
+    // // simultaneous downloading of data from both sources
+    // forkJoin([this.communicator.getFriendsList(),
+    // this.communicator.getUsersSearchList("")
+    // ]).subscribe(([friendsData, usersData]) => {
+    //   this.friendshipList = friendsData;
+    //   this.usersDTOList = usersData;
 
-      // console.log("friendship:", this.friendshipList);
-      // console.log("users:", this.usersList);
-      // After fetch data invoke function refreshData()
-      // this.loadFriends();
-      // this.loadChats();
-    });
+    //   // console.log("friendship:", this.friendshipList);
+    //   // console.log("users:", this.usersList);
+    //   // After fetch data invoke function refreshData()
+    //   // this.loadFriends();
+    //   // this.loadChats();
+    // });
 
     // TODO: make better select with join - better api? if needed
   }

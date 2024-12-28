@@ -54,11 +54,8 @@ export class AccountService {
   }
 
   login(email: string, password: string): Observable<SY_ResponseStatus> {
-    // this.SY_LoginDTO.email = email;
-    // this.SY_LoginDTO.password = password;
-
-    this.SY_LoginDTO.email = "jk@gmail.com";
-    this.SY_LoginDTO.password = "Kowal";
+    this.SY_LoginDTO.email = email;
+    this.SY_LoginDTO.password = password;
 
     return this._loginToCommunicator().pipe(
       map((userDTO: SY_UserDTO) => {
