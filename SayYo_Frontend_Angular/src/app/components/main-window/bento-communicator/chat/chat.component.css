@@ -10,63 +10,80 @@
   max-width: 98%;
   min-width: 98%;
   height: 98%;
-  padding: 0 0 0;
+  padding: 0;
   background-color: rgba(255, 255, 255, 0.1);
   border-top-left-radius: 22px;
   border-top-right-radius: 22px;
   border-bottom-left-radius: 3%;
   border-bottom-right-radius: 3%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* .chat .blockname-container {
-  display: block;
-  height: 6%;
-  min-height: 30px;
-  padding: 0;
-  margin: 0;
-  padding-top: 5px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-} */
-
 .blockname-container {
-  position: relative; /* Set context for absolute positioning */
-  display: flex; /* Align elements in a row */
-  align-items: center; /* Vertical alignment */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 
 .blockname {
-  flex: 1; /* Fill remaining space to keep the chat name on the left */
-  height: 6%;
-  min-height: 30px;
+  flex: 1;
+  height: 30px;
   margin: 0;
-  padding-top: 5px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
 }
 
 .close-chat {
-  position: absolute; /* Set absolute position relative to .blockname-container */
-  right: 10px; /* Distance from the right side */
-  top: 50%; /* Vertical alignment */
-  transform: translateY(-50%); /* Center vertically relative to the middle */
-  cursor: pointer; /* Add pointer cursor */
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
   color: white;
 }
 
 .chat-ok {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 92%;
+  overflow: hidden;
+}
+
+.writearea {
+  bottom: 0;
+  display: flex;
+  height: 35px;
+  align-items: center;
+}
+
+.writearea input {
+  flex: 1;
+  text-align: left;
+  padding: 3px 4px 5px 4px;
+  border-radius: 4px;
+}
+
+.writearea input:focus {
+  outline: none;
+  border-width: 2px;
+}
+
+.writearea button {
+  margin: 0 1% 0 0;
+  padding: 1px 0 5px 0;
+  min-width: 12%;
+  min-height: fit-content;
+  font-size: 17px;
+  font-weight: bold;
+  width: fit-content;
 }
 
 .messages {
   flex: 1;
-  /* width: 100%; */
   padding-top: 1%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -121,7 +138,6 @@
 }
 
 .messages-start-screen {
-  padding-top: 1%;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -175,48 +191,11 @@
   text-align: left;
 }
 
-.writearea {
-  /* position: absolute; */
-  bottom: 0;
-  /* width: 100%; */
-  /* margin-bottom: 0 0 2px 0; */
-  display:flex;
-  height: 35px;
-  align-items: center;
-}
-
-.writearea input {
-  margin: 0% 1%;
-  min-width: 84%;
-  min-height: fit-content;
-  text-align: left;
-  padding: 3px 4px 5px 4px;
-  /* font-weight: bolder; */
-  border-radius: 4px;
-}
-
-.writearea input:focus {
-  outline: none;
-  border-width: 2px;
-}
-
-.writearea button {
-  margin: 0 1% 0 0;
-  padding: 1px 0 5px 0;
-  min-width: 12%;
-  min-height: fit-content;
-  font-size: 17px;
-  font-weight: bold;
-  width: fit-content;
-}
-
 /* THEMES */
 
 .default .blockname {
   font-weight: bold;
-  background: linear-gradient(to top, #4e4d4d, #5f5e59 20%, #8a8989);
-
-  /* background-color: rgb(60, 60, 60); */
+  background: linear-gradient( to top, #8c7b7b, #000 20%, #6a6a6a);
   color: white;
 }
 
@@ -252,14 +231,15 @@
 
 .default .messages p.right {
   color: white;
-  background: linear-gradient(to top, #204c30, #00ae83 20%, #00cc99);
+  background: linear-gradient( to top, #005e3f, #007131 20%, #748e2c);
+  /* background: linear-gradient(to top, #204c30, #00ae83 20%, #00cc99); */
 }
 
 .default .writearea input {
   background-color: rgb(164, 254, 172);
-  background: linear-gradient(to top, #204c30, #2e6b44 30%, #32a076);
+  background: linear-gradient( to top, #385b32, #405e2b 30%, #13cc86);
   color: white;
-  border-color: #00cc99;
+  border-color: #58b08b;
 }
 
 .default .writearea input:focus {
@@ -268,14 +248,29 @@
   background: radial-gradient(circle, #32a076, #2e6b44);
 }
 
-.default .writearea button:hover {
+ .default .writearea button:hover {
   background: linear-gradient(to top, #efda87, #c59d00 20%, #ffcc00);
 }
 
 .default .writearea button {
-  background: linear-gradient(to top, #7fbad3, #4bbdf7 20%, #66ccff);
+  margin: 0 1% 0 0;
+  padding: 5px 15px;
+  min-width: 12%;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #45c996, #2e6b44); /* Gradient */
+  border: none;
+  border-radius: 10px; /* Zaokrąglone rogi */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Płynne przejścia dla efektów */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Delikatny cień */
 }
 
+.writearea button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
 
 /*  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
