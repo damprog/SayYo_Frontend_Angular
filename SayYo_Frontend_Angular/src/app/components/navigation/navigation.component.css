@@ -60,6 +60,11 @@
   margin-left: 2.5rem;
 }
 
+.navbar a:hover {
+  color: #cfcfcf;
+  scale: 1.05;
+}
+
 .navbar a.active::after {
   content: "";
   display: block;
@@ -132,6 +137,11 @@
     transform: translateY(-50px);
     transition: 0.3s ease;
     opacity: 0;
+  }
+
+  .navbar a:hover {
+    color: #cfcfcf;
+    scale: 1.00;
   }
 
   .navbar a.active::after {

@@ -46,6 +46,11 @@
   color: white;
 }
 
+.close-chat:hover {
+  scale: 1.15;
+  color: #ffcc00;
+}
+
 .chat-ok {
   flex: 1;
   display: flex;
@@ -86,6 +91,7 @@
 .messages {
   flex: 1;
   padding-top: 1%;
+  font-size: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-color: #45c996 transparent;
@@ -164,7 +170,8 @@
   border-radius: 50%;
   font-size: 1.5rem;
   min-width: 10%;
-  max-width: 40%;
+  width: 50%;
+  max-width: 60%;
   max-height: 60%;
   min-height: 10%;
   aspect-ratio: 1/1;
@@ -243,12 +250,14 @@
 
 .default .messages p.left {
   color: white;
-  background: linear-gradient(
+  background: linear-gradient(135deg, #17a2b8, #74d4db);
+  /* background: linear-gradient(
     to top,
     rgb(40, 40, 40),
     rgb(60, 60, 60) 80%,
     rgb(114, 114, 114)
   );
+  background: linear-gradient(to top, rgb(144, 179, 175) , rgb(22, 60, 83) ,rgb(153, 213, 223)); */
 }
 
 .default .messages p.right {
@@ -259,7 +268,7 @@
 
 .default .writearea input {
   background-color: rgb(164, 254, 172);
-  background: linear-gradient( to top, #385b32, #405e2b 30%, #13cc86);
+  background: linear-gradient( to top, #3b8864, #2a6a40 30%, #1f4a42);
   color: white;
   border: none;
 }
