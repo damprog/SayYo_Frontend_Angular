@@ -17,7 +17,7 @@ export class ChatService {
 
   cachedChats: Array<Chat> = [];
   activeChats: Array<Chat> = [];
-  helloContainerActive: Boolean = false;
+  helloContainerActive: Boolean = true;
 
   showChat(friendChat: SY_FriendChatDTO) {
     const exists = this.activeChats.some(
@@ -49,6 +49,8 @@ export class ChatService {
             syMessages = fetchedMessages;
             console.log('Messages fetched');
 
+            syMessages = syMessages.sort((a, b) => new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime());
+
             const chatMessages: Array<ChatMessage> =
               this.convertMessages(syMessages);
             console.log('chatMessages', chatMessages);
@@ -61,6 +63,7 @@ export class ChatService {
             this.addToCachedChats(chat);
             this.activeChats.push(chat);
             console.log('Chat added: ' + friendChat.friend.guid);
+            this.checkHelloContainer();
           },
           error: (error) => {
             console.error('Failed to fetch messages:', error);
@@ -68,12 +71,14 @@ export class ChatService {
         });
       }
     }
+    this.checkHelloContainer();
   }
 
   closeChat(friendGuid: string) {
     this.activeChats = this.activeChats.filter(
       (chat) => chat.chatInfo.friend.guid !== friendGuid
     );
+    this.checkHelloContainer();
   }
 
   sendMessage(chatGuid: string, content: string) {
@@ -94,6 +99,9 @@ export class ChatService {
   // ----------------------------
   // Helpers
   // ----------------------------
+  checkHelloContainer(){
+    this.helloContainerActive = this.activeChats.length === 0;
+  }
 
   addToCachedChats(chat: Chat) {
     if (chat) {

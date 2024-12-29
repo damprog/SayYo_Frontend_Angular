@@ -58,6 +58,7 @@
   display: flex;
   height: 35px;
   align-items: center;
+  gap: 10px;
 }
 
 .writearea input {
@@ -87,6 +88,21 @@
   padding-top: 1%;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-color: #45c996 transparent;
+}
+
+.messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+.messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background-color: #45c996;
+  border-radius: 10px;
+  border: 2px solid transparent;
 }
 
 .messages .time {
@@ -239,7 +255,7 @@
   background-color: rgb(164, 254, 172);
   background: linear-gradient( to top, #385b32, #405e2b 30%, #13cc86);
   color: white;
-  border-color: #58b08b;
+  border: none;
 }
 
 .default .writearea input:focus {
