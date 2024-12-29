@@ -160,20 +160,26 @@
 
 .messages-start-screen .start-chat {
   position: absolute;
+  display: flex;
   border-radius: 50%;
   font-size: 1.5rem;
-  width: 50%;
+  min-width: 10%;
+  max-width: 40%;
+  max-height: 60%;
+  min-height: 10%;
   aspect-ratio: 1/1;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   left: 50%;
-  bottom: 50%;
-  transform: translate(-50%, 60%);
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .messages-start-screen .start-chat b {
   position: relative;
   display: block;
-  padding-top: 40%;
+  padding: 2%;
 }
 
 .messages div {
