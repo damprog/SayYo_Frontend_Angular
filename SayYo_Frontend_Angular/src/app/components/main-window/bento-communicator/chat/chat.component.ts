@@ -1,6 +1,8 @@
 import { ChatService } from './../../../../services/chat.service';
 import { Component } from '@angular/core';
 import { AccountService } from '../../../../services/account.service';
+import { SY_FriendChatDTO } from '../../../../models/dto';
+import { Chat } from '../../../../models/model';
 
 @Component({
   selector: 'app-chat',
@@ -12,8 +14,6 @@ export class ChatComponent {
     protected chatService: ChatService,
     protected accountService: AccountService
   ) {}
-
-  myMessage: string = ''; // from writearea
 
   // // DATA
   // friendshipList: any; // id, userId, friendId, status, blockFromUser, blockFromFriend
@@ -32,11 +32,19 @@ export class ChatComponent {
   // activeChat: Boolean = false; // true if there are messages
   // UserGuid: any;
 
-  startChatClick() {}
+  startChatClick(friendChat: SY_FriendChatDTO) {
+    this.chatService.startChat(friendChat);
+  }
 
-  sendMessageClick(chatGuid: string) {
-    if (this.myMessage.length !== 0) {
-      this.chatService.sendMessage(chatGuid, this.myMessage);
+  sendMessageClick(chat: Chat) {
+    const message = chat.currentMessage?.trim();
+    if (message && message.length !== 0) {
+      this.chatService.sendMessage(chat.chatInfo.chatGuid, message);
     }
+    chat.currentMessage = "";
+  }
+
+  ngOnInit() {
+    this.chatService.messageHubSetup();
   }
 }

@@ -44,4 +44,5 @@ export interface ChatMessage {
 export interface Chat {
   chatInfo: SY_FriendChatDTO;
   messages: Array<ChatMessage>;
+  currentMessage?: string;
 }

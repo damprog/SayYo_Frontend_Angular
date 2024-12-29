@@ -62,6 +62,24 @@ export interface SY_GroupChatDTO {
   members: Array<SY_FriendMemberDTO>;
 }
 
+export interface SY_AddChatDTO {
+  chatType: number;
+  name: string;
+}
+
+export interface SY_AddChatMemberDTO {
+  chatGuid: string;
+  userGuid: string;
+  role: number;
+}
+
+export interface SY_UpdateChatMemberDTO {
+  memberGuid: string;
+  chatGuid: string;
+  userGuid: string;
+  role: number;
+}
+
 // --------------------------------------
 // MESSEGES SERVICE
 // --------------------------------------
@@ -78,4 +96,27 @@ export interface SY_MessageDTO {
   senderGuid: string;
   content: string;
   sentAt: string;
+}
+
+// --------------------------------------
+// FRIENDSHIP SERVICE
+// --------------------------------------
+
+export interface SY_AddFriendshipDTO {
+  userGuid: string,
+  friendGuid: string,
+  status: number
+}
+
+export interface SY_UpdateFriendshipDTO {
+  userGuid: string;
+  friendGuid: string;
+  status: number;
+  blockFromUser: number;
+  blockFromFriend: number;
+}
+
+export interface SY_FindFriendshipDTO {
+  userGuid: string;
+  friendGuid: string;
 }

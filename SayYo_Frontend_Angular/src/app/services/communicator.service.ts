@@ -81,116 +81,116 @@ getChat(chatId: string) {
 //     return this.http.get<any[]>(this.APIUrl+"sayyo/chat/getChatsForUser?userId="+this.SY_UserGuid);
 // }
 
-// List of ChatMemberDTO
-getUsersForChat(chatId: string): Observable<any[]> {
-  return this.http.get<any[]>(this.APIUrl + "sayyo/chat/getUsersForChat?chatId=" + chatId);
-}
+// // List of ChatMemberDTO
+// getUsersForChat(chatId: string): Observable<any[]> {
+//   return this.http.get<any[]>(this.APIUrl + "sayyo/chat/getUsersForChat?chatId=" + chatId);
+// }
 
-// Returns Created and chatGuid
-createChat(chatType: number, chatName: string) {
-  this.SY_AddChatDTO = {
-      ChatType: chatType,
-      Name: chatName
-  }
-  return this.http.post(this.APIUrl + "sayyo/chat/createChat/", this.SY_AddChatDTO);
-}
+// // Returns Created and chatGuid
+// createChat(chatType: number, chatName: string) {
+//   this.SY_AddChatDTO = {
+//       ChatType: chatType,
+//       Name: chatName
+//   }
+//   return this.http.post(this.APIUrl + "sayyo/chat/createChat/", this.SY_AddChatDTO);
+// }
 
-// Returns Created and chat member guid
-addChatMember(chatGuid: string, userId: string, memberRole: number = 0) {
-  this.SY_AddChatMemberDTO = {
-      ChatId: chatGuid,
-      UserId: userId,
-      Role: memberRole
-  }
-  return this.http.post(this.APIUrl + "sayyo/chat/addChatMember/", this.SY_AddChatMemberDTO);
-}
+// // Returns Created and chat member guid
+// addChatMember(chatGuid: string, userId: string, memberRole: number = 0) {
+//   this.SY_AddChatMemberDTO = {
+//       ChatId: chatGuid,
+//       UserId: userId,
+//       Role: memberRole
+//   }
+//   return this.http.post(this.APIUrl + "sayyo/chat/addChatMember/", this.SY_AddChatMemberDTO);
+// }
 
-// Returns no content
-updateChatMember(memberId: string, userId: string, chatId: string, chatRole: number = 0) {
-  this.SY_UpdateChatMemberDTO = {
-      Id: memberId,
-      ChatId: chatId,
-      UserId: userId,
-      Role: chatRole
-  }
-  return this.http.put(this.APIUrl + "sayyo/chat/updateChatMember/", this.SY_UpdateChatMemberDTO);
-}
+// // Returns no content
+// updateChatMember(memberId: string, userId: string, chatId: string, chatRole: number = 0) {
+//   this.SY_UpdateChatMemberDTO = {
+//       Id: memberId,
+//       ChatId: chatId,
+//       UserId: userId,
+//       Role: chatRole
+//   }
+//   return this.http.put(this.APIUrl + "sayyo/chat/updateChatMember/", this.SY_UpdateChatMemberDTO);
+// }
 
-// Returns no content
-deleteChatMember(id:string){
-  return this.http.delete(this.APIUrl + "sayyo/chat/deleteChatMember?id=" + id);
-}
+// // Returns no content
+// deleteChatMember(id:string){
+//   return this.http.delete(this.APIUrl + "sayyo/chat/deleteChatMember?id=" + id);
+// }
 
-// ----------------------------------------------------------------------------------------------------------------------------------------------
-// FriendshipController
-//
-// .. some info ..
-// FriendshipStatusEnum: 0 - awaiting, 1 - friend, 2 - blocked, 3 - unknown (this one is not in sql _ but if group member is not known)
-// blockFromUser/blockFromFriend - 0 - none, 1 - active
-// invitation - 0 - awaiting, 1 - accepted, 2 - rejected, 4 - unknown (not in sql)
+// // ----------------------------------------------------------------------------------------------------------------------------------------------
+// // FriendshipController
+// //
+// // .. some info ..
+// // FriendshipStatusEnum: 0 - awaiting, 1 - friend, 2 - blocked, 3 - unknown (this one is not in sql _ but if group member is not known)
+// // blockFromUser/blockFromFriend - 0 - none, 1 - active
+// // invitation - 0 - awaiting, 1 - accepted, 2 - rejected, 4 - unknown (not in sql)
 
-// Returns Created and friendship guid
-inviteFriend(friendGuid: string) {
-  // I use SY_UserGuid because it's default variable to store GUID from api
-  this.SY_AddFriendshipDTO = {
-      UserId: this.SY_UserGuid,
-      FriendId: friendGuid,
-      Status: 0
-  }
-  return this.http.post(this.APIUrl + "sayyo/friendship/add/", this.SY_AddFriendshipDTO);
-}
+// // Returns Created and friendship guid
+// inviteFriend(friendGuid: string) {
+//   // I use SY_UserGuid because it's default variable to store GUID from api
+//   this.SY_AddFriendshipDTO = {
+//       UserId: this.SY_UserGuid,
+//       FriendId: friendGuid,
+//       Status: 0
+//   }
+//   return this.http.post(this.APIUrl + "sayyo/friendship/add/", this.SY_AddFriendshipDTO);
+// }
 
-// Returns no content
-updateFriendshipStatus(friendhipGuid: string, friendGuid: string, status: number, blockFromUser: number, blockFromFriend: number) {
-  // Friendship status is unknown - backend set proper value
-  this.SY_UpdateFriendshipDTO = {
-      Guid: friendhipGuid,
-      UserId: this.SY_UserGuid,
-      FriendId: friendGuid,
-      Status: status,
-      BlockFromUser: blockFromUser,
-      BlockFromFriend: blockFromFriend
-  }
-  return this.http.put(this.APIUrl + "sayyo/friendship/update/", this.SY_UpdateFriendshipDTO);
-}
+// // Returns no content
+// updateFriendshipStatus(friendhipGuid: string, friendGuid: string, status: number, blockFromUser: number, blockFromFriend: number) {
+//   // Friendship status is unknown - backend set proper value
+//   this.SY_UpdateFriendshipDTO = {
+//       Guid: friendhipGuid,
+//       UserId: this.SY_UserGuid,
+//       FriendId: friendGuid,
+//       Status: status,
+//       BlockFromUser: blockFromUser,
+//       BlockFromFriend: blockFromFriend
+//   }
+//   return this.http.put(this.APIUrl + "sayyo/friendship/update/", this.SY_UpdateFriendshipDTO);
+// }
 
-deleteFriendship(friendshipGuid: string) {
-  return this.http.delete(this.APIUrl + "sayyo/friendship/delete?friendshipGuid=" + friendshipGuid);
-}
+// deleteFriendship(friendshipGuid: string) {
+//   return this.http.delete(this.APIUrl + "sayyo/friendship/delete?friendshipGuid=" + friendshipGuid);
+// }
 
-// Returns list of FriendshipDTO
-getFriendsList(): Observable<any[]> {
-  return this.http.get<any[]>(this.APIUrl + `sayyo/friendship/findAllForUser?userId=${this.SY_UserGuid}`);
-}
+// // Returns list of FriendshipDTO
+// getFriendsList(): Observable<any[]> {
+//   return this.http.get<any[]>(this.APIUrl + `sayyo/friendship/findAllForUser?userId=${this.SY_UserGuid}`);
+// }
 
-// Returns specific FriendshipDTO
-getFriendship(friendGuid: string) {
-  this.SY_FindFriendshipDTO = {
-      UserId: this.SY_UserGuid,
-      FriendId: friendGuid
-  }
-  return this.http.get(this.APIUrl + "sayyo/friendship/find/", this.SY_FindFriendshipDTO);
-}
+// // Returns specific FriendshipDTO
+// getFriendship(friendGuid: string) {
+//   this.SY_FindFriendshipDTO = {
+//       UserId: this.SY_UserGuid,
+//       FriendId: friendGuid
+//   }
+//   return this.http.get(this.APIUrl + "sayyo/friendship/find/", this.SY_FindFriendshipDTO);
+// }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // MessageController
 //
 // MessageDTO: id, chatId, senderId, content, sentAt
 
-// Returns no content
-sendMessage(chatGuid: string, content: string) {
-  this.SY_SendMessageDTO = {
-      ChatId: chatGuid,
-      SenderId: this.SY_UserGuid,
-      Message: content
-  }
-  return this.http.post(this.APIUrl + "sayyo/message/send/", this.SY_SendMessageDTO, this.httpOptions);
-}
+// // Returns no content
+// sendMessage(chatGuid: string, content: string) {
+//   this.SY_SendMessageDTO = {
+//       ChatId: chatGuid,
+//       SenderId: this.SY_UserGuid,
+//       Message: content
+//   }
+//   return this.http.post(this.APIUrl + "sayyo/message/send/", this.SY_SendMessageDTO, this.httpOptions);
+// }
 
-// Returns list of MessageDTO
-getMesseges(chatGuid: string): Observable<any[]> {
-  return this.http.get<any[]>(this.APIUrl + "sayyo/message/messagesForChat?chatId=" + chatGuid);
-}
+// // Returns list of MessageDTO
+// getMesseges(chatGuid: string): Observable<any[]> {
+//   return this.http.get<any[]>(this.APIUrl + "sayyo/message/messagesForChat?chatId=" + chatGuid);
+// }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // SearchFriendController

@@ -111,7 +111,7 @@ export class CommunicatorComponent {
   addToGroup(){
     this.friendsExcludingCurrentGroupMembers.forEach((f: { isSelected: boolean; id: string; }) => {
       if (f.isSelected) {
-          this.communicator.addChatMember(this.currentGroupChat.chatId, f.id, 0).subscribe(_res => { });
+          // this.communicator.addChatMember(this.currentGroupChat.chatId, f.id, 0).subscribe(_res => { });
       }
       f.isSelected = false;
     });
@@ -123,27 +123,27 @@ export class CommunicatorComponent {
   }
 
   grantAdmin(member: { memberId: string; id: string; }) {
-    this.communicator.updateChatMember(member.memberId, member.id, this.currentGroupChat.chatId, 1).subscribe(_res => { });;
+    // this.communicator.updateChatMember(member.memberId, member.id, this.currentGroupChat.chatId, 1).subscribe(_res => { });;
   }
 
   denyAdmin(member: { memberId: string; id: string; }) {
-    this.communicator.updateChatMember(member.memberId, member.id, this.currentGroupChat.chatId, 0).subscribe(_res => { });;
+    // this.communicator.updateChatMember(member.memberId, member.id, this.currentGroupChat.chatId, 0).subscribe(_res => { });;
   }
 
   removeFromGroup(id: string) {
-    this.communicator.deleteChatMember(id).subscribe(_res=>{ });
+    // this.communicator.deleteChatMember(id).subscribe(_res=>{ });
   }
 
   leaveGroup() {
-    var members = this.currentGroupChat.members;
-    members.forEach((m: { id: string; memberId: string; })=>{
-      console.log(m.id);
-      console.log(this.UserGuid);
-      if(m.id == this.UserGuid){
-        console.log(m.memberId);
-        this.communicator.deleteChatMember(m.memberId).subscribe(_res => {});
-      }
-    });
+    // var members = this.currentGroupChat.members;
+    // members.forEach((m: { id: string; memberId: string; })=>{
+    //   console.log(m.id);
+    //   console.log(this.UserGuid);
+    //   if(m.id == this.UserGuid){
+    //     console.log(m.memberId);
+    //     this.communicator.deleteChatMember(m.memberId).subscribe(_res => {});
+    //   }
+    // });
   }
 
   toggleGroupChatCreator() {
@@ -159,37 +159,37 @@ export class CommunicatorComponent {
 
   // but first open creator
   createGroupChat() {
-    let chatGuid = "";
-    this.communicator.createChat(1, this.groupName).subscribe(async res => {
-      chatGuid = String(res);
-      // Creator of the group chat is it's owner
-      this.communicator.addChatMember(chatGuid, this.UserGuid, 2).subscribe(_res => { });
-      this.friends.forEach((f: { isSelected: boolean; id: string; }) => {
-        if (f.isSelected) {
-          // Other members have "normal" status by default
-          this.communicator.addChatMember(chatGuid, f.id, 0).subscribe(_res => { });
-          f.isSelected = false;
-        }
-      });
-    });
-    this.activeGroupChatCreator = false;
+    // let chatGuid = "";
+    // this.communicator.createChat(1, this.groupName).subscribe(async res => {
+    //   chatGuid = String(res);
+    //   // Creator of the group chat is it's owner
+    //   this.communicator.addChatMember(chatGuid, this.UserGuid, 2).subscribe(_res => { });
+    //   this.friends.forEach((f: { isSelected: boolean; id: string; }) => {
+    //     if (f.isSelected) {
+    //       // Other members have "normal" status by default
+    //       this.communicator.addChatMember(chatGuid, f.id, 0).subscribe(_res => { });
+    //       f.isSelected = false;
+    //     }
+    //   });
+    // });
+    // this.activeGroupChatCreator = false;
   }
 
   createGroupChat1() {
-    let chatGuid = "";
-    this.communicator.createChat(1, this.groupName).subscribe(async res => {
-      chatGuid = String(res);
-      // Creator of the group chat is it's owner
-      this.communicator.addChatMember(chatGuid, this.UserGuid, 2).subscribe(_res => { });
-      this.friends.forEach((f: { isSelected: boolean; id: string; }) => {
-        if (f.isSelected) {
-          // Other members have "normal" status by default
-          this.communicator.addChatMember(chatGuid, f.id, 0).subscribe(_res => { });
-          f.isSelected = false;
-        }
-      });
-    });
-    this.activeGroupChatCreator = false;
+    // let chatGuid = "";
+    // this.communicator.createChat(1, this.groupName).subscribe(async res => {
+    //   chatGuid = String(res);
+    //   // Creator of the group chat is it's owner
+    //   this.communicator.addChatMember(chatGuid, this.UserGuid, 2).subscribe(_res => { });
+    //   this.friends.forEach((f: { isSelected: boolean; id: string; }) => {
+    //     if (f.isSelected) {
+    //       // Other members have "normal" status by default
+    //       this.communicator.addChatMember(chatGuid, f.id, 0).subscribe(_res => { });
+    //       f.isSelected = false;
+    //     }
+    //   });
+    // });
+    // this.activeGroupChatCreator = false;
   }
 
   toggleSearchArea() {
@@ -238,7 +238,7 @@ export class CommunicatorComponent {
       if ((fs.userId == uId || fs.friendId == uId) && (fs.userId == friendId || fs.friendId == friendId))
         fsGuid = fs.id;
     });
-    this.communicator.deleteFriendship(fsGuid).subscribe(_res => { });
+    // this.communicator.deleteFriendship(fsGuid).subscribe(_res => { });
   }
 
   blockFriend(friendId: string) {
@@ -261,7 +261,7 @@ export class CommunicatorComponent {
     if(friendship.friendId == this.UserGuid)
       blockFromFriend = 1;
 
-    this.communicator.updateFriendshipStatus(fsGuid, friendId, fsStatus, blockFromUser, blockFromFriend).subscribe(_res => { });
+    // this.communicator.updateFriendshipStatus(fsGuid, friendId, fsStatus, blockFromUser, blockFromFriend).subscribe(_res => { });
   }
 
   unlockFriend(friend: { id: string; }) {
@@ -282,7 +282,7 @@ export class CommunicatorComponent {
     if(friendship.friendId == this.UserGuid)
       blockFromFriend = 0;
 
-    this.communicator.updateFriendshipStatus(fsGuid, friend.id, fsStatus, blockFromUser, blockFromFriend).subscribe(_res => { });
+    // this.communicator.updateFriendshipStatus(fsGuid, friend.id, fsStatus, blockFromUser, blockFromFriend).subscribe(_res => { });
   }
 
   rejectInvitation(friend: { id: string; }) {
@@ -293,7 +293,7 @@ export class CommunicatorComponent {
         fsGuid = fs.id;
     });
     // User is the one who invites friend, so when friend reject - set blockFromFriend
-    this.communicator.updateFriendshipStatus(fsGuid, friend.id, 2, 0, 1).subscribe(_res => { });
+    // this.communicator.updateFriendshipStatus(fsGuid, friend.id, 2, 0, 1).subscribe(_res => { });
   }
 
   acceptInvitation(friend: { id: string; }) {
@@ -303,11 +303,11 @@ export class CommunicatorComponent {
       if ((fs.userId == uId || fs.friendId == uId) && (fs.userId == friend.id || fs.friendId == friend.id))
         fsGuid = fs.id;
     });
-    this.communicator.updateFriendshipStatus(fsGuid, friend.id, 1, 0, 0).subscribe(_res => { });
+    // this.communicator.updateFriendshipStatus(fsGuid, friend.id, 1, 0, 0).subscribe(_res => { });
   }
 
   inviteFriend(stranger: { id: string; }) {
-    this.communicator.inviteFriend(stranger.id).subscribe(_res => {});
+    // this.communicator.inviteFriend(stranger.id).subscribe(_res => {});
   }
 
   // already moved to friends component
@@ -320,22 +320,22 @@ export class CommunicatorComponent {
     }
   }
 
-  startChatClick() {
-    // 1. Create chat
-    // 2. Add ChatMembers
-    var chatGuid = "";
-    this.communicator.createChat(0, this.activeFriend.name).subscribe(async res => {
-      chatGuid = String(res);
-      // They are both admins in private chat
-      this.communicator.addChatMember(chatGuid, this.UserGuid, 1).subscribe(_res => { });
-      this.communicator.addChatMember(chatGuid, this.activeFriend.id, 1).subscribe(_res => {
-      });
-      //TODO: refreshing doesnt wor
-      //this.loadChats();
-      // this.activeChatContent = this.friendsChats.find(fc=>fc.chatId == chatGuid);
-      // this.chatClicked(this.activeChatContent);
-    });
-  }
+   startChatClick() {
+  //   // 1. Create chat
+  //   // 2. Add ChatMembers
+  //   var chatGuid = "";
+  //   this.communicator.createChat(0, this.activeFriend.name).subscribe(async res => {
+  //     chatGuid = String(res);
+  //     // They are both admins in private chat
+  //     this.communicator.addChatMember(chatGuid, this.UserGuid, 1).subscribe(_res => { });
+  //     this.communicator.addChatMember(chatGuid, this.activeFriend.id, 1).subscribe(_res => {
+  //     });
+  //     //TODO: refreshing doesnt wor
+  //     //this.loadChats();
+  //     // this.activeChatContent = this.friendsChats.find(fc=>fc.chatId == chatGuid);
+  //     // this.chatClicked(this.activeChatContent);
+  //   });
+   }
 
   //TODO: refreshing messages
 
