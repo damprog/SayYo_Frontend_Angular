@@ -20,6 +20,10 @@ export class NavigationComponent {
 
   closeMenu() {
     this.menuOpen = false;
+  }
+
+  logout(){
+    this.menuOpen = false;
     this._account.logout();
   }
 }

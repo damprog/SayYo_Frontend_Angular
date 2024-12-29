@@ -1,4 +1,4 @@
-
+/*
 
 .login-window{
   margin: 0;
@@ -23,10 +23,10 @@
 /*           THEMES            */
 /* --------------------------- */
 
-.login-window_default-theme{
+/* .login-window_default-theme{
   background: linear-gradient(
     to top,
     #000000,
     #414141
   );
-}
+}  */

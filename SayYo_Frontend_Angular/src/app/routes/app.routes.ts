@@ -4,7 +4,6 @@ import { StartWindowComponent } from '../components/start-window/start-window.co
 import { MainWindowComponent } from '../components/main-window/main-window.component';
 import { LoginWindowComponent } from '../components/start-window/login-window/login-window.component';
 import { RegistrationWindowComponent } from '../components/start-window/registration-window/registration-window.component';
-import { CommunicatorComponent } from '../components/main-window/communicator/communicator.component';
 import { CommunicatorWindowComponent } from '../components/communicator-window/communicator-window.component';
 
 export const routes: Routes = [

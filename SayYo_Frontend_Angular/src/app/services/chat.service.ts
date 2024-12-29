@@ -9,7 +9,6 @@ import {
   SY_UpdateChatMemberDTO,
 } from '../models/dto';
 import { MessagesService } from './messages.service';
-import { combineAll, Observable } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from './account.service';
@@ -55,10 +54,6 @@ export class ChatService {
     if (cachedChat) {
       cachedChat.messages.push(chatMsg[0]);
     }
-    // var activeChat = this.activeChats.find((chat) => chat.chatInfo.chatGuid = message.chatGuid);
-    // if (activeChat) {
-    //   activeChat.messages.push(chatMsg[0]);
-    // }
   }
 
   startChat(friendChat: SY_FriendChatDTO) {

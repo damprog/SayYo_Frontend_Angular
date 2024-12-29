@@ -1,5 +1,3 @@
-
-
 /* GENERAL */
 
 * {
@@ -20,9 +18,9 @@ body {
 /*    THEMES    */
 /*              */
 
-.default .communicator {
-  /* background: linear-gradient(to bottom, #757575 10%, #616161 20%, #515050 60%, #131313); */
-}
+/* .default .communicator {
+  background: linear-gradient(to bottom, #757575 10%, #616161 20%, #515050 60%, #131313);
+} */
 
 .default .options-wrapper {
   background-color: gray;
@@ -46,9 +44,9 @@ body {
   color: rgb(255, 255, 255);
   background-color: rgb(75, 75, 75);
 }
-.default .groupchats .groupchat {
-  /* background-color: white; */
-}
+/*.default .groupchats .groupchat {
+   background-color: white;
+}*/
 .default .groupchats .groupchat:hover {
   background-color: rgb(100, 100, 100);
 }
@@ -98,9 +96,9 @@ body {
   background-color: rgb(75, 75, 75);
 }
 
-.default .friend {
-  /* background-color: white; */
-}
+/*.default .friend {
+   background-color: white;
+}*/
 
 .default .friend:hover {
   background-color: rgb(100, 100, 100);
@@ -170,8 +168,6 @@ body {
   transition: all 0.3s 0s ease-in;
   z-index: 1;
 }
-
-
 
 /* ### Group Chats Area --------------------------*/
 .groupchats {

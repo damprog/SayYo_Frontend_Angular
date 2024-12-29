@@ -11,12 +11,17 @@ import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { UserAccount } from '../models/model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  constructor(private _http: HttpClient, private _conn: ConnectionService) {}
+  constructor(
+    private _http: HttpClient,
+    private _conn: ConnectionService,
+    private _router: Router
+    ) {}
 
   // ----------------------------------------------------------------------------------------------------------------------------------------------
   // For testing
@@ -49,6 +54,10 @@ export class AccountService {
   };
   isLoggedIn: boolean = false;
 
+  refreshToken(refreshToken: string): Observable<any> {
+    return this._http.post('/refreshToken', { refreshToken });
+  }
+
   logout(): void {
     this.account = {
       userGuid: this.DEFAULT_ACCOUNT_ID,
@@ -58,6 +67,15 @@ export class AccountService {
       photoFileName: this.DEFAULT_PHOTO,
     };
     this.isLoggedIn = false;
+
+    var refreshToken = localStorage.getItem('refreshToken');
+    if(refreshToken){
+      this._http.post(this.API_URL + 'sayyo/user/revokeRefreshToken', refreshToken);
+    }
+
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    this._router.navigate(['/start/login']);
   }
 
   login(email: string, password: string): Observable<SY_ResponseStatus> {
@@ -77,8 +95,10 @@ export class AccountService {
         map((response: any) => {
 
           localStorage.setItem('authToken', response.token);
+          localStorage.setItem('refreshToken', response.refreshToken);
 
           console.log("token: " + response.token);
+          console.log("refreshToken: " + response.refreshToken);
           console.log("user: " + response.user);
 
           this.account = {
@@ -105,32 +125,6 @@ export class AccountService {
           } as SY_ResponseStatus);
         })
       );
-
-    // ).pipe(
-    //   map((userDTO: SY_UserDTO) => {
-    //     this.account = {
-    //       userGuid: userDTO.guid,
-    //       userName: userDTO.userName,
-    //       email: userDTO.email,
-    //       isAdmin: userDTO.isAdmin,
-    //       photoFileName: this.DEFAULT_PHOTO,
-    //     };
-    //     this.isLoggedIn = true;
-    //     console.log("Test1 guid: "+this.account.userGuid);
-    //     return  {
-    //       success: true,
-    //       message: "Pomyślnie zalogowano."
-    //     } as SY_ResponseStatus;
-    //   }),
-    //   catchError((error: HttpErrorResponse) => {
-    //     console.error('Wystąpił błąd:', error.message);
-    //     this.isLoggedIn = false;
-    //     return  of({
-    //       success: false,
-    //       message: error.error
-    //     } as SY_ResponseStatus);
-    //   })
-    // );
   }
 
   register(

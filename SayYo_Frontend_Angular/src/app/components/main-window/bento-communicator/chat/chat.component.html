@@ -28,7 +28,6 @@
     >
       <div class="messages" #messagesContainer>
         <ng-container *ngFor="let message of chat.messages">
-          <!-- <ng-container *ngIf="message.chatGuid === chat.chatInfo.chatGuid"> -->
           <div class="date" *ngIf="message.otherDate">
             <div class="date-line-left"></div>
             <div class="date-output">{{ message.date }}</div>
@@ -53,7 +52,6 @@
             </p>
           </div>
           <div class="next"></div>
-          <!-- </ng-container> -->
         </ng-container>
       </div>
 

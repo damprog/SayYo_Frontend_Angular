@@ -10,7 +10,7 @@
 
   <nav class="navbar">
     <ng-container *ngIf="isLoggedIn">
-       <a routerLink="/start/login" routerLinkActive="active" aria-current="page" style="--i:1;" (click)="closeMenu()">Wyloguj</a>
+       <a routerLink="/start/login" routerLinkActive="active" aria-current="page" style="--i:1;" (click)="logout()">Wyloguj</a>
     </ng-container>
      <ng-container *ngIf="!isLoggedIn">
       <a routerLink="/start/login" routerLinkActive="active" aria-current="page" style="--i:0;" (click)="closeMenu()">Login</a>

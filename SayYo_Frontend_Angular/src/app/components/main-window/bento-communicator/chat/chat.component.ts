@@ -1,6 +1,5 @@
 import { ChatService } from './../../../../services/chat.service';
 import {
-  AfterViewChecked,
   Component,
   ElementRef,
   OnDestroy,
@@ -44,13 +43,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messagesContainer.nativeElement.scrollHeight;
     }, 0);
   }
-
-  // ngAfterViewChecked(): void {
-  //   // Automatically scroll to bottom when user is on the bottom of messages
-  //   if (this.isScrolledToBottom()) {
-  //     this.scrollToBottom();
-  //   }
-  // }
 
   onNewMessage(): void {
     if (this.isScrolledToBottom()) {

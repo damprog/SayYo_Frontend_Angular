@@ -33,7 +33,6 @@ export class LoginWindowComponent {
         .subscribe({
           next: (result: SY_ResponseStatus) => {
             if (result.success) {
-              console.log("Test2");
               this._router.navigate(['/main']);
             } else {
               alert(result.message);

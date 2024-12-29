@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommunicatorService } from '../../services/communicator.service';
-import { forkJoin } from 'rxjs';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 
@@ -17,10 +16,9 @@ export class MainWindowComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    if(!this._accountService.isLoggedIn){
-      this._router.navigate(['/start/login']);
-    }
-    // throw new Error('Method not implemented.');
+    // if(!this._accountService.isLoggedIn){
+    //   this._router.navigate(['/start/login']);
+    // }
   }
 
 }

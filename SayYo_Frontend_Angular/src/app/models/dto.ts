@@ -37,6 +37,7 @@ export interface SY_RegisterResponseDTO {
 
 export interface SY_LoginResponseDTO {
   token: string;
+  refreshToken: string;
   user: SY_UserDTO;
 }
 
