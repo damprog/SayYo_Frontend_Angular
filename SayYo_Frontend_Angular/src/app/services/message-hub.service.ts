@@ -45,6 +45,7 @@ export class MessageHubService {
   }
 
   onReceiveMessage(callback: (message: SY_MessageDTO) => void) {
-    this.hubConnection.on('ReceiveMessage', callback);
+    this.hubConnection.off('ReceiveMessage');
+  this.hubConnection.on('ReceiveMessage', callback);
   }
 }

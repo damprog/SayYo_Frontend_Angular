@@ -1,36 +1,63 @@
 import { ChatService } from './../../../../services/chat.service';
-import { Component } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { AccountService } from '../../../../services/account.service';
 import { SY_FriendChatDTO } from '../../../../models/dto';
 import { Chat } from '../../../../models/model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit, OnDestroy {
   constructor(
     protected chatService: ChatService,
     protected accountService: AccountService
   ) {}
 
-  // // DATA
-  // friendshipList: any; // id, userId, friendId, status, blockFromUser, blockFromFriend
-  // usersDTOList: any; // list of all userDTO (id, userName, email)
-  // strangersDTOList: any; // list of strangers UserDTO type
-  // friends: any; // only friends - id, name, status, isSelected (creating group purposes), options (0 - closed, 1 - opened), isBlockedFriend (not in sql: false, true), invitation (not in sql: false, true)
-  // friendsChats: any; // list of: chatId, chatType, chatName, friend(id, memberId, userName, email, chatRole, friendshipStatus)
-  // chatsMessages: any; // list of (chatId, list of message(id, chatId, senderId, content, sentAt, date, time, otherDate))
+  @ViewChild('messagesContainer', { static: false })
+  private messagesContainer!: ElementRef;
+  private messageSubscription!: Subscription;
 
-  // // uzywne niby
+  private isScrolledToBottom(): boolean {
+    if (!this.messagesContainer) return false;
+    const { scrollTop, scrollHeight, clientHeight } =
+      this.messagesContainer.nativeElement;
+    return scrollTop + clientHeight >= scrollHeight - 10; // Check if bottom of messages container
+  }
 
-  // activeFriend: any; // friend retrieved from friends
-  // activeChatContent: any; // active chat retrieved from friendsChats
-  // activeChatMessages: any;// active chat content retrieved from chatsMessages
-  // // FLAGS
-  // activeChat: Boolean = false; // true if there are messages
-  // UserGuid: any;
+  private scrollToBottom(): void {
+    if (!this.messagesContainer) return;
+
+    setTimeout(() => {
+      console.log('scrollToBottom ok');
+
+      this.messagesContainer.nativeElement.scrollTop =
+        this.messagesContainer.nativeElement.scrollHeight;
+    }, 0);
+  }
+
+  // ngAfterViewChecked(): void {
+  //   // Automatically scroll to bottom when user is on the bottom of messages
+  //   if (this.isScrolledToBottom()) {
+  //     this.scrollToBottom();
+  //   }
+  // }
+
+  onNewMessage(): void {
+    if (this.isScrolledToBottom()) {
+      this.scrollToBottom();
+      console.log('scrollToBottom');
+    }
+  }
 
   startChatClick(friendChat: SY_FriendChatDTO) {
     this.chatService.startChat(friendChat);
@@ -41,10 +68,19 @@ export class ChatComponent {
     if (message && message.length !== 0) {
       this.chatService.sendMessage(chat.chatInfo.chatGuid, message);
     }
-    chat.currentMessage = "";
+    chat.currentMessage = '';
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.chatService.messageHubSetup();
+    this.messageSubscription = this.chatService.onNewMessage.subscribe(() => {
+      this.onNewMessage();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Chat, ChatMessage } from '../models/model';
 import {
   SY_FriendChatDTO,
@@ -9,7 +9,7 @@ import {
   SY_UpdateChatMemberDTO,
 } from '../models/dto';
 import { MessagesService } from './messages.service';
-import { Observable } from 'rxjs';
+import { combineAll, Observable } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from './account.service';
@@ -29,6 +29,8 @@ export class ChatService {
     private _http: HttpClient
   ) {}
 
+  public onNewMessage: EventEmitter<void> = new EventEmitter<void>();
+
   emptyGuid: string = '00000000-0000-0000-0000-000000000000';
 
   cachedChats: Array<Chat> = [];
@@ -39,10 +41,24 @@ export class ChatService {
     this._messageHubService.startConnection(this._account.TEST_UserGuid);
 
     this._messageHubService.onReceiveMessage((message) => {
-      console.log("Received message", message);
+      this.handleNewMessage(message);
+      this.onNewMessage.emit();
     });
 
     console.log("Setup Message Hub Service");
+  }
+
+  handleNewMessage(message: SY_MessageDTO){
+    var cachedChat = this.cachedChats.find((chat) => chat.chatInfo.chatGuid = message.chatGuid);
+    let syMsgs = [message];
+    const chatMsg = this.convertMessages(syMsgs);
+    if (cachedChat) {
+      cachedChat.messages.push(chatMsg[0]);
+    }
+    // var activeChat = this.activeChats.find((chat) => chat.chatInfo.chatGuid = message.chatGuid);
+    // if (activeChat) {
+    //   activeChat.messages.push(chatMsg[0]);
+    // }
   }
 
   startChat(friendChat: SY_FriendChatDTO) {
@@ -250,7 +266,19 @@ export class ChatService {
       const minutes = String(dateObj.getMinutes()).padStart(2, '0');
       const formattedTime = `${hours}:${minutes}`;
 
-      const otherDate = previousDate !== formattedDate ? 1 : 0;
+      let othDate = 1;
+      if (messages.length === 1) {
+        const chat = this.cachedChats.find(chat => chat.chatInfo.chatGuid === message.chatGuid);
+
+        if (chat && chat.messages.length > 0) {
+          const compareMsg = chat.messages[chat.messages.length - 1];
+          othDate = compareMsg.date !== formattedDate ? 1 : 0;
+        }
+      } else {
+        othDate = previousDate !== formattedDate ? 1 : 0;
+      }
+
+      const otherDate = othDate;
       previousDate = formattedDate;
 
       return {

@@ -26,7 +26,7 @@
       class="chat-ok"
       *ngIf="chat.chatInfo.chatGuid != chatService.emptyGuid"
     >
-      <div class="messages">
+      <div class="messages" #messagesContainer>
         <ng-container *ngFor="let message of chat.messages">
           <!-- <ng-container *ngIf="message.chatGuid === chat.chatInfo.chatGuid"> -->
           <div class="date" *ngIf="message.otherDate">
