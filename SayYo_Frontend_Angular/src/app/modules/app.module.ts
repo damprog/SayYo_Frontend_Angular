@@ -2,7 +2,7 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AccountService } from '../services/account.service';
@@ -25,6 +25,7 @@ import { FriendsComponent } from '../components/main-window/bento-communicator/c
 import { GroupsComponent } from '../components/main-window/bento-communicator/community/groups/groups.component';
 import { CommunicatorWindowComponent } from '../components/communicator-window/communicator-window.component';
 import { AccountComponent } from '../components/main-window/bento-communicator/community/account/account.component';
+import { JwtInterceptor } from '../inceptors/jwt.inceptor';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,9 @@ import { AccountComponent } from '../components/main-window/bento-communicator/c
     RouterModule,
     AppRoutingModule,
   ],
-  providers: [ConnectionService, AccountService, CommunicatorService],
+  providers: [ConnectionService, AccountService, CommunicatorService,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  ],
   schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent],
 })

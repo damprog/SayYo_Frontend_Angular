@@ -35,6 +35,11 @@ export interface SY_RegisterResponseDTO {
   guid: string;
 }
 
+export interface SY_LoginResponseDTO {
+  token: string;
+  user: SY_UserDTO;
+}
+
 // --------------------------------------
 // CONTACTS SERVICE
 // --------------------------------------
