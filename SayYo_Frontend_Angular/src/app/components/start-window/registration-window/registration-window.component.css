@@ -22,16 +22,16 @@
 }
 
 .form_input-container {
-  margin-bottom: 32px;
   position: relative;
+  margin-bottom: 32px;
 }
 
 .form_input,
 .form_button {
+  position: relative;
   border: none;
   border-radius: 18px;
   padding: 12px 24px;
-  position: relative;
   transition: box-shadow 0.3s ease-in, outline 0.3s ease-in;
   overflow: hidden;
 }
@@ -44,13 +44,15 @@
 
 .form_input:hover + .form_label {
   left: 7%;
-  opacity: 0.2;
+  opacity: 0.7;
 }
 
 .form_input:focus + .form_label,
 .form_input:not(:placeholder-shown) + .form_label {
-  left: 100%;
-  opacity: 0;
+  top: 0;
+  transform: translateY(-100%);
+  font-size: 1rem;
+  opacity: 0.7;
 }
 
 .form_button:after {
@@ -158,6 +160,10 @@
 .form_input_default-theme:hover:not(:focus),
 .form_button_default-theme:hover:not(:focus) {
   box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.3);
+}
+
+.form_input_default-theme:hover + .form_label_default-theme {
+  color: rgba(255, 255, 255);
 }
 
 .form_label_default-theme {
