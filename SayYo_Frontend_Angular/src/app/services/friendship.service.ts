@@ -30,7 +30,7 @@ export class FriendshipService {
   // Returns Created and friendship guid
   inviteFriend(friendGuid: string) {
     const invitation: SY_AddFriendshipDTO = {
-      userGuid: this._account.TEST_UserGuid,
+      userGuid: this._account.account.userGuid,
       friendGuid: friendGuid,
       status: 0,
     };
@@ -49,7 +49,7 @@ export class FriendshipService {
   ) {
     // Friendship status is unknown - backend set proper value
     const updateFriendship: SY_UpdateFriendshipDTO = {
-      userGuid: this._account.TEST_UserGuid,
+      userGuid: this._account.account.userGuid,
       friendGuid: friendGuid,
       status: status,
       blockFromUser: blockFromUser,

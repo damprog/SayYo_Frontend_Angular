@@ -21,7 +21,7 @@ export class MessagesService {
 sendMessage(chatGuid: string, content: string): Observable<SY_ResponseStatus>{
   const send: SY_SendMessageDTO = {
     ChatGuid: chatGuid,
-    SenderGuid: this._account.TEST_UserGuid,
+    SenderGuid: this._account.account.userGuid,
     Message: content
   }
   return this._sendMessage_EDP(send).pipe(

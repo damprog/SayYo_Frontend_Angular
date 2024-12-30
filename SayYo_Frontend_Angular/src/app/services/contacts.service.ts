@@ -328,7 +328,7 @@ export class ContactsService {
     return this._http.get<Array<SY_FriendChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getActiveFriendChats?userGuid=' +
-        this._account.TEST_UserGuid
+        this._account.account.userGuid
     );
   }
 
@@ -336,7 +336,7 @@ export class ContactsService {
     return this._http.get<Array<SY_FriendChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getAwaitingFriendChats?userGuid=' +
-        this._account.TEST_UserGuid
+        this._account.account.userGuid
     );
   }
 
@@ -344,7 +344,7 @@ export class ContactsService {
     return this._http.get<Array<SY_FriendChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getBlockedFriendChats?userGuid=' +
-        this._account.TEST_UserGuid
+        this._account.account.userGuid
     );
   }
 
@@ -352,7 +352,7 @@ export class ContactsService {
     return this._http.get<Array<SY_GroupChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getGroupChats?userGuid=' +
-        this._account.TEST_UserGuid
+        this._account.account.userGuid
     );
   }
 

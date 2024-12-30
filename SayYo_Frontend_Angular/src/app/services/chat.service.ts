@@ -36,19 +36,21 @@ export class ChatService {
   activeChats: Array<Chat> = [];
   helloContainerActive: Boolean = true;
 
-  messageHubSetup(){
-    this._messageHubService.startConnection(this._account.TEST_UserGuid);
+  messageHubSetup() {
+    this._messageHubService.startConnection(this._account.account.userGuid);
 
     this._messageHubService.onReceiveMessage((message) => {
       this.handleNewMessage(message);
       this.onNewMessage.emit();
     });
 
-    console.log("Setup Message Hub Service");
+    console.log('Setup Message Hub Service');
   }
 
-  handleNewMessage(message: SY_MessageDTO){
-    var cachedChat = this.cachedChats.find((chat) => chat.chatInfo.chatGuid = message.chatGuid);
+  handleNewMessage(message: SY_MessageDTO) {
+    var cachedChat = this.cachedChats.find(
+      (chat) => (chat.chatInfo.chatGuid = message.chatGuid)
+    );
     let syMsgs = [message];
     const chatMsg = this.convertMessages(syMsgs);
     if (cachedChat) {
@@ -75,7 +77,7 @@ export class ChatService {
     this.createChat(addChat).subscribe(async (res) => {
       const chatGuid = String(res);
       // They are both admins in private chat
-      this.addChatMember(chatGuid, this._account.TEST_UserGuid, 1).subscribe(
+      this.addChatMember(chatGuid, this._account.account.userGuid, 1).subscribe(
         (_res) => {}
       );
       this.addChatMember(chatGuid, friendChat.friend.guid, 1).subscribe(
@@ -111,36 +113,44 @@ export class ChatService {
         chat = cachedChat;
         this.activeChats.push(chat);
       } else {
-        let syMessages: Array<SY_MessageDTO> = [];
-        // Fetch messages from API
-        this._messagesService.getMessages(friendChat.chatGuid).subscribe({
-          next: (fetchedMessages: Array<SY_MessageDTO>) => {
-            syMessages = fetchedMessages;
-            console.log('Messages fetched');
+        chat = {
+          chatInfo: friendChat,
+          messages: [],
+        };
 
-            syMessages = syMessages.sort(
-              (a, b) =>
-                new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
-            );
+        if (friendChat.chatGuid !== this.emptyGuid) {
+          let syMessages: Array<SY_MessageDTO> = [];
+          // Fetch messages from API
+          this._messagesService.getMessages(friendChat.chatGuid).subscribe({
+            next: (fetchedMessages: Array<SY_MessageDTO>) => {
+              syMessages = fetchedMessages;
+              console.log('Messages fetched');
 
-            const chatMessages: Array<ChatMessage> =
-              this.convertMessages(syMessages);
-            console.log('chatMessages', chatMessages);
+              syMessages = syMessages.sort(
+                (a, b) =>
+                  new Date(a.sentAt).getTime() - new Date(b.sentAt).getTime()
+              );
 
-            chat = {
-              chatInfo: friendChat,
-              messages: chatMessages,
-            };
+              const chatMessages: Array<ChatMessage> =
+                this.convertMessages(syMessages);
+              console.log('chatMessages', chatMessages);
 
-            this.addToCachedChats(chat);
-            this.activeChats.push(chat);
-            console.log('Chat added: ' + friendChat.friend.guid);
-            this.checkHelloContainer();
-          },
-          error: (error) => {
-            console.error('Failed to fetch messages:', error);
-          },
-        });
+              chat.messages = chatMessages;
+
+              this.addToCachedChats(chat);
+              this.activeChats.push(chat);
+              console.log('Chat added: ' + friendChat.friend.guid);
+              this.checkHelloContainer();
+            },
+            error: (error) => {
+              console.error('Failed to fetch messages:', error);
+            },
+          });
+        } else {
+          this.addToCachedChats(chat);
+          this.activeChats.push(chat);
+          console.log('Start Chat added: ' + friendChat.friend.guid);
+        }
       }
     }
     this.checkHelloContainer();
@@ -263,7 +273,9 @@ export class ChatService {
 
       let othDate = 1;
       if (messages.length === 1) {
-        const chat = this.cachedChats.find(chat => chat.chatInfo.chatGuid === message.chatGuid);
+        const chat = this.cachedChats.find(
+          (chat) => chat.chatInfo.chatGuid === message.chatGuid
+        );
 
         if (chat && chat.messages.length > 0) {
           const compareMsg = chat.messages[chat.messages.length - 1];

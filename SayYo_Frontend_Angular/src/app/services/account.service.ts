@@ -25,7 +25,7 @@ export class AccountService {
 
   // ----------------------------------------------------------------------------------------------------------------------------------------------
   // For testing
-  TEST_UserGuid = 'd9d4b0ce-82cc-4e14-ae2d-007b51cbe4c9';
+  // TEST_UserGuid = 'd9d4b0ce-82cc-4e14-ae2d-007b51cbe4c9';
 
   // Default config for not logged in user
   readonly DEFAULT_ACCOUNT_ID: string = '10'; // default user guid - 10 (that does not exist)
@@ -55,6 +55,7 @@ export class AccountService {
   isLoggedIn: boolean = false;
 
   refreshToken(refreshToken: string): Observable<any> {
+    console.log("refreshToken");
     return this._http.post('/refreshToken', { refreshToken });
   }
 
