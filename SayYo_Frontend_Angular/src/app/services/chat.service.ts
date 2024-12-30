@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 import { AccountService } from './account.service';
 import { FriendshipService } from './friendship.service';
 import { MessageHubService } from './message-hub.service';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,7 @@ export class ChatService {
   ) {}
 
   public onNewMessage: EventEmitter<void> = new EventEmitter<void>();
+  private cleanup_Subscription!: Subscription;
 
   emptyGuid: string = '00000000-0000-0000-0000-000000000000';
 
@@ -45,6 +47,15 @@ export class ChatService {
     });
 
     console.log('Setup Message Hub Service');
+
+    // Add subscription for cleaning chat
+    if (this.cleanup_Subscription) {
+      this.cleanup_Subscription.unsubscribe();
+    }
+    this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
+      this.releaseChats();
+      this.stopSignalRConnection();
+    });
   }
 
   handleNewMessage(message: SY_MessageDTO) {
@@ -239,6 +250,18 @@ export class ChatService {
   // ----------------------------
   // Helpers
   // ----------------------------
+  releaseChats(){
+    console.log("Before Released chats", this.activeChats, this.cachedChats);
+
+    this.activeChats = [];
+    this.cachedChats = [];
+    console.log("Released chats", this.activeChats, this.cachedChats);
+  }
+
+  stopSignalRConnection() {
+    this._messageHubService.stopConnection();
+  }
+
   checkHelloContainer() {
     this.helloContainerActive = this.activeChats.length === 0;
   }

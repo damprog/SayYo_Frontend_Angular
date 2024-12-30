@@ -6,7 +6,7 @@ import {
   SY_UserDTO,
   SY_LoginResponseDTO,
 } from './../models/dto';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Input } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { ConnectionService } from './connection.service';
@@ -21,11 +21,10 @@ export class AccountService {
     private _http: HttpClient,
     private _conn: ConnectionService,
     private _router: Router
-    ) {}
+  ) {}
 
-  // ----------------------------------------------------------------------------------------------------------------------------------------------
-  // For testing
-  // TEST_UserGuid = 'd9d4b0ce-82cc-4e14-ae2d-007b51cbe4c9';
+  // ------------------------------------------------------------------------------------
+   public cleanup_Emitter: EventEmitter<void> = new EventEmitter<void>();
 
   // Default config for not logged in user
   readonly DEFAULT_ACCOUNT_ID: string = '10'; // default user guid - 10 (that does not exist)
@@ -54,8 +53,12 @@ export class AccountService {
   };
   isLoggedIn: boolean = false;
 
+  cleanup(): void {
+    this.cleanup_Emitter.emit();
+  }
+
   refreshToken(refreshToken: string): Observable<any> {
-    console.log("refreshToken");
+    console.log('refreshToken');
     return this._http.post('/refreshToken', { refreshToken });
   }
 
@@ -67,11 +70,14 @@ export class AccountService {
       isAdmin: false,
       photoFileName: this.DEFAULT_PHOTO,
     };
+    this.cleanup();
     this.isLoggedIn = false;
-
     var refreshToken = localStorage.getItem('refreshToken');
-    if(refreshToken){
-      this._http.post(this.API_URL + 'sayyo/user/revokeRefreshToken', refreshToken);
+    if (refreshToken) {
+      this._http.post(
+        this.API_URL + 'sayyo/user/revokeRefreshToken',
+        refreshToken
+      );
     }
 
     localStorage.removeItem('authToken');
@@ -82,7 +88,8 @@ export class AccountService {
   login(email: string, password: string): Observable<SY_ResponseStatus> {
     this.SY_LoginDTO.email = email;
     this.SY_LoginDTO.password = password;
-    console.log("AccountService login1");
+    this.cleanup();
+    console.log('AccountService login');
     return this._http
       .post<SY_LoginResponseDTO>(
         this.API_URL + 'sayyo/user/login/',
@@ -94,13 +101,12 @@ export class AccountService {
       )
       .pipe(
         map((response: any) => {
-
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('refreshToken', response.refreshToken);
 
-          console.log("token: " + response.token);
-          console.log("refreshToken: " + response.refreshToken);
-          console.log("user: " + response.user);
+          console.log('token: ' + response.token);
+          console.log('refreshToken: ' + response.refreshToken);
+          console.log('user: ' + response.user);
 
           this.account = {
             userGuid: response.user.guid,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, Subscription, catchError, map, of } from 'rxjs';
 import { SY_FriendChatDTO, SY_GroupChatDTO, SY_ResponseStatus, SY_UserDTO } from '../models/dto';
 import { FriendsChats, GroupChats } from '../models/model';
 
@@ -20,6 +20,8 @@ export class ContactsService {
     this.friendsChats_Blocked.items = new Array<SY_FriendChatDTO>();
     this.groupChats.items = new Array<SY_GroupChatDTO>();
   }
+
+  private cleanup_Subscription!: Subscription;
 
   friendsChats_Ok: FriendsChats = {
     items: [],
@@ -41,6 +43,16 @@ export class ContactsService {
   // AwaitingFriends: Array<SY_UserDTO> = [];
   // BlockedFriends: Array<SY_UserDTO> = [];
 
+  releaseFriendChats() {
+    console.log("Before Released FriendChats", this.friendsChats_Ok, this.friendsChats_Awaiting, this.friendsChats_Blocked);
+
+    this.friendsChats_Ok.items = [];
+    this.friendsChats_Awaiting.items = [];
+    this.friendsChats_Blocked.items = [];
+
+    console.log("Released FriendChats", this.friendsChats_Ok, this.friendsChats_Awaiting, this.friendsChats_Blocked);
+  }
+
   getStrangers(): Observable<SY_ResponseStatus> {
     return of({
       success: false,
@@ -49,6 +61,15 @@ export class ContactsService {
   }
 
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
+    // Add subscription for cleaning chat
+    if (this.cleanup_Subscription) {
+      this.cleanup_Subscription.unsubscribe();
+    }
+    this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
+      this.releaseFriendChats();
+    });
+
+
     if (this.friendsChats_Ok.items.length == 0) {
       console.log('getFriendChats_ok');
 

@@ -11,6 +11,11 @@ export class MessageHubService {
 
   private hubConnection!: signalR.HubConnection;
 
+  stopConnection(){
+    this.hubConnection.stop();
+    console.log('SignalR connection stopped.');
+  }
+
   startConnection(userGuid: string) {
     const token = localStorage.getItem('authToken');
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
