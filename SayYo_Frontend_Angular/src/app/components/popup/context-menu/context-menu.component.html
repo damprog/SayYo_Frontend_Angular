@@ -1,0 +1,9 @@
+<div class="context-menu" [class.visible]="visible">
+  <p>{{ contextMenu.name }}</p>
+  <ul>
+    <li *ngFor="let item of contextMenu.menuItems" (click)="item.action()">
+      {{ item.label }}
+    </li>
+  </ul>
+</div>
+

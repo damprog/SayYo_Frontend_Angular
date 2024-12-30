@@ -56,9 +56,11 @@ export interface SY_FriendMemberDTO {
   guid: string;
   chatMemberGuid: string;
   chatRole: number;
+  friendshipGuid: string;
   friendshipStatus: number;
-  blockFromUser: number;
-  blockFromFriend: number;
+  iBlockedUser: number;
+  userBlockedMe: number;
+  iInvited: boolean;
 }
 
 export interface SY_GroupChatDTO {
@@ -118,8 +120,8 @@ export interface SY_UpdateFriendshipDTO {
   userGuid: string;
   friendGuid: string;
   status: number;
-  blockFromUser: number;
-  blockFromFriend: number;
+  iBlockedUser: number;
+  userBlockedMe: number;
 }
 
 export interface SY_FindFriendshipDTO {

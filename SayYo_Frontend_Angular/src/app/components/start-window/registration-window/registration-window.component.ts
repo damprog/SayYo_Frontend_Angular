@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SpinnerService } from '../../../services/spinner.service';
 import { SY_ResponseStatus } from '../../../models/dto';
+import { ModalService } from '../../../services/modal.service';
 
 @Component({
   selector: 'app-registration-window',
@@ -14,6 +15,7 @@ export class RegistrationWindowComponent {
   registerForm: FormGroup;
 
   constructor(
+    private _modalService: ModalService,
     private _account: AccountService,
     private _router: Router,
     private _fb: FormBuilder,
@@ -45,9 +47,9 @@ export class RegistrationWindowComponent {
           next: (result: SY_ResponseStatus) => {
             if (result.success) {
               this._router.navigate(['/main']);
-              alert(result.message);
+              this._modalService.showModal(result.message);
             } else {
-              alert(result.message);
+              this._modalService.showModal(result.message);
             }
           },
           error: (error) => {
@@ -59,7 +61,7 @@ export class RegistrationWindowComponent {
         });
     } else {
       this.spinnerService.hide();
-      alert('Niepoprawnie uzupełniony formularz rejestracji.');
+      this._modalService.showModal('Niepoprawnie uzupełniony formularz rejestracji.');
     }
   }
 }

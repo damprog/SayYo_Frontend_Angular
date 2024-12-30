@@ -44,13 +44,13 @@ export class ContactsService {
   // BlockedFriends: Array<SY_UserDTO> = [];
 
   releaseFriendChats() {
-    console.log("Before Released FriendChats", this.friendsChats_Ok, this.friendsChats_Awaiting, this.friendsChats_Blocked);
+    console.log("Before Released FriendChats", this.friendsChats_Ok.items, this.friendsChats_Awaiting.items, this.friendsChats_Blocked.items);
 
     this.friendsChats_Ok.items = [];
     this.friendsChats_Awaiting.items = [];
     this.friendsChats_Blocked.items = [];
 
-    console.log("Released FriendChats", this.friendsChats_Ok, this.friendsChats_Awaiting, this.friendsChats_Blocked);
+    console.log("Released FriendChats", this.friendsChats_Ok.items, this.friendsChats_Awaiting.items, this.friendsChats_Blocked.items);
   }
 
   getStrangers(): Observable<SY_ResponseStatus> {

@@ -23,7 +23,7 @@ export class MessageHubService {
       return;
     }
 
-    console.log("token from local storage:" + token);
+    console.log("SignalR: start connection with token:" + token);
 
     // Create connection config
     this.hubConnection = new signalR.HubConnectionBuilder()

@@ -1,0 +1,45 @@
+.context-menu {
+  position: fixed;
+  background: #444;
+  border: 1px solid #666;
+  border-radius: 5px;
+  padding: 0 0 10px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 1000;
+  width: fit-content;
+  min-width: fit-content;
+  color: white;
+  text-align: left;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+  background: #333;
+  border-bottom: 1px solid white;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  height: fit-content;
+  text-align: center;
+}
+
+.context-menu.visible {
+  display:block;
+}
+
+.context-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.context-menu li {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.context-menu li:hover {
+  background-color: #555;
+}

@@ -14,7 +14,7 @@
 
     <span>ZNAJOMI</span>
 
-    <div id="add" class="btn-icon">
+    <div id="add" class="btn-icon" (click)="_modalService.showModal('sad')">
       <i id="icon-add" class="bx bxs-user-plus"></i>
     </div>
   </div>
@@ -66,7 +66,7 @@
           </span>
         </div>
 
-        <div class="options">
+        <div class="options" (click)="showContextMenu($event, x)">
           <div class="option-dot"></div>
           <div class="option-dot"></div>
           <div class="option-dot"></div>
@@ -88,7 +88,7 @@
           </span>
         </div>
 
-        <div class="options">
+        <div class="options" (click)="showContextMenu($event, x)">
           <div class="option-dot"></div>
           <div class="option-dot"></div>
           <div class="option-dot"></div>
@@ -110,7 +110,7 @@
           </span>
         </div>
 
-        <div class="options">
+        <div class="options" (click)="showContextMenu($event, x)">
           <div class="option-dot"></div>
           <div class="option-dot"></div>
           <div class="option-dot"></div>

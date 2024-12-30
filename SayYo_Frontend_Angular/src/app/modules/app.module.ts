@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule, APP_INITIALIZER, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,10 @@ import { CommunicatorWindowComponent } from '../components/communicator-window/c
 import { AccountComponent } from '../components/main-window/bento-communicator/community/account/account.component';
 import { JwtInterceptor } from '../inceptors/jwt.inceptor';
 
+export function initializeApp(accountService: AccountService) {
+  return () => accountService.tryLoginWithToken_Promise();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +46,7 @@ import { JwtInterceptor } from '../inceptors/jwt.inceptor';
     FriendsComponent,
     GroupsComponent,
     LeftMenuComponent,
-    CommunicatorWindowComponent
+    CommunicatorWindowComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,8 +58,17 @@ import { JwtInterceptor } from '../inceptors/jwt.inceptor';
     RouterModule,
     AppRoutingModule,
   ],
-  providers: [ConnectionService, AccountService, CommunicatorService,
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  providers: [
+    ConnectionService,
+    AccountService,
+    CommunicatorService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AccountService],
+      multi: true,
+    },
   ],
   schemas: [NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent],

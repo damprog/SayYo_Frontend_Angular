@@ -46,3 +46,17 @@ export interface Chat {
   messages: Array<ChatMessage>;
   currentMessage?: string;
 }
+
+// --------------------------------------
+// CONTEXT MENU
+// --------------------------------------
+
+export interface ContextMenu {
+  name: string;
+  menuItems: Array<MenuItem>
+}
+
+export interface MenuItem {
+  label: string;
+  action: any;
+}

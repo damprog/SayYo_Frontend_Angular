@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../../services/account.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SY_ResponseStatus } from '../../../models/dto';
 import { SpinnerService } from '../../../services/spinner.service';
+import { ModalService } from '../../../services/modal.service';
 
 @Component({
   selector: 'app-login-window',
   templateUrl: './login-window.component.html',
   styleUrl: './login-window.component.css',
 })
-export class LoginWindowComponent {
+export class LoginWindowComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(
+    private _modalService: ModalService,
     private _account: AccountService,
     private _router: Router,
     private _fb: FormBuilder,
@@ -25,6 +27,8 @@ export class LoginWindowComponent {
     });
   }
 
+  ngOnInit() {}
+
   onLogin() {
     this.spinnerService.show();
     if (this.loginForm.valid) {
@@ -35,11 +39,13 @@ export class LoginWindowComponent {
             if (result.success) {
               this._router.navigate(['/main']);
             } else {
-              alert(result.message);
+              this._modalService.showModal(result.message);
             }
           },
           error: (error) => {
-            alert('Wystąpił błąd podczas próby logowania.');
+            this._modalService.showModal(
+              'Wystąpił błąd podczas próby logowania.'
+            );
             console.error('Error during login: ', error);
             this.spinnerService.hide();
           },
@@ -49,7 +55,9 @@ export class LoginWindowComponent {
         });
     } else {
       this.spinnerService.hide();
-      alert('Niepoprawnie uzupełniony formularz logownia.');
+      this._modalService.showModal(
+        'Niepoprawnie uzupełniony formularz logownia.'
+      );
     }
   }
 }

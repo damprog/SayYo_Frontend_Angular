@@ -1,12 +1,11 @@
 <!-- Modal -->
-<div class="modal" [class.show]="isOpen" (click)="close()">
+<div class="modal" [class.show]="visible">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <i class='bx bx-x close' (click)="close()"></i>
+    <i class="bx bx-x close" (click)="hide()"></i>
     <ng-content></ng-content>
-    <p>dziala</p>
+    <p>{{ content }}</p>
   </div>
 </div>
-
 
 <!-- How to use -->
 <!-- <app-modal-base #modal></app-modal-base>

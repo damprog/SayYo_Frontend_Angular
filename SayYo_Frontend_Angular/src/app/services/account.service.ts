@@ -24,7 +24,7 @@ export class AccountService {
   ) {}
 
   // ------------------------------------------------------------------------------------
-   public cleanup_Emitter: EventEmitter<void> = new EventEmitter<void>();
+  public cleanup_Emitter: EventEmitter<void> = new EventEmitter<void>();
 
   // Default config for not logged in user
   readonly DEFAULT_ACCOUNT_ID: string = '10'; // default user guid - 10 (that does not exist)
@@ -85,6 +85,57 @@ export class AccountService {
     this._router.navigate(['/start/login']);
   }
 
+  tryLoginWithToken_Promise(): Promise<void> {
+    return new Promise((resolve) => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        console.log('Próba logowania z tokenem: ' + token);
+        this.loginWithToken().subscribe((response: SY_ResponseStatus) => {
+          if (response?.success) {
+            console.log(response.message);
+            this._router.navigate(['/main']);
+            resolve();
+          } else {
+            console.log(response.message);
+            resolve();
+          }
+        });
+      } else {
+        this._router.navigate(['/start/login']);
+        resolve();
+      }
+    });
+  }
+
+  loginWithToken(): Observable<SY_ResponseStatus> {
+    return this._http
+      .post<SY_UserDTO>(this.API_URL + 'sayyo/user/loginWithToken', {})
+      .pipe(
+        map((response: any) => {
+          this.account = {
+            userGuid: response.user.guid,
+            userName: response.user.userName,
+            email: response.user.email,
+            isAdmin: response.user.isAdmin,
+            photoFileName: this.DEFAULT_PHOTO,
+          };
+          this.isLoggedIn = true;
+          return {
+            success: true,
+            message: 'Pomyślnie zalogowano z pomoca tokena.',
+          } as SY_ResponseStatus;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Wystąpił błąd:', error.message);
+          this.isLoggedIn = false;
+          return of({
+            success: false,
+            message: error.error,
+          } as SY_ResponseStatus);
+        })
+      );
+  }
+
   login(email: string, password: string): Observable<SY_ResponseStatus> {
     this.SY_LoginDTO.email = email;
     this.SY_LoginDTO.password = password;
@@ -104,9 +155,9 @@ export class AccountService {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('refreshToken', response.refreshToken);
 
-          console.log('token: ' + response.token);
-          console.log('refreshToken: ' + response.refreshToken);
-          console.log('user: ' + response.user);
+          console.log('got token: ' + response.token);
+          console.log('got refreshToken: ' + response.refreshToken);
+          console.log('got user: ' + response.user);
 
           this.account = {
             userGuid: response.user.guid,
