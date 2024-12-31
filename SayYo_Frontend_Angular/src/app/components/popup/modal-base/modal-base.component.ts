@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, TemplateRef } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
 
 @Component({
@@ -7,24 +7,37 @@ import { ModalService } from '../../../services/modal.service';
   styleUrl: './modal-base.component.css',
 })
 export class ModalBaseComponent implements AfterViewInit {
-  // @Input() isOpen = false;
-  visible = false;
+  // Modal base
+  visibleBase = false;
   content: string = '';
+  // Modal with template
+  visible = false;
+  contentTemplate!: TemplateRef<any>;
+  templateContext: any;
 
   constructor(private _modalService: ModalService) {}
 
-  ngAfterViewInit(): void {
-    this._modalService.setModal(this);
-    console.log('Modal init');
-  }
-
-  hide() {
-    this.visible = false;
+  showWithTemplate(template: TemplateRef<any>, context?: any) {
+    this.contentTemplate = template;
+    this.templateContext = context;
+    this.visible = true;
   }
 
   show(content: string) {
     this.content = content;
-    this.visible = true;
+    this.visibleBase = true;
     console.log('Modal show');
+  }
+
+  hide() {
+    this.visible = false;
+    this.visibleBase = false;
+    this.content = "";
+    this.templateContext = {};
+  }
+
+  ngAfterViewInit(): void {
+    this._modalService.registerModal(this);
+    console.log('Modal init');
   }
 }

@@ -1,10 +1,11 @@
 import { ContextMenu, MenuItem } from './../../../../../models/model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import {
   SY_FriendChatDTO,
   SY_ResponseStatus,
+  SY_StrangerDTO,
   SY_UserDTO,
 } from '../../../../../models/dto';
 import { ComponentsStateService } from '../../../../../services/components-state.service';
@@ -14,6 +15,7 @@ import { ContextMenuService } from '../../../../../services/context-menu.service
 import { FriendshipService } from '../../../../../services/friendship.service';
 import { ModalService } from '../../../../../services/modal.service';
 import { AccountService } from '../../../../../services/account.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-friends',
@@ -23,21 +25,14 @@ import { AccountService } from '../../../../../services/account.service';
 export class FriendsComponent implements OnInit {
   searchOpen: boolean = false;
   searchPattern: string = '';
-
-  // activeFriends: Array<SY_UserDTO> = [];
-  // awaitingFriends: Array<SY_UserDTO> = [];
-  // blockedFriends: Array<SY_UserDTO> = [];
-
   friendsChats_Ok: Array<SY_FriendChatDTO> = [];
   friendsChats_Awaiting: Array<SY_FriendChatDTO> = [];
   friendsChats_Blocked: Array<SY_FriendChatDTO> = [];
 
   friendsStatusComp$ = this._stateService.friendsStatus$;
-  // @ViewChild(ChatBarContextMenuComponent)
-  // contextMenu!: ChatBarContextMenuComponent;
 
   constructor(
-    protected _modalService:ModalService,
+    protected _modalService: ModalService,
     private _accountService: AccountService,
     private _friendshipService: FriendshipService,
     private _contacts: ContactsService,
@@ -191,7 +186,7 @@ export class FriendsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this._accountService.isLoggedIn){
+    if (this._accountService.isLoggedIn) {
       this.showFriends_StatusOk();
     }
   }
@@ -211,7 +206,9 @@ export class FriendsComponent implements OnInit {
         }
       },
       error: (error) => {
-        this._modalService.showModal('Wystąpił błąd podczas ładowania znajomych.');
+        this._modalService.showModal(
+          'Wystąpił błąd podczas ładowania znajomych.'
+        );
         console.error('Error during loading active friends: ', error);
         this.spinnerService.hide();
       },
@@ -237,7 +234,9 @@ export class FriendsComponent implements OnInit {
         }
       },
       error: (error) => {
-        this._modalService.showModal('Wystąpił błąd podczas ładowania oczekujących znajomych.');
+        this._modalService.showModal(
+          'Wystąpił błąd podczas ładowania oczekujących znajomych.'
+        );
         console.error('Error during loading awaiting friends: ', error);
         this.spinnerService.hide();
       },
@@ -262,7 +261,9 @@ export class FriendsComponent implements OnInit {
         }
       },
       error: (error) => {
-        this._modalService.showModal('Wystąpił błąd podczas ładowania zablokowanych znajomych.');
+        this._modalService.showModal(
+          'Wystąpił błąd podczas ładowania zablokowanych znajomych.'
+        );
         console.error('Error during loading blocked friends: ', error);
         this.spinnerService.hide();
       },
@@ -271,4 +272,57 @@ export class FriendsComponent implements OnInit {
       },
     });
   }
+
+  // -------------------
+  // modal
+  // -------------------
+
+  searchName = '';
+  results: Array<SY_StrangerDTO> = [];
+
+  openAddUserModal(template: TemplateRef<any>): void {
+    this.searchName = '';
+    this.spinnerService.show();
+
+    this._contacts
+      .getStrangers(10)
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe({
+        next: (data) => {
+          this.results = data;
+          console.log("Get strangers: " + JSON.stringify(data));
+          this._modalService.showWithTemplate(template, {
+            results: this.results,
+          });
+        },
+        error: (error) => {
+          console.error('Wystąpił błąd podczas ładowania strangerów:', error);
+        },
+      });
+  }
+
+  searchUsers(): void {
+    this.spinnerService.show();
+    this._contacts
+      .getStrangersWithFilter(this.searchName)
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe({
+        next: (data) => {
+          this.results = data;
+          this._modalService.showWithTemplate(
+            this._modalService.modalComponent.contentTemplate,
+            { results: this.results }
+          );
+        },
+        error: (error) => {
+          console.error('Wystąpił błąd podczas ładowania strangerów:', error);
+        },
+      });
+  }
+
+  addFriend(userId: number): void {
+    console.log(`Dodano użytkownika o ID: ${userId}`);
+  }
+
+  // -------------------
 }

@@ -192,20 +192,20 @@ export class CommunicatorComponent {
     // this.activeGroupChatCreator = false;
   }
 
-  toggleSearchArea() {
-    if (this.isSearchAreaActive) this.isSearchAreaActive = false;
-    else {
-      if (!this.strangersDTOList)
-        this.strangersDTOList = [];
-      if (Object.keys(this.strangersDTOList).length === 0) {
-        this.strangersDTOList = this._contactsService.getStrangers().subscribe(data => {
-          this.strangersDTOList = data;
-          // console.log("refresh strangers");
-        });
-      }
-      this.isSearchAreaActive = true;
-    }
-  }
+   toggleSearchArea() {
+  //   if (this.isSearchAreaActive) this.isSearchAreaActive = false;
+  //   else {
+  //     if (!this.strangersDTOList)
+  //       this.strangersDTOList = [];
+  //     if (Object.keys(this.strangersDTOList).length === 0) {
+  //       this.strangersDTOList = this._contactsService.getStrangers().subscribe(data => {
+  //         this.strangersDTOList = data;
+  //         // console.log("refresh strangers");
+  //       });
+  //     }
+  //     this.isSearchAreaActive = true;
+  //   }
+   }
 
   hideGroupOptions() {
     this.activeGroupOptions = false;

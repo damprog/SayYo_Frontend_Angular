@@ -3,7 +3,13 @@ import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
-import { SY_FriendChatDTO, SY_GroupChatDTO, SY_ResponseStatus, SY_UserDTO } from '../models/dto';
+import {
+  SY_FriendChatDTO,
+  SY_GroupChatDTO,
+  SY_ResponseStatus,
+  SY_StrangerDTO,
+  SY_UserDTO,
+} from '../models/dto';
 import { FriendsChats, GroupChats } from '../models/model';
 
 @Injectable({
@@ -44,20 +50,53 @@ export class ContactsService {
   // BlockedFriends: Array<SY_UserDTO> = [];
 
   releaseFriendChats() {
-    console.log("Before Released FriendChats", this.friendsChats_Ok.items, this.friendsChats_Awaiting.items, this.friendsChats_Blocked.items);
+    console.log(
+      'Before Released FriendChats',
+      this.friendsChats_Ok.items,
+      this.friendsChats_Awaiting.items,
+      this.friendsChats_Blocked.items
+    );
 
     this.friendsChats_Ok.items = [];
     this.friendsChats_Awaiting.items = [];
     this.friendsChats_Blocked.items = [];
 
-    console.log("Released FriendChats", this.friendsChats_Ok.items, this.friendsChats_Awaiting.items, this.friendsChats_Blocked.items);
+    console.log(
+      'Released FriendChats',
+      this.friendsChats_Ok.items,
+      this.friendsChats_Awaiting.items,
+      this.friendsChats_Blocked.items
+    );
   }
 
-  getStrangers(): Observable<SY_ResponseStatus> {
-    return of({
-      success: false,
-      message: 'Strangers',
-    } as SY_ResponseStatus);
+  getStrangers(amount: number): Observable<Array<SY_StrangerDTO>> {
+    return this._http
+      .get<Array<SY_StrangerDTO>>(
+        `${this._conn.API_URL}sayyo/misc/getStrangers?userGuid=${this._account.account.userGuid}&amount=${amount}`
+      )
+      .pipe(
+        map((response: Array<SY_StrangerDTO>) => {
+          return response.map((item) => ({
+            guid: item.guid,
+            userName: item.userName,
+          }));
+        })
+      );
+  }
+
+  getStrangersWithFilter(search: string): Observable<Array<SY_StrangerDTO>> {
+    return this._http
+      .get<Array<SY_StrangerDTO>>(
+        `${this._conn.API_URL}sayyo/misc/getStrangersWithFilter?userGuid=${this._account.account.userGuid}&amount=${1000}&search=${search}`
+      )
+      .pipe(
+        map((response: Array<SY_StrangerDTO>) => {
+          return response.map((item) => ({
+            guid: item.guid,
+            userName: item.userName,
+          }));
+        })
+      );
   }
 
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
@@ -68,7 +107,6 @@ export class ContactsService {
     this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
       this.releaseFriendChats();
     });
-
 
     if (this.friendsChats_Ok.items.length == 0) {
       console.log('getFriendChats_ok');
@@ -126,7 +164,10 @@ export class ContactsService {
           } as SY_ResponseStatus;
         }),
         catchError((error: HttpErrorResponse) => {
-          console.error('While getting awaiting friends chats: ', error.message);
+          console.error(
+            'While getting awaiting friends chats: ',
+            error.message
+          );
           return of({
             success: false,
             message: error.error,
@@ -176,7 +217,6 @@ export class ContactsService {
       } as SY_ResponseStatus);
     }
   }
-
 
   // getActiveFriends(): Observable<SY_ResponseStatus> {
   //   if (this.ActiveFriends.length == 0) {
@@ -376,5 +416,4 @@ export class ContactsService {
         this._account.account.userGuid
     );
   }
-
 }

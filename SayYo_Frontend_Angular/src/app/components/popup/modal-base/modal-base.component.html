@@ -1,9 +1,19 @@
-<!-- Modal -->
-<div class="modal" [class.show]="visible">
+<!-- Modal base -->
+<div class="modal" [class.show]="visibleBase">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <i class="bx bx-x close" (click)="hide()"></i>
     <ng-content></ng-content>
     <p>{{ content }}</p>
+  </div>
+</div>
+
+<!-- Modal with template -->
+<div class="modal" [class.show]="visible">
+  <div class="modal-content">
+    <i class="bx bx-x close" (click)="hide()"></i>
+    <!-- <ng-container *ngIf="contentTemplate"> -->
+      <ng-container *ngTemplateOutlet="contentTemplate; context: templateContext"></ng-container>
+    <!-- </ng-container> -->
   </div>
 </div>
 

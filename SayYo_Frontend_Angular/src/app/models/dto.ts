@@ -88,6 +88,11 @@ export interface SY_UpdateChatMemberDTO {
   role: number;
 }
 
+export interface SY_StrangerDTO {
+  guid: string;
+  userName: string;
+}
+
 // --------------------------------------
 // MESSEGES SERVICE
 // --------------------------------------

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { ModalBaseComponent } from '../components/popup/modal-base/modal-base.component';
 
 @Injectable({
@@ -8,21 +8,27 @@ export class ModalService {
 
   constructor() { }
 
-  private modalBaseComponent!: ModalBaseComponent;
+  public modalComponent!: ModalBaseComponent;
 
- setModal(component: ModalBaseComponent): void {
-    this.modalBaseComponent = component;
+  showWithTemplate(template: TemplateRef<any>, context?: any): void {
+    if (this.modalComponent) {
+      this.modalComponent.showWithTemplate(template, context);
+    }
   }
 
   showModal(content: string){
-    if(this.modalBaseComponent){
-      this.modalBaseComponent.show(content);
+    if(this.modalComponent){
+      this.modalComponent.show(content);
     }
   }
 
   hideModal(){
-    if(this.modalBaseComponent){
-      this.modalBaseComponent.hide();
+    if(this.modalComponent){
+      this.modalComponent.hide();
     }
+  }
+
+  registerModal(component: ModalBaseComponent): void {
+    this.modalComponent = component;
   }
 }
