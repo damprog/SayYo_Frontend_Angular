@@ -1,5 +1,5 @@
 import { ContextMenuService } from '../../../services/context-menu.service';
-import { ContextMenu } from '../../../models/model';
+import { ContextMenu, MenuItem } from '../../../models/model';
 import { Component, AfterViewInit, HostListener, Input } from '@angular/core';
 
 @Component({
@@ -23,6 +23,13 @@ export class ContextMenuComponent implements AfterViewInit {
     this._contextMenuService.setContextMenu(this);
   }
 
+  executeAction(item: MenuItem){
+    item.action().subscribe(
+      () => {},
+      () => {},
+    );
+  }
+
   showMenu(event: MouseEvent, menuInfo: ContextMenu): void {
     event.preventDefault();
     this.contextMenu = menuInfo;
@@ -31,7 +38,6 @@ export class ContextMenuComponent implements AfterViewInit {
     if (menuElement) {
       menuElement.style.top = `${event.clientY}px`;
       menuElement.style.left = `${event.clientX}px`;
-      console.log("znelzione context menu " + event.clientY);
     }
 
     this.visible = true;

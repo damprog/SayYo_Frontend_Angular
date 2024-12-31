@@ -129,8 +129,6 @@
 <!-- MODAL              -->
 <!-- @@@@@@@@@@@@@@@@@@ -->
 
-<!-- <ng-template #addUser let-user="user"> -->
-  <!-- <p>Witaj, {{ user }}!</p> -->
   <ng-template #addUserModalTemplate let-results="results">
     <p class="add-user-title">Dodawanie znajomych</p>
     <div class="add-user-search">
@@ -140,7 +138,7 @@
     <ul class="add-user-list">
       <li *ngFor="let user of results" class="add-user-item">
         <span class="add-user-name">{{ user.userName }}</span>
-        <button class="add-user-add-btn" (click)="addFriend(user.guid)">+</button>
+        <button class="add-user-add-btn" (click)="inviteUser(user.guid)">+</button>
       </li>
     </ul>
   </ng-template>

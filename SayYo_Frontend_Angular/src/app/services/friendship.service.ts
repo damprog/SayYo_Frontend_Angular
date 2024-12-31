@@ -28,7 +28,7 @@ export class FriendshipService {
   // iBlockedUser/userBlockedMe - 0 - none, 1 - active
   // invitation - 0 - awaiting, 1 - accepted, 2 - rejected, 4 - unknown (not in sql)
 
-  // Returns Created and friendship guid
+  // Returns ok
   inviteFriend(friendGuid: string) {
     const invitation: SY_AddFriendshipDTO = {
       userGuid: this._account.account.userGuid,
@@ -36,11 +36,12 @@ export class FriendshipService {
       status: 0,
     };
 
-    console.log("Wysłano zaproszenie do " + friendGuid);
-
     return this._http.post(
       this._conn.API_URL + 'sayyo/friendship/add/',
-      invitation
+      invitation,
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
     );
   }
 

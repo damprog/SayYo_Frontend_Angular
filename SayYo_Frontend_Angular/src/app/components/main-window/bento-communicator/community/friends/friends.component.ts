@@ -290,7 +290,7 @@ export class FriendsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.results = data;
-          console.log("Get strangers: " + JSON.stringify(data));
+          console.log('Get strangers: ' + JSON.stringify(data));
           this._modalService.showWithTemplate(template, {
             results: this.results,
           });
@@ -320,8 +320,11 @@ export class FriendsComponent implements OnInit {
       });
   }
 
-  addFriend(userId: number): void {
-    console.log(`Dodano użytkownika o ID: ${userId}`);
+  inviteUser(userGuid: string): void {
+    this._friendshipService.inviteFriend(userGuid).subscribe(
+      () => console.log(`Zaproszono użytkownika o ID: ${userGuid}`),
+      (error) => console.error('Błąd podczas zapraszania:', error)
+    );
   }
 
   // -------------------
