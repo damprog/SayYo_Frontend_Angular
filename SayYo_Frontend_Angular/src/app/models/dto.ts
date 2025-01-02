@@ -45,12 +45,12 @@ export interface SY_LoginResponseDTO {
 // CONTACTS SERVICE
 // --------------------------------------
 
-export interface SY_FriendChatDTO {
-  chatGuid: string;
-  chatType: number;
-  chatName: string;
-  friend: SY_FriendMemberDTO;
-}
+// export interface SY_ChatDTO {
+//   chatGuid: string;
+//   chatType: number;
+//   chatName: string;
+//   friend: SY_FriendMemberDTO;
+// }
 
 export interface SY_FriendMemberDTO {
   guid: string;

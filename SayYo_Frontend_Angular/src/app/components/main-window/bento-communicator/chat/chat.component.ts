@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { AccountService } from '../../../../services/account.service';
-import { SY_FriendChatDTO } from '../../../../models/dto';
+import { SY_ChatDTO } from '../../../../models/dto';
 import { Chat } from '../../../../models/model';
 import { Subscription } from 'rxjs';
 
@@ -51,8 +51,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  startChatClick(friendChat: SY_FriendChatDTO) {
-    this.chatService.startChat(friendChat);
+  startChatClick(friendChat: SY_ChatDTO) {
+    this.chatService.startPrivateChat(friendChat);
   }
 
   sendMessageClick(chat: Chat) {

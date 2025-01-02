@@ -4,7 +4,6 @@ import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
 import {
-  SY_FriendChatDTO,
   SY_ChatDTO,
   SY_ResponseStatus,
   SY_StrangerDTO,
@@ -21,9 +20,9 @@ export class ContactsService {
     private _account: AccountService,
     private _http: HttpClient
   ) {
-    this.friendsChats_Ok.items = new Array<SY_FriendChatDTO>();
-    this.friendsChats_Awaiting.items = new Array<SY_FriendChatDTO>();
-    this.friendsChats_Blocked.items = new Array<SY_FriendChatDTO>();
+    this.friendsChats_Ok.items = new Array<SY_ChatDTO>();
+    this.friendsChats_Awaiting.items = new Array<SY_ChatDTO>();
+    this.friendsChats_Blocked.items = new Array<SY_ChatDTO>();
     this.groupChats.items = new Array<SY_ChatDTO>();
   }
 
@@ -112,13 +111,13 @@ export class ContactsService {
       console.log('getFriendChats_ok');
 
       return this._getFriendChats_Ok_EDP().pipe(
-        map((response: Array<SY_FriendChatDTO>) => {
+        map((response: Array<SY_ChatDTO>) => {
           response.forEach((x) => {
-            const newChat: SY_FriendChatDTO = {
+            const newChat: SY_ChatDTO = {
               chatGuid: x.chatGuid,
               chatType: x.chatType,
               chatName: x.chatName,
-              friend: x.friend,
+              members: x.members,
             };
             this.friendsChats_Ok.items.push(newChat);
           });
@@ -148,13 +147,13 @@ export class ContactsService {
       console.log('getFriendChats_Awaiting');
 
       return this._getFriendChats_Awaiting_EDP().pipe(
-        map((response: Array<SY_FriendChatDTO>) => {
+        map((response: Array<SY_ChatDTO>) => {
           response.forEach((x) => {
-            const newChat: SY_FriendChatDTO = {
+            const newChat: SY_ChatDTO = {
               chatGuid: x.chatGuid,
               chatType: x.chatType,
               chatName: x.chatName,
-              friend: x.friend,
+              members: x.members,
             };
             this.friendsChats_Awaiting.items.push(newChat);
           });
@@ -187,13 +186,13 @@ export class ContactsService {
       console.log('getFriendChats_Blocked');
 
       return this._getFriendChats_Blocked_EDP().pipe(
-        map((response: Array<SY_FriendChatDTO>) => {
+        map((response: Array<SY_ChatDTO>) => {
           response.forEach((x) => {
-            const newChat: SY_FriendChatDTO = {
+            const newChat: SY_ChatDTO = {
               chatGuid: x.chatGuid,
               chatType: x.chatType,
               chatName: x.chatName,
-              friend: x.friend,
+              members: x.members,
             };
             this.friendsChats_Blocked.items.push(newChat);
           });
@@ -385,24 +384,24 @@ export class ContactsService {
   //   );
   // }
 
-  private _getFriendChats_Ok_EDP(): Observable<Array<SY_FriendChatDTO>> {
-    return this._http.get<Array<SY_FriendChatDTO>>(
+  private _getFriendChats_Ok_EDP(): Observable<Array<SY_ChatDTO>> {
+    return this._http.get<Array<SY_ChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getActiveFriendChats?userGuid=' +
         this._account.account.userGuid
     );
   }
 
-  private _getFriendChats_Awaiting_EDP(): Observable<Array<SY_FriendChatDTO>> {
-    return this._http.get<Array<SY_FriendChatDTO>>(
+  private _getFriendChats_Awaiting_EDP(): Observable<Array<SY_ChatDTO>> {
+    return this._http.get<Array<SY_ChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getAwaitingFriendChats?userGuid=' +
         this._account.account.userGuid
     );
   }
 
-  private _getFriendChats_Blocked_EDP(): Observable<Array<SY_FriendChatDTO>> {
-    return this._http.get<Array<SY_FriendChatDTO>>(
+  private _getFriendChats_Blocked_EDP(): Observable<Array<SY_ChatDTO>> {
+    return this._http.get<Array<SY_ChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getBlockedFriendChats?userGuid=' +
         this._account.account.userGuid

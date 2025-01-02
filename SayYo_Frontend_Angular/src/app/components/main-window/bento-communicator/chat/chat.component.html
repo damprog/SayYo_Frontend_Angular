@@ -15,7 +15,7 @@
         <p class="blockname">{{ chat.chatInfo.chatName }}</p>
         <p
           class="close-chat"
-          (click)="chatService.closeChat(chat.chatInfo.friend.guid)"
+          (click)="chatService.closeChat(chat)"
         >
           X
         </p>
@@ -55,7 +55,8 @@
         </ng-container>
       </div>
 
-      <div class="writearea" *ngIf="chat.chatInfo.friend.friendshipStatus != 2">
+      <!-- Group chat - chatType 1 -->
+      <div class="writearea" *ngIf="chat.chatInfo.members[0].friendshipStatus != 2 || chat.chatInfo.chatType == 1">
         <input
           type="text"
           placeholder="Aa"

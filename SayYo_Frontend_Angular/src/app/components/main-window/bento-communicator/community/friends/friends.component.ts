@@ -3,7 +3,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import {
-  SY_FriendChatDTO,
+  SY_ChatDTO,
   SY_ResponseStatus,
   SY_StrangerDTO,
   SY_UserDTO,
@@ -25,9 +25,9 @@ import { finalize } from 'rxjs';
 export class FriendsComponent implements OnInit {
   searchOpen: boolean = false;
   searchPattern: string = '';
-  friendsChats_Ok: Array<SY_FriendChatDTO> = [];
-  friendsChats_Awaiting: Array<SY_FriendChatDTO> = [];
-  friendsChats_Blocked: Array<SY_FriendChatDTO> = [];
+  friendsChats_Ok: Array<SY_ChatDTO> = [];
+  friendsChats_Awaiting: Array<SY_ChatDTO> = [];
+  friendsChats_Blocked: Array<SY_ChatDTO> = [];
 
   friendsStatusComp$ = this._stateService.friendsStatus$;
 
@@ -42,25 +42,25 @@ export class FriendsComponent implements OnInit {
     public spinnerService: SpinnerService
   ) {}
 
-  showContextMenu(event: MouseEvent, info: SY_FriendChatDTO): void {
+  showContextMenu(event: MouseEvent, info: SY_ChatDTO): void {
     event.stopPropagation();
     var menuInfo: ContextMenu = {
       name: '',
       menuItems: [],
     };
 
-    if (info.friend.friendshipStatus === 0) {
+    if (info.members[0].friendshipStatus === 0) {
       menuInfo = this.prepareAwaitingFriendsMenu(info);
-    } else if (info.friend.friendshipStatus === 1) {
+    } else if (info.members[0].friendshipStatus === 1) {
       menuInfo = this.prepareActiveFriendsMenu(info);
-    } else if (info.friend.friendshipStatus === 2) {
+    } else if (info.members[0].friendshipStatus === 2) {
       menuInfo = this.prepareBlockedFriendsMenu(info);
     }
 
     this._contextMenuService.showMenu(event, menuInfo);
   }
 
-  prepareActiveFriendsMenu(info: SY_FriendChatDTO): ContextMenu {
+  prepareActiveFriendsMenu(info: SY_ChatDTO): ContextMenu {
     var menuInfo: ContextMenu = {
       name: info.chatName,
       menuItems: [
@@ -68,17 +68,17 @@ export class FriendsComponent implements OnInit {
           label: 'Zablokuj',
           action: () =>
             this._friendshipService.updateFriendshipStatus(
-              info.friend.guid,
+              info.members[0].guid,
               2,
               1,
-              info.friend.userBlockedMe
+              info.members[0].userBlockedMe
             ),
         },
         {
           label: 'Usuń znajomego',
           action: () =>
             this._friendshipService.deleteFriendship(
-              info.friend.friendshipGuid
+              info.members[0].friendshipGuid
             ),
         },
       ],
@@ -86,18 +86,18 @@ export class FriendsComponent implements OnInit {
     return menuInfo;
   }
 
-  prepareAwaitingFriendsMenu(info: SY_FriendChatDTO): ContextMenu {
+  prepareAwaitingFriendsMenu(info: SY_ChatDTO): ContextMenu {
     var menuInfo: ContextMenu = {
       name: info.chatName,
       menuItems: [],
     };
 
-    if (!info.friend.iInvited) {
+    if (!info.members[0].iInvited) {
       menuInfo.menuItems.push({
         label: 'Akceptuj',
         action: () =>
           this._friendshipService.updateFriendshipStatus(
-            info.friend.guid,
+            info.members[0].guid,
             1,
             0,
             0
@@ -107,44 +107,44 @@ export class FriendsComponent implements OnInit {
         label: 'Odrzuć',
         action: () =>
           this._friendshipService.updateFriendshipStatus(
-            info.friend.guid,
+            info.members[0].guid,
             2,
             1,
-            info.friend.userBlockedMe
+            info.members[0].userBlockedMe
           ),
       });
     } else {
       menuInfo.menuItems.push({
         label: 'Anuluj',
         action: () =>
-          this._friendshipService.deleteFriendship(info.friend.friendshipGuid),
+          this._friendshipService.deleteFriendship(info.members[0].friendshipGuid),
       });
     }
 
     return menuInfo;
   }
 
-  prepareBlockedFriendsMenu(info: SY_FriendChatDTO): ContextMenu {
+  prepareBlockedFriendsMenu(info: SY_ChatDTO): ContextMenu {
     var menuInfo: ContextMenu = {
       name: info.chatName,
       menuItems: [],
     };
 
-    if (info.friend.iBlockedUser) {
+    if (info.members[0].iBlockedUser) {
       menuInfo.menuItems.push({
         label: 'Odblokuj',
         action: () =>
           this._friendshipService.updateFriendshipStatus(
-            info.friend.guid,
+            info.members[0].guid,
             1,
             0,
-            info.friend.userBlockedMe
+            info.members[0].userBlockedMe
           ),
       });
       menuInfo.menuItems.push({
         label: 'Usuń',
         action: () =>
-          this._friendshipService.deleteFriendship(info.friend.friendshipGuid),
+          this._friendshipService.deleteFriendship(info.members[0].friendshipGuid),
       });
     } else {
       // No options for blocked user
@@ -153,14 +153,14 @@ export class FriendsComponent implements OnInit {
     return menuInfo;
   }
 
-  showChat(friendChat: SY_FriendChatDTO) {
+  showChat(friendChat: SY_ChatDTO) {
     console.log(
       'showChat(): ' +
         friendChat.chatGuid +
         ', chatName: ' +
         friendChat.chatName +
         ', friendGuid: ' +
-        friendChat.friend.guid
+        friendChat.members[0].guid
     );
     this._chatService.showChat(friendChat);
   }

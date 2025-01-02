@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { SY_FriendChatDTO, SY_ChatDTO } from "./dto";
+import { SY_ChatDTO } from "./dto";
 import { Observable } from 'rxjs';
 
 
@@ -20,7 +20,7 @@ export interface UserAccount {
 // --------------------------------------
 
 export interface FriendsChats {
-  items: Array<SY_FriendChatDTO>;
+  items: Array<SY_ChatDTO>;
 }
 
 export interface GroupChats {
@@ -43,7 +43,7 @@ export interface ChatMessage {
 }
 
 export interface Chat {
-  chatInfo: SY_FriendChatDTO;
+  chatInfo: SY_ChatDTO;
   messages: Array<ChatMessage>;
   currentMessage?: string;
 }

@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Chat, ChatMessage } from '../models/model';
 import {
-  SY_FriendChatDTO,
+  SY_ChatDTO,
   SY_MessageDTO,
   SY_ResponseStatus,
   SY_AddChatMemberDTO,
@@ -63,8 +63,9 @@ export class ChatService {
 
   handleNewMessage(message: SY_MessageDTO) {
     var cachedChat = this.cachedChats.find(
-      (chat) => (chat.chatInfo.chatGuid = message.chatGuid)
+      (chat) => (chat.chatInfo.chatGuid === message.chatGuid)
     );
+    // Create array
     let syMsgs = [message];
     const chatMsg = this.convertMessages(syMsgs);
     if (cachedChat) {
@@ -72,12 +73,12 @@ export class ChatService {
     }
   }
 
-  startChat(friendChat: SY_FriendChatDTO) {
+  startPrivateChat(friendChat: SY_ChatDTO) {
     // friendship status - awaiting - 0
-    if (friendChat.friend.friendshipStatus == 0) {
+    if (friendChat.members[0].friendshipStatus == 0) {
       // Confirm friendship - accept friend request
       this._friendshipService.updateFriendshipStatus(
-        friendChat.friend.guid,
+        friendChat.members[0].guid,
         1,
         0,
         0
@@ -94,7 +95,7 @@ export class ChatService {
       this._membershipService.addChatMember(chatGuid, this._account.account.userGuid, 1).subscribe(
         (_res) => {}
       );
-      this._membershipService.addChatMember(chatGuid, friendChat.friend.guid, 1).subscribe(
+      this._membershipService.addChatMember(chatGuid, friendChat.members[0].guid, 1).subscribe(
         (_res) => {}
       );
       //TODO: refreshing doesnt wor
@@ -104,13 +105,13 @@ export class ChatService {
     });
   }
 
-  showChat(friendChat: SY_FriendChatDTO) {
+  showChat(targetChat: SY_ChatDTO) {
     const exists = this.activeChats.some(
-      (chat) => chat.chatInfo.friend.guid === friendChat.friend.guid
+      (chat) => this.isSameChat(chat.chatInfo, targetChat)
     );
 
     if (exists) {
-      console.log('Chat already exists: ' + friendChat.friend.guid);
+      console.log('Chat already opened');
     } else {
       // remove the first chat
       if (this.activeChats.length === 4) {
@@ -118,7 +119,7 @@ export class ChatService {
       }
 
       const cachedChat = this.cachedChats.find(
-        (chat) => chat.chatInfo.friend.guid === friendChat.friend.guid
+        (chat) => this.isSameChat(chat.chatInfo, targetChat)
       );
 
       let chat: Chat;
@@ -128,14 +129,14 @@ export class ChatService {
         this.activeChats.push(chat);
       } else {
         chat = {
-          chatInfo: friendChat,
+          chatInfo: targetChat,
           messages: [],
         };
 
-        if (friendChat.chatGuid !== this.emptyGuid) {
+        if (targetChat.chatGuid !== this.emptyGuid) {
           let syMessages: Array<SY_MessageDTO> = [];
           // Fetch messages from API
-          this._messagesService.getMessages(friendChat.chatGuid).subscribe({
+          this._messagesService.getMessages(targetChat.chatGuid).subscribe({
             next: (fetchedMessages: Array<SY_MessageDTO>) => {
               syMessages = fetchedMessages;
               console.log('Messages fetched');
@@ -153,7 +154,6 @@ export class ChatService {
 
               this.addToCachedChats(chat);
               this.activeChats.push(chat);
-              console.log('Chat added: ' + friendChat.friend.guid);
               this.checkHelloContainer();
             },
             error: (error) => {
@@ -163,16 +163,16 @@ export class ChatService {
         } else {
           this.addToCachedChats(chat);
           this.activeChats.push(chat);
-          console.log('Start Chat added: ' + friendChat.friend.guid);
+          console.log('Start Chat added: ' + targetChat.members[0].userName);
         }
       }
     }
     this.checkHelloContainer();
   }
 
-  closeChat(friendGuid: string) {
+  closeChat(targetChat: Chat) {
     this.activeChats = this.activeChats.filter(
-      (chat) => chat.chatInfo.friend.guid !== friendGuid
+      (chat) => !this.isSameChat(chat.chatInfo, targetChat.chatInfo)
     );
     this.checkHelloContainer();
   }
@@ -265,14 +265,14 @@ export class ChatService {
     this.helloContainerActive = this.activeChats.length === 0;
   }
 
-  addToCachedChats(chat: Chat) {
-    if (chat) {
+  addToCachedChats(targetChat: Chat) {
+    if (targetChat) {
       const exists = this.cachedChats.some(
-        (chat) => chat.chatInfo.friend.guid === chat.chatInfo.friend.guid
+        (chat) => this.isSameChat(chat.chatInfo, targetChat.chatInfo)
       );
       if (!exists) {
-        this.cachedChats.push(chat);
-        console.log('Chat cached:', chat);
+        this.cachedChats.push(targetChat);
+        console.log('Chat cached:', targetChat);
       }
     }
   }
@@ -321,5 +321,12 @@ export class ChatService {
         otherDate: otherDate,
       };
     });
+  }
+
+  isSameChat(chat: SY_ChatDTO, targetChat: SY_ChatDTO): boolean {
+    return (
+      chat.chatGuid === targetChat.chatGuid &&
+      chat.members[0].guid === targetChat.members[0].guid
+    );
   }
 }

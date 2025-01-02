@@ -5,7 +5,6 @@ import { SpinnerService } from '../../../../../services/spinner.service';
 import {
   SY_ChatDTO,
   SY_CreateGroupChatDTO,
-  SY_FriendChatDTO,
   SY_GroupChatMemberDTO,
   SY_ResponseStatus,
 } from '../../../../../models/dto';
@@ -136,15 +135,15 @@ export class GroupsComponent implements OnInit {
     console.log('Group: filtered');
     this.filteredFriendList = this._contacts.friendsChats_Ok.items
       .filter((friendChat) =>
-        friendChat.friend.userName
+        friendChat.members[0].userName
           .toLowerCase()
           .includes(this.filterText.toLowerCase())
       )
       .map((friendChat) => {
         console.log('Group: filtered map');
         return {
-          userGuid: friendChat.friend.guid,
-          userName: friendChat.friend.userName,
+          userGuid: friendChat.members[0].guid,
+          userName: friendChat.members[0].userName,
         };
       });
     this._modalService.showWithTemplate(
