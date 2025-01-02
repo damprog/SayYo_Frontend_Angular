@@ -1,7 +1,12 @@
 @import url("../community-shared.css");
 
 .item{
-  background-color: rgb(109, 63, 63);
+  background-color: #6b8671;
+  background-color: #011706;
+}
+
+.item:hover {
+  background: #010f04;
 }
 
 /*-------------------
