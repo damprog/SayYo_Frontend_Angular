@@ -54,7 +54,8 @@ export interface SY_FriendChatDTO {
 
 export interface SY_FriendMemberDTO {
   guid: string;
-  chatMemberGuid: string;
+  userName: string;
+  membershipGuid: string;
   chatRole: number;
   friendshipGuid: string;
   friendshipStatus: number;
@@ -63,11 +64,21 @@ export interface SY_FriendMemberDTO {
   iInvited: boolean;
 }
 
-export interface SY_GroupChatDTO {
+export interface SY_ChatDTO {
   chatGuid: string;
   chatType: number;
   chatName: string;
   members: Array<SY_FriendMemberDTO>;
+}
+
+export interface SY_CreateGroupChatDTO {
+  chatName: string,
+  members: Array<SY_GroupChatMemberDTO>
+}
+
+export interface SY_GroupChatMemberDTO {
+  userGuid: string,
+  role: number
 }
 
 export interface SY_AddChatDTO {

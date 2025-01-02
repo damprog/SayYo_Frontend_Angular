@@ -12,13 +12,13 @@ export class ModalBaseComponent implements AfterViewInit {
   content: string = '';
   // Modal with template
   visible = false;
-  contentTemplate!: TemplateRef<any>;
+  modalTemplate!: TemplateRef<any>;
   templateContext: any;
 
   constructor(private _modalService: ModalService) {}
 
   showWithTemplate(template: TemplateRef<any>, context?: any) {
-    this.contentTemplate = template;
+    this.modalTemplate = template;
     this.templateContext = context;
     this.visible = true;
   }

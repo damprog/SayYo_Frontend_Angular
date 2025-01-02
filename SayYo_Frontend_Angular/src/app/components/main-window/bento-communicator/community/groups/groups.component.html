@@ -15,7 +15,7 @@
 
     <span>GRUPY</span>
 
-    <div id="add" class="btn-icon">
+    <div id="add" class="btn-icon" (click)="openCreateGroupModal()">
       <i class="bx bxs-plus-circle"></i>
     </div>
   </div>
@@ -27,7 +27,7 @@
 
   <div class="divider"></div>
 
-  <div class="item" *ngFor="let x of groupsChats">
+  <div class="item" *ngFor="let x of groupChats">
     <div class="content">
       <div class="photo-container">
         <div class="photo"></div>
@@ -39,7 +39,7 @@
         </span>
       </div>
 
-      <div class="options">
+      <div class="options" (click)="showContextMenu($event, x)">
         <div class="option-dot"></div>
         <div class="option-dot"></div>
         <div class="option-dot"></div>
@@ -47,3 +47,47 @@
     </div>
   </div>
 </div>
+
+<!-- @@@@@@@@@@@@@@@@@@ -->
+<!-- MODAL              -->
+<!-- @@@@@@@@@@@@@@@@@@ -->
+
+<ng-template #createGroupModalTemplate>
+  <p class="create-group-title">Tworzenie grupy</p>
+
+  <!-- Group name ipnut-->
+  <div class="create-group-name-input">
+    <input
+      class="create-group-input"
+      placeholder="Nazwa grupy"
+      [(ngModel)]="groupName"
+    />
+  </div>
+
+  <!-- Filter friends input-->
+  <div class="create-group-search">
+    <input
+      class="create-group-input"
+      placeholder="Filtruj znajomych"
+      [(ngModel)]="filterText"
+      (ngModelChange)="filterFriends()"
+    />
+  </div>
+
+  <!-- List of filtered friends with checbox -->
+  <ul class="create-group-list">
+    <li *ngFor="let friend of filteredFriendList" class="create-group-item">
+      <span class="create-group-name">{{ friend.userName }}</span>
+      <input
+        type="checkbox"
+        class="create-group-checkbox"
+        [(ngModel)]="selectedFriends[friend.userGuid]"
+      />
+    </li>
+  </ul>
+
+  <!-- Button -->
+  <button class="create-group-button" (click)="createGroup()" [disabled]="!groupName || !Object.keys(selectedFriends).length">
+    Utwórz grupę
+  </button>
+</ng-template>

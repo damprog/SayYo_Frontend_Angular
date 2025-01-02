@@ -1,6 +1,7 @@
 import { ContextMenuService } from '../../../services/context-menu.service';
 import { ContextMenu, MenuItem } from '../../../models/model';
 import { Component, AfterViewInit, HostListener, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-context-menu',
@@ -15,20 +16,43 @@ export class ContextMenuComponent implements AfterViewInit {
     menuItems: [],
   };
 
-  constructor(
-    private _contextMenuService: ContextMenuService
-  ) {}
+  constructor(private _contextMenuService: ContextMenuService) {}
 
   ngAfterViewInit(): void {
     this._contextMenuService.setContextMenu(this);
   }
 
-  executeAction(item: MenuItem){
+  executeAction(item: MenuItem) {
+    // if (item.action) {
+    //   const result = item.action();
+    //   console.log("Niby wykonanie action()");
+    //   if (result instanceof Observable) {
+    //     result.subscribe(
+    //       () => {
+    //         console.log('Wykonano action()');
+    //       },
+    //       () => {
+    //         console.log('Błąd action()');
+    //       }
+    //     );
+    //   }
+    // }
+
+    console.log('menu item clicked');
     item.action().subscribe(
-      () => {},
-      () => {},
+      () => {
+        console.log('Wykonano action()');
+      },
+      () => {
+        console.log('Błąd action()');
+      }
     );
   }
+  // console.log("menu item clicked");
+  // item.action().subscribe(
+  //   () => {console.log("Wykonano action()");},
+  //   () => {console.log("Błąd action()");},
+  // );
 
   showMenu(event: MouseEvent, menuInfo: ContextMenu): void {
     event.preventDefault();

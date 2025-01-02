@@ -1,5 +1,6 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { SY_FriendChatDTO, SY_GroupChatDTO } from "./dto";
+import { SY_FriendChatDTO, SY_ChatDTO } from "./dto";
+import { Observable } from 'rxjs';
 
 
 // --------------------------------------
@@ -23,7 +24,7 @@ export interface FriendsChats {
 }
 
 export interface GroupChats {
-  items: Array<SY_GroupChatDTO>;
+  items: Array<SY_ChatDTO>;
 }
 
 // --------------------------------------
@@ -59,4 +60,5 @@ export interface ContextMenu {
 export interface MenuItem {
   label: string;
   action: any;
+  //action: () => void | Observable<any>;
 }

@@ -5,7 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
 import {
   SY_FriendChatDTO,
-  SY_GroupChatDTO,
+  SY_ChatDTO,
   SY_ResponseStatus,
   SY_StrangerDTO,
   SY_UserDTO,
@@ -24,7 +24,7 @@ export class ContactsService {
     this.friendsChats_Ok.items = new Array<SY_FriendChatDTO>();
     this.friendsChats_Awaiting.items = new Array<SY_FriendChatDTO>();
     this.friendsChats_Blocked.items = new Array<SY_FriendChatDTO>();
-    this.groupChats.items = new Array<SY_GroupChatDTO>();
+    this.groupChats.items = new Array<SY_ChatDTO>();
   }
 
   private cleanup_Subscription!: Subscription;
@@ -328,9 +328,9 @@ export class ContactsService {
   getGroupChats(): Observable<SY_ResponseStatus> {
     this.groupChats.items = [];
     return this._getGroupChatsEDP().pipe(
-      map((response: Array<SY_GroupChatDTO>) => {
+      map((response: Array<SY_ChatDTO>) => {
         response.forEach((x) => {
-          const newChat: SY_GroupChatDTO = {
+          const newChat: SY_ChatDTO = {
             chatGuid: x.chatGuid,
             chatType: x.chatType,
             chatName: x.chatName,
@@ -409,8 +409,8 @@ export class ContactsService {
     );
   }
 
-  private _getGroupChatsEDP(): Observable<Array<SY_GroupChatDTO>> {
-    return this._http.get<Array<SY_GroupChatDTO>>(
+  private _getGroupChatsEDP(): Observable<Array<SY_ChatDTO>> {
+    return this._http.get<Array<SY_ChatDTO>>(
       this._conn.API_URL +
         'sayyo/misc/getGroupChats?userGuid=' +
         this._account.account.userGuid

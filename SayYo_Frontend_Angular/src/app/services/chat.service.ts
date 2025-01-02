@@ -7,6 +7,7 @@ import {
   SY_AddChatMemberDTO,
   SY_AddChatDTO,
   SY_UpdateChatMemberDTO,
+  SY_CreateGroupChatDTO,
 } from '../models/dto';
 import { MessagesService } from './messages.service';
 import { ConnectionService } from './connection.service';
@@ -14,13 +15,15 @@ import { HttpClient } from '@angular/common/http';
 import { AccountService } from './account.service';
 import { FriendshipService } from './friendship.service';
 import { MessageHubService } from './message-hub.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { MembershipService } from './membership.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
   constructor(
+    private _membershipService: MembershipService,
     private _messagesService: MessagesService,
     private _conn: ConnectionService,
     private _account: AccountService,
@@ -88,10 +91,10 @@ export class ChatService {
     this.createChat(addChat).subscribe(async (res) => {
       const chatGuid = String(res);
       // They are both admins in private chat
-      this.addChatMember(chatGuid, this._account.account.userGuid, 1).subscribe(
+      this._membershipService.addChatMember(chatGuid, this._account.account.userGuid, 1).subscribe(
         (_res) => {}
       );
-      this.addChatMember(chatGuid, friendChat.friend.guid, 1).subscribe(
+      this._membershipService.addChatMember(chatGuid, friendChat.friend.guid, 1).subscribe(
         (_res) => {}
       );
       //TODO: refreshing doesnt wor
@@ -200,6 +203,13 @@ export class ChatService {
   //   );
   // }
 
+  deleteChat(chatGuid: string): Observable<any> {
+    console.log("deleteChat: " + chatGuid);
+    return this._http.delete(
+      `${this._conn.API_URL}sayyo/chat/deleteChat?chatGuid=${chatGuid}`
+    );
+  }
+
   // Returns Created and chatGuid
   createChat(addChat: SY_AddChatDTO) {
     return this._http.post(
@@ -208,16 +218,11 @@ export class ChatService {
     );
   }
 
-  // Returns Created and chat member guid
-  addChatMember(chatGuid: string, userGuid: string, memberRole: number = 0) {
-    const addChatMember: SY_AddChatMemberDTO = {
-      chatGuid: chatGuid,
-      userGuid: userGuid,
-      role: memberRole,
-    };
-    return this._http.post(
-      this._conn.API_URL + 'sayyo/chat/addChatMember/',
-      addChatMember
+  // chatName: string, members: Array<{userGuid: string, role: int}>
+  createGroup(groupPayload: SY_CreateGroupChatDTO): Observable<any> {
+    return this._http.post<any>(
+      this._conn.API_URL + 'sayyo/chat/createGroupChat/',
+      groupPayload
     );
   }
 
@@ -240,12 +245,6 @@ export class ChatService {
   //   );
   // }
 
-  // Returns no content
-  // deleteChatMember(guid: string) {
-  //   return this._http.delete(
-  //     this._conn.API_URL + 'sayyo/chat/deleteChatMember?guid=' + guid
-  //   );
-  // }
 
   // ----------------------------
   // Helpers

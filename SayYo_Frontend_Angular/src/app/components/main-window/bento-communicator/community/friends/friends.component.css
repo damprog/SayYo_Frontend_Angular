@@ -60,7 +60,7 @@
   padding: 0;
   min-height: fit-content;
   /* max-height: 50vh; */
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .add-user-item {

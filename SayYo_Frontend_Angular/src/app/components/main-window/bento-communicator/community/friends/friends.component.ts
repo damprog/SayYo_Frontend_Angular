@@ -310,7 +310,7 @@ export class FriendsComponent implements OnInit {
         next: (data) => {
           this.results = data;
           this._modalService.showWithTemplate(
-            this._modalService.modalComponent.contentTemplate,
+            this._modalService.modalComponent.modalTemplate,
             { results: this.results }
           );
         },
