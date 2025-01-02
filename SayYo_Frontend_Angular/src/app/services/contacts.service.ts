@@ -86,7 +86,9 @@ export class ContactsService {
   getStrangersWithFilter(search: string): Observable<Array<SY_StrangerDTO>> {
     return this._http
       .get<Array<SY_StrangerDTO>>(
-        `${this._conn.API_URL}sayyo/misc/getStrangersWithFilter?userGuid=${this._account.account.userGuid}&amount=${1000}&search=${search}`
+        `${this._conn.API_URL}sayyo/misc/getStrangersWithFilter?userGuid=${
+          this._account.account.userGuid
+        }&amount=${1000}&search=${search}`
       )
       .pipe(
         map((response: Array<SY_StrangerDTO>) => {
@@ -99,15 +101,17 @@ export class ContactsService {
   }
 
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
-    // Add subscription for cleaning chat
-    if (this.cleanup_Subscription) {
-      this.cleanup_Subscription.unsubscribe();
-    }
-    this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
-      this.releaseFriendChats();
-    });
-
     if (this.friendsChats_Ok.items.length == 0) {
+      // Add subscription for cleaning chat
+      if (this.cleanup_Subscription) {
+        this.cleanup_Subscription.unsubscribe();
+      }
+      this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(
+        () => {
+          this.releaseFriendChats();
+        }
+      );
+
       console.log('getFriendChats_ok');
 
       return this._getFriendChats_Ok_EDP().pipe(
@@ -325,33 +329,41 @@ export class ContactsService {
   // }
 
   getGroupChats(): Observable<SY_ResponseStatus> {
-    this.groupChats.items = [];
-    return this._getGroupChatsEDP().pipe(
-      map((response: Array<SY_ChatDTO>) => {
-        response.forEach((x) => {
-          const newChat: SY_ChatDTO = {
-            chatGuid: x.chatGuid,
-            chatType: x.chatType,
-            chatName: x.chatName,
-            members: x.members,
-          };
+    if (this.groupChats.items.length == 0) {
+      console.log('loading groupChats');
 
-          this.groupChats.items.push(newChat);
-        });
+      return this._getGroupChatsEDP().pipe(
+        map((response: Array<SY_ChatDTO>) => {
+          response.forEach((x) => {
+            const newChat: SY_ChatDTO = {
+              chatGuid: x.chatGuid,
+              chatType: x.chatType,
+              chatName: x.chatName,
+              members: x.members,
+            };
 
-        return {
-          success: true,
-          message: '',
-        } as SY_ResponseStatus;
-      }),
-      catchError((error: HttpErrorResponse) => {
-        console.error('While getting groups chats: ', error.message);
-        return of({
-          success: false,
-          message: error.error,
-        } as SY_ResponseStatus);
-      })
-    );
+            this.groupChats.items.push(newChat);
+          });
+
+          return {
+            success: true,
+            message: '',
+          } as SY_ResponseStatus;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('While getting groups chats: ', error.message);
+          return of({
+            success: false,
+            message: error.error,
+          } as SY_ResponseStatus);
+        })
+      );
+    } else {
+      return of({
+        success: true,
+        message: '',
+      } as SY_ResponseStatus);
+    }
   }
 
   // ----------------------------------------------------------------------------------------------------------------------------------------------

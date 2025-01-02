@@ -28,6 +28,7 @@ export class FriendsComponent implements OnInit {
   friendsChats_Ok: Array<SY_ChatDTO> = [];
   friendsChats_Awaiting: Array<SY_ChatDTO> = [];
   friendsChats_Blocked: Array<SY_ChatDTO> = [];
+  selectedArea: any;
 
   friendsStatusComp$ = this._stateService.friendsStatus$;
 
@@ -40,7 +41,44 @@ export class FriendsComponent implements OnInit {
     private _chatService: ChatService,
     private _contextMenuService: ContextMenuService,
     public spinnerService: SpinnerService
-  ) {}
+  ) {
+    this._stateService.friendsStatus$.subscribe((status) => {
+      this.selectedArea = status;
+    });
+  }
+
+  // get filteredFriendsChats_Ok(): Array<SY_ChatDTO> {
+  //   console.log('Filtruj po: ' + this.searchPattern);
+  //   return this.filterList(
+  //     this.friendsChats_Ok,
+  //     this.searchPattern,
+  //     'chatName'
+  //   );
+  // }
+
+  filterChats() {
+    if (this.selectedArea.ok) this.loadActiveFriends();
+    if (this.selectedArea.invitations) this.loadAwaitingFriends();
+    if (this.selectedArea.blocked) this.loadBlockedFriends();
+  }
+
+  filterList<T>(
+    list: Array<T>,
+    searchKey: string,
+    property: keyof T
+  ): Array<T> {
+    if (!searchKey) {
+      console.log('return list');
+      return list;
+    }
+    console.log('return filtered');
+
+    return list.filter((item) =>
+      (item[property] as unknown as string)
+        .toLowerCase()
+        .includes(searchKey.toLowerCase())
+    );
+  }
 
   showContextMenu(event: MouseEvent, info: SY_ChatDTO): void {
     event.stopPropagation();
@@ -117,7 +155,9 @@ export class FriendsComponent implements OnInit {
       menuInfo.menuItems.push({
         label: 'Anuluj',
         action: () =>
-          this._friendshipService.deleteFriendship(info.members[0].friendshipGuid),
+          this._friendshipService.deleteFriendship(
+            info.members[0].friendshipGuid
+          ),
       });
     }
 
@@ -144,7 +184,9 @@ export class FriendsComponent implements OnInit {
       menuInfo.menuItems.push({
         label: 'Usuń',
         action: () =>
-          this._friendshipService.deleteFriendship(info.members[0].friendshipGuid),
+          this._friendshipService.deleteFriendship(
+            info.members[0].friendshipGuid
+          ),
       });
     } else {
       // No options for blocked user
@@ -153,16 +195,16 @@ export class FriendsComponent implements OnInit {
     return menuInfo;
   }
 
-  showChat(friendChat: SY_ChatDTO) {
+  showChat(targetChat: SY_ChatDTO) {
     console.log(
       'showChat(): ' +
-        friendChat.chatGuid +
+        targetChat.chatGuid +
         ', chatName: ' +
-        friendChat.chatName +
+        targetChat.chatName +
         ', friendGuid: ' +
-        friendChat.members[0].guid
+        targetChat.members[0].guid
     );
-    this._chatService.showChat(friendChat);
+    this._chatService.showChat(targetChat);
   }
 
   showFriends_StatusOk() {
@@ -183,6 +225,7 @@ export class FriendsComponent implements OnInit {
   toggleSearch() {
     this.searchOpen = !this.searchOpen;
     this.searchPattern = '';
+    this.filterChats();
   }
 
   ngOnInit() {
@@ -201,6 +244,11 @@ export class FriendsComponent implements OnInit {
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
           this.friendsChats_Ok = this._contacts.friendsChats_Ok.items;
+          this.friendsChats_Ok = this.filterList(
+            this.friendsChats_Ok,
+            this.searchPattern,
+            'chatName'
+          );
         } else {
           this._modalService.showModal(result.message);
         }
@@ -229,6 +277,11 @@ export class FriendsComponent implements OnInit {
         if (result.success) {
           this.friendsChats_Awaiting =
             this._contacts.friendsChats_Awaiting.items;
+          this.friendsChats_Awaiting = this.filterList(
+            this.friendsChats_Awaiting,
+            this.searchPattern,
+            'chatName'
+          );
         } else {
           this._modalService.showModal(result.message);
         }
@@ -256,6 +309,11 @@ export class FriendsComponent implements OnInit {
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
           this.friendsChats_Blocked = this._contacts.friendsChats_Blocked.items;
+          this.friendsChats_Blocked = this.filterList(
+            this.friendsChats_Blocked,
+            this.searchPattern,
+            'chatName'
+          );
         } else {
           this._modalService.showModal(result.message);
         }

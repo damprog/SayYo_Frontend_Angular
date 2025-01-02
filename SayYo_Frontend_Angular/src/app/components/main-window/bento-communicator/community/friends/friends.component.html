@@ -1,10 +1,10 @@
-
 <!-- @@@@@@@@@@@@@@@@@@ -->
 <!-- FRIENDS            -->
 <!-- @@@@@@@@@@@@@@@@@@ -->
 
 <div class="items-container" *ngIf="friendsStatusComp$ | async as state">
   <div class="community-type">
+    <!-- Header and buttons -->
     <input
       type="checkbox"
       id="searchCheckBox"
@@ -19,18 +19,29 @@
 
     <span>ZNAJOMI</span>
 
-    <div id="add" class="btn-icon" (click)="openAddUserModal(addUserModalTemplate)">
+    <div
+      id="add"
+      class="btn-icon"
+      (click)="openAddUserModal(addUserModalTemplate)"
+    >
       <i id="icon-add" class="bx bxs-user-plus"></i>
     </div>
   </div>
 
+  <!-- Filter input -->
   <ng-container *ngIf="searchOpen">
     <div class="divider"></div>
-    <input type="text" class="searchPattern" [(ngModel)]="searchPattern"/>
+    <input
+      type="text"
+      class="searchPattern"
+      [(ngModel)]="searchPattern"
+      (ngModelChange)="filterChats()"
+    />
   </ng-container>
 
   <div class="divider"></div>
 
+  <!-- Community buttons -->
   <div class="friendship-status">
     <div
       id="ok"
@@ -58,8 +69,13 @@
     </div>
   </div>
 
+  <!-- friends ok -->
   <div id="ok-friends" *ngIf="state.ok">
-    <div class="item" *ngFor="let x of friendsChats_Ok" (click)="showChat(x)">
+    <div
+      class="item"
+      *ngFor="let x of friendsChats_Ok"
+      (click)="showChat(x)"
+    >
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>
@@ -80,8 +96,13 @@
     </div>
   </div>
 
+  <!-- awaiting friends -->
   <div id="invitation-friends" *ngIf="state.invitations">
-    <div class="item" *ngFor="let x of friendsChats_Awaiting" (click)="showChat(x)">
+    <div
+      class="item"
+      *ngFor="let x of friendsChats_Awaiting"
+      (click)="showChat(x)"
+    >
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>
@@ -102,8 +123,13 @@
     </div>
   </div>
 
+  <!-- blocked friends -->
   <div id="blocked-friends" *ngIf="state.blocked">
-    <div class="item" *ngFor="let x of friendsChats_Blocked" (click)="showChat(x)">
+    <div
+      class="item"
+      *ngFor="let x of friendsChats_Blocked"
+      (click)="showChat(x)"
+    >
       <div class="content">
         <div class="photo-container">
           <div class="photo"></div>
@@ -129,16 +155,29 @@
 <!-- MODAL              -->
 <!-- @@@@@@@@@@@@@@@@@@ -->
 
-  <ng-template #addUserModalTemplate let-results="results">
-    <p class="add-user-title">Dodawanie znajomych</p>
-    <div class="add-user-search">
-      <input class="add-user-input" placeholder="Nazwa użytkownika" [(ngModel)]="searchName" (keydown.enter)="searchUsers()">
-      <button class="add-user-button" (click)="searchUsers()" [disabled]="!searchName || searchName.trim() === ''">Szukaj</button>
-    </div>
-    <ul class="add-user-list">
-      <li *ngFor="let user of results" class="add-user-item">
-        <span class="add-user-name">{{ user.userName }}</span>
-        <button class="add-user-add-btn" (click)="inviteUser(user.guid)">+</button>
-      </li>
-    </ul>
-  </ng-template>
+<ng-template #addUserModalTemplate let-results="results">
+  <p class="add-user-title">Dodawanie znajomych</p>
+  <div class="add-user-search">
+    <input
+      class="add-user-input"
+      placeholder="Nazwa użytkownika"
+      [(ngModel)]="searchName"
+      (keydown.enter)="searchUsers()"
+    />
+    <button
+      class="add-user-button"
+      (click)="searchUsers()"
+      [disabled]="!searchName || searchName.trim() === ''"
+    >
+      Szukaj
+    </button>
+  </div>
+  <ul class="add-user-list">
+    <li *ngFor="let user of results" class="add-user-item">
+      <span class="add-user-name">{{ user.userName }}</span>
+      <button class="add-user-add-btn" (click)="inviteUser(user.guid)">
+        +
+      </button>
+    </li>
+  </ul>
+</ng-template>

@@ -36,6 +36,28 @@ export class GroupsComponent implements OnInit {
     public spinnerService: SpinnerService
   ) {}
 
+  filterChats() {
+    this.loadGroupChats();
+  }
+
+  filterList<T>(
+    list: Array<T>,
+    searchKey: string,
+    property: keyof T
+  ): Array<T> {
+    if (!searchKey) {
+      console.log('return list');
+      return list;
+    }
+    console.log('return filtered');
+
+    return list.filter((item) =>
+      (item[property] as unknown as string)
+        .toLowerCase()
+        .includes(searchKey.toLowerCase())
+    );
+  }
+
   showContextMenu(event: MouseEvent, chatInfo: SY_ChatDTO): void {
     event.stopPropagation();
     var menuInfo: ContextMenu = {
@@ -82,18 +104,36 @@ export class GroupsComponent implements OnInit {
     return menuInfo;
   }
 
+  showChat(targetChat: SY_ChatDTO) {
+    console.log(
+      'showChat(): ' +
+        targetChat.chatGuid +
+        ', chatName: ' +
+        targetChat.chatName
+    );
+    console.table(targetChat.members);
+    this._chatService.showChat(targetChat);
+  }
+
   toggleSearch() {
     this.searchOpen = !this.searchOpen;
     this.searchPattern = '';
+    this.filterChats();
   }
 
-  ngOnInit() {
+  loadGroupChats() {
+    console.log("loadGroupChats");
     this.spinnerService.show();
     this.groupChats = [];
     this._contacts.getGroupChats().subscribe({
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
           this.groupChats = this._contacts.groupChats.items;
+          this.groupChats = this.filterList(
+            this.groupChats,
+            this.searchPattern,
+            'chatName'
+          );
         } else {
           this._modalService.showModal(result.message);
         }
@@ -109,6 +149,10 @@ export class GroupsComponent implements OnInit {
     });
   }
 
+  ngOnInit() {
+    this.loadGroupChats();
+  }
+
   // -------------------
   // modal
   // -------------------
@@ -121,7 +165,10 @@ export class GroupsComponent implements OnInit {
   filteredFriendList: Array<{ userGuid: string; userName: string }> = [];
 
   openCreateGroupModal(): void {
-    console.log('Group: open modal');
+    // Reset modal
+    this.groupName = '';
+    this.selectedFriends = {};
+
     this._modalService.showWithTemplate(this.createGroupModalTemplate, {
       groupName: this.groupName,
       filterText: this.filterText,

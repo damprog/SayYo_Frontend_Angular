@@ -20,14 +20,20 @@
     </div>
   </div>
 
+  <!-- Filter input -->
   <ng-container *ngIf="searchOpen">
     <div class="divider"></div>
-    <input type="text" class="searchPattern" [(ngModel)]="searchPattern"/>
+    <input
+      type="text"
+      class="searchPattern"
+      [(ngModel)]="searchPattern"
+      (ngModelChange)="filterChats()"
+    />
   </ng-container>
 
   <div class="divider"></div>
 
-  <div class="item" *ngFor="let x of groupChats">
+  <div class="item" *ngFor="let x of groupChats" (click)="showChat(x)">
     <div class="content">
       <div class="photo-container">
         <div class="photo"></div>
