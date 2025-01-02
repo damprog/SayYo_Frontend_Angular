@@ -15,7 +15,7 @@ import { ContextMenuService } from '../../../../../services/context-menu.service
 import { FriendshipService } from '../../../../../services/friendship.service';
 import { ModalService } from '../../../../../services/modal.service';
 import { AccountService } from '../../../../../services/account.service';
-import { finalize } from 'rxjs';
+import { finalize, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-friends',
@@ -115,9 +115,23 @@ export class FriendsComponent implements OnInit {
         {
           label: 'Usuń znajomego',
           action: () =>
-            this._friendshipService.deleteFriendship(
-              info.members[0].friendshipGuid
-            ),
+            this._modalService
+              .confirmPopup(
+                `Czy na pewno chcesz usunąć znajomego ${info.members[0].userName}?`
+              )
+              .pipe(
+                switchMap((confirmed) => {
+                  if (confirmed) {
+                    console.log('Potwierdzono usunięcie znajomego');
+                    return this._friendshipService.deleteFriendship(
+                      info.members[0].friendshipGuid
+                    );
+                  } else {
+                    console.log('Anulowno usunięcie znajomego');
+                    return of(null);
+                  }
+                }),
+              ),
         },
       ],
     };

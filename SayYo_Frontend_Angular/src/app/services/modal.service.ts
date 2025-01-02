@@ -1,5 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { ModalBaseComponent } from '../components/popup/modal-base/modal-base.component';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,15 @@ export class ModalService {
     if(this.modalComponent){
       this.modalComponent.show(content);
     }
+  }
+
+  confirmPopup(question: string): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.modalComponent.showConfirm(question).subscribe((confirmed) => {
+        observer.next(confirmed);
+        observer.complete();
+      });
+    });
   }
 
   hideModal(){

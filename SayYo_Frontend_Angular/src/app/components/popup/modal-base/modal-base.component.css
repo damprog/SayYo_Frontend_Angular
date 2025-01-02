@@ -29,6 +29,33 @@
   border-radius: 5px;
 }
 
+.modal-header{
+  display: block;
+}
+
+.modal-footer{
+  align-items: center;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.confirm {
+  background: #d08d28;
+}
+
+.cancel {
+  background: #777;
+
+}
+
 .close {
   position: absolute;
   top: 0;

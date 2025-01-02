@@ -1,6 +1,5 @@
 <div class="items-container">
   <div class="community-type">
-
     <input
       type="checkbox"
       id="searchCheckBox"
@@ -8,9 +7,9 @@
       (click)="toggleSearch()"
     />
     <label for="searchCheckBox">
-    <div id="search" class="btn-icon">
-      <i class="bx bx-search"></i>
-    </div>
+      <div id="search" class="btn-icon">
+        <i class="bx bx-search"></i>
+      </div>
     </label>
 
     <span>GRUPY</span>
@@ -57,23 +56,37 @@
 <!-- @@@@@@@@@@@@@@@@@@ -->
 <!-- MODAL              -->
 <!-- @@@@@@@@@@@@@@@@@@ -->
+<ng-template #groupMembersModalTemplate>
+  <p class="modal-title">Członkowie grupy</p>
+  <!-- List of filtered friends with checbox -->
+  <ul class="modal-list">
+    <li *ngFor="let member of tempGroupMembers" class="modal-item">
+      <span class="modal-item-name">
+        {{ member.userName }}
+        <span class="modal-item-chatrole">
+          {{ member.chatRole === 1 ? "(Admin)" : "" }}
+        </span>
+      </span>
+    </li>
+  </ul>
+</ng-template>
 
 <ng-template #createGroupModalTemplate>
-  <p class="create-group-title">Tworzenie grupy</p>
+  <p class="modal-title">Tworzenie grupy</p>
 
   <!-- Group name ipnut-->
-  <div class="create-group-name-input">
+  <div class="modal-name-input">
     <input
-      class="create-group-input"
+      class="modal-input"
       placeholder="Nazwa grupy"
       [(ngModel)]="groupName"
     />
   </div>
 
   <!-- Filter friends input-->
-  <div class="create-group-search">
+  <div class="modal-search">
     <input
-      class="create-group-input"
+      class="modal-input"
       placeholder="Filtruj znajomych"
       [(ngModel)]="filterText"
       (ngModelChange)="filterFriends()"
@@ -81,19 +94,23 @@
   </div>
 
   <!-- List of filtered friends with checbox -->
-  <ul class="create-group-list">
-    <li *ngFor="let friend of filteredFriendList" class="create-group-item">
-      <span class="create-group-name">{{ friend.userName }}</span>
+  <ul class="modal-list">
+    <li *ngFor="let friend of filteredFriendList" class="modal-item">
+      <span class="modal-name">{{ friend.userName }}</span>
       <input
         type="checkbox"
-        class="create-group-checkbox"
+        class="modal-checkbox"
         [(ngModel)]="selectedFriends[friend.userGuid]"
       />
     </li>
   </ul>
 
   <!-- Button -->
-  <button class="create-group-button" (click)="createGroup()" [disabled]="!groupName || !Object.keys(selectedFriends).length">
+  <button
+    class="modal-button"
+    (click)="createGroup()"
+    [disabled]="!groupName || !Object.keys(selectedFriends).length"
+  >
     Utwórz grupę
   </button>
 </ng-template>

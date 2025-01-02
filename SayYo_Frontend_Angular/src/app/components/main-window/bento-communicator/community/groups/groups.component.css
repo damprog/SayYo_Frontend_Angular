@@ -13,7 +13,7 @@
        modal
 ------------------- */
 
-.create-group-title {
+.modal-title {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 15px;
@@ -21,11 +21,11 @@
   color: white;
 }
 
-.create-group-search {
+.modal-search {
   margin-bottom: 15px;
 }
 
-.create-group-input {
+.modal-input {
   margin-bottom: 5%;
   width: 100%;
   padding: 10px;
@@ -35,7 +35,7 @@
   color: white;
 }
 
-.create-group-list {
+.modal-list {
   list-style: none;
   padding: 0;
   max-height: 300px;
@@ -43,7 +43,7 @@
   overflow-x: hidden;
 }
 
-.create-group-item {
+.modal-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,15 +51,20 @@
   border-bottom: 1px solid #555;
 }
 
-.create-group-name {
+.modal-item-chatrole{
+  color:#686868;
+  font-size: 0.8rem;
+}
+
+.modal-name {
   color: white;
 }
 
-.create-group-checkbox {
+.modal-checkbox {
   transform: scale(1.2);
 }
 
-.create-group-button {
+.modal-button {
   padding: 10px 20px;
   background: #4caf50;
   color: white;
@@ -69,7 +74,7 @@
   transition: background 0.3s;
 }
 
-.create-group-button:hover {
+.modal-button:hover {
   background: #45a049;
 }
 

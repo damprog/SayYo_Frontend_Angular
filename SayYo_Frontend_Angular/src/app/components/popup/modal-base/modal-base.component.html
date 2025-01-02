@@ -8,12 +8,31 @@
 </div>
 
 <!-- Modal with template -->
-<div class="modal" [class.show]="visible">
+<div class="modal" [class.show]="visibleTemplate">
   <div class="modal-content">
     <i class="bx bx-x close" (click)="hide()"></i>
     <!-- <ng-container *ngIf="modalTemplate"> -->
-      <ng-container *ngTemplateOutlet="modalTemplate; context: templateContext"></ng-container>
+    <ng-container
+      *ngTemplateOutlet="modalTemplate; context: templateContext"
+    ></ng-container>
     <!-- </ng-container> -->
+  </div>
+</div>
+
+<!-- Modal confirm -->
+<div class="modal" [class.show]="visibleConfirm">
+  <div class="modal-content">
+    <i class="bx bx-x close" (click)="confirm(false)"></i>
+    <div class="modal-header">
+      <h2>Potwierdzenie</h2>
+    </div>
+    <div class="modal-body">
+      <p>{{ content }}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-button confirm" (click)="confirm(true)">Tak</button>
+      <button class="modal-button cancel" (click)="confirm(false)">Nie</button>
+    </div>
   </div>
 </div>
 

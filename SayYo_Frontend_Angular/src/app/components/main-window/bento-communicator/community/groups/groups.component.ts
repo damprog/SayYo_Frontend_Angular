@@ -1,9 +1,10 @@
-import { finalize, Observable, of } from 'rxjs';
+import { finalize, Observable, of, switchMap } from 'rxjs';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import {
   SY_ChatDTO,
+  SY_ChatMemberDTO,
   SY_CreateGroupChatDTO,
   SY_GroupChatMemberDTO,
   SY_ResponseStatus,
@@ -71,7 +72,7 @@ export class GroupsComponent implements OnInit {
   }
 
   prepareGroupMenu(chatInfo: SY_ChatDTO): ContextMenu {
-    var accountMember = chatInfo.members.find(
+    const accountMember: SY_ChatMemberDTO | undefined = chatInfo.members.find(
       (member) => member.guid == this._accountService.account.userGuid
     );
 
@@ -80,15 +81,34 @@ export class GroupsComponent implements OnInit {
       name: chatInfo.chatName,
       menuItems: [
         {
-          label: 'Opuść grupe',
+          label: 'Zobacz członków',
           action: () => {
-            if (accountMember) {
-              return this._membershipService.deleteChatMember(
-                accountMember.membershipGuid
-              );
-            }
-            return of(null);
+            this.tempGroupMembers = chatInfo.members;
+            return this._modalService.showWithTemplate(
+              this.groupMembersModalTemplate,
+              {}
+            );
           },
+        },
+        {
+          label: 'Opuść grupe',
+          action: () =>
+             this._modalService
+              .confirmPopup(
+                `Czy na pewno chcesz opuścić grupę ${chatInfo.chatName}?`
+              ).pipe(
+                switchMap((confirmed) => {
+                if (confirmed && accountMember) {
+                  console.log('Potwierdzono opuszczenie grupy');
+                  return this._membershipService.deleteChatMember(
+                    accountMember.membershipGuid
+                  );
+                } else {
+                  console.log('Anulowno opuszczenie grupy');
+                  return of(null);
+                }
+              })
+            ),
         },
       ],
     };
@@ -97,7 +117,20 @@ export class GroupsComponent implements OnInit {
     if (accountMember?.chatRole == 1) {
       menuInfo.menuItems.push({
         label: 'Usuń grupę',
-        action: () => this._chatService.deleteChat(chatInfo.chatGuid),
+        action: () =>
+          this._modalService.confirmPopup(`Czy na pewno chcesz usunąć grupę ${chatInfo.chatName}?`)
+          .pipe(
+            switchMap((confirmed) => {
+              if (confirmed) {
+                console.log('Potwierdzono usunięcie grupy');
+                return this._chatService.deleteChat(chatInfo.chatGuid);
+              }
+              else{
+                console.log('Anulowano usuwanie grupy');
+                return of(null);
+              }
+            })
+          ),
       });
     }
 
@@ -122,7 +155,7 @@ export class GroupsComponent implements OnInit {
   }
 
   loadGroupChats() {
-    console.log("loadGroupChats");
+    console.log('loadGroupChats');
     this.spinnerService.show();
     this.groupChats = [];
     this._contacts.getGroupChats().subscribe({
@@ -156,6 +189,10 @@ export class GroupsComponent implements OnInit {
   // -------------------
   // modal
   // -------------------
+
+  @ViewChild('groupMembersModalTemplate')
+  groupMembersModalTemplate!: TemplateRef<any>;
+  tempGroupMembers: Array<SY_ChatMemberDTO> = [];
 
   @ViewChild('createGroupModalTemplate')
   createGroupModalTemplate!: TemplateRef<any>;

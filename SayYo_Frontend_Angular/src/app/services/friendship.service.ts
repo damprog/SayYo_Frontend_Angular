@@ -61,7 +61,7 @@ export class FriendshipService {
     };
 
     console.log(
-      'Usunięto znajomość: ' +
+      'Zaktualizowao znajomość: ' +
         this._account.account.userGuid +
         ' z ' +
         friendGuid

@@ -23,22 +23,6 @@ export class ContextMenuComponent implements AfterViewInit {
   }
 
   executeAction(item: MenuItem) {
-    // if (item.action) {
-    //   const result = item.action();
-    //   console.log("Niby wykonanie action()");
-    //   if (result instanceof Observable) {
-    //     result.subscribe(
-    //       () => {
-    //         console.log('Wykonano action()');
-    //       },
-    //       () => {
-    //         console.log('Błąd action()');
-    //       }
-    //     );
-    //   }
-    // }
-
-    console.log('menu item clicked');
     item.action().subscribe(
       () => {
         console.log('Wykonano action()');
@@ -48,11 +32,6 @@ export class ContextMenuComponent implements AfterViewInit {
       }
     );
   }
-  // console.log("menu item clicked");
-  // item.action().subscribe(
-  //   () => {console.log("Wykonano action()");},
-  //   () => {console.log("Błąd action()");},
-  // );
 
   showMenu(event: MouseEvent, menuInfo: ContextMenu): void {
     event.preventDefault();

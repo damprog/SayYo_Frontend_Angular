@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, TemplateRef } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-modal-base',
@@ -10,8 +11,11 @@ export class ModalBaseComponent implements AfterViewInit {
   // Modal base
   visibleBase = false;
   content: string = '';
+  // Modal confirm
+  visibleConfirm = false;
+  private confirmationSubject = new Subject<boolean>();
   // Modal with template
-  visible = false;
+  visibleTemplate = false;
   modalTemplate!: TemplateRef<any>;
   templateContext: any;
 
@@ -20,7 +24,20 @@ export class ModalBaseComponent implements AfterViewInit {
   showWithTemplate(template: TemplateRef<any>, context?: any) {
     this.modalTemplate = template;
     this.templateContext = context;
-    this.visible = true;
+    this.visibleTemplate = true;
+  }
+
+  showConfirm(question: string): Subject<boolean> {
+    this.content = question;
+    this.visibleConfirm = true;
+    return this.confirmationSubject;
+  }
+
+  confirm(result: boolean) {
+    this.visibleConfirm = false;
+    this.content = "";
+    this.confirmationSubject.next(result);
+    this.confirmationSubject.complete();
   }
 
   show(content: string) {
@@ -30,8 +47,9 @@ export class ModalBaseComponent implements AfterViewInit {
   }
 
   hide() {
-    this.visible = false;
+    this.visibleTemplate = false;
     this.visibleBase = false;
+    this.visibleConfirm = false;
     this.content = "";
     this.templateContext = {};
   }
