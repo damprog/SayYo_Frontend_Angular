@@ -12,7 +12,7 @@
   <ng-container *ngIf="!chatService.helloContainerActive && chat">
     <ng-container>
       <div class="blockname-container">
-        <p class="blockname">{{ chat.chatInfo.chatName }}</p>
+        <p class="blockname" [class.groupTypeChat] = "chat.chatInfo.chatType == 1">{{ chat.chatInfo.chatName }}</p>
         <p
           class="close-chat"
           (click)="chatService.closeChat(chat)"
