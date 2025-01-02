@@ -45,14 +45,14 @@ export interface SY_LoginResponseDTO {
 // CONTACTS SERVICE
 // --------------------------------------
 
-// export interface SY_ChatDTO {
-//   chatGuid: string;
-//   chatType: number;
-//   chatName: string;
-//   friend: SY_FriendMemberDTO;
-// }
+export interface SY_ChatDTO {
+  chatGuid: string;
+  chatType: number;
+  chatName: string;
+  members: Array<SY_ChatMemberDTO>;
+}
 
-export interface SY_FriendMemberDTO {
+export interface SY_ChatMemberDTO {
   guid: string;
   userName: string;
   membershipGuid: string;
@@ -62,13 +62,6 @@ export interface SY_FriendMemberDTO {
   iBlockedUser: number;
   userBlockedMe: number;
   iInvited: boolean;
-}
-
-export interface SY_ChatDTO {
-  chatGuid: string;
-  chatType: number;
-  chatName: string;
-  members: Array<SY_FriendMemberDTO>;
 }
 
 export interface SY_CreateGroupChatDTO {
