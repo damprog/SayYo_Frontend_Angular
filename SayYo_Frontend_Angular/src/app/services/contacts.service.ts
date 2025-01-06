@@ -122,11 +122,12 @@ export class ContactsService {
   }
 
   getStrangersWithFilter(search: string): Observable<Array<SY_StrangerDTO>> {
+    const filter: string = 'filter:' + search;
     return this._http
       .get<Array<SY_StrangerDTO>>(
         `${this._conn.API_URL}sayyo/misc/getStrangersWithFilter?userGuid=${
           this._account.account.userGuid
-        }&amount=${1000}&search=${search}`
+        }&amount=${1000}&search=${filter}`
       )
       .pipe(
         map((response: Array<SY_StrangerDTO>) => {

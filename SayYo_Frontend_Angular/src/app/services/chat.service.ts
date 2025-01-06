@@ -174,6 +174,13 @@ export class ChatService {
     this.checkHelloContainer();
   }
 
+  closeChat_1(targetChatInfo: SY_ChatDTO) {
+    this.activeChats = this.activeChats.filter(
+      (chat) => !this.isSameChat(chat.chatInfo, targetChatInfo)
+    );
+    this.checkHelloContainer();
+  }
+
   sendMessage(chatGuid: string, content: string) {
     this._messagesService.sendMessage(chatGuid, content).subscribe({
       next: (response: SY_ResponseStatus) => {

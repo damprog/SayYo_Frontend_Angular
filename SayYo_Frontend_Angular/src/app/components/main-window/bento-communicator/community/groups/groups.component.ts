@@ -107,6 +107,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
               .pipe(
                 switchMap((confirmed) => {
                   if (confirmed && accountMember) {
+                    this._chatService.closeChat_1(chatInfo);
                     console.log('Potwierdzono opuszczenie grupy');
                     return this._membershipService.deleteChatMember(
                       accountMember.membershipGuid
@@ -133,6 +134,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
             .pipe(
               switchMap((confirmed) => {
                 if (confirmed) {
+                  this._chatService.closeChat_1(chatInfo);
                   console.log('Potwierdzono usunięcie grupy');
                   return this._chatService.deleteChat(chatInfo.chatGuid);
                 } else {

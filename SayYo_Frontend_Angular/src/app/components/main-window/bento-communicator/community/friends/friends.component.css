@@ -38,7 +38,7 @@
   box-sizing: border-box;
 }
 
-.add-user-button {
+.add-user-search-button {
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -51,7 +51,7 @@
   box-sizing: border-box;
 }
 
-.add-user-button:hover {
+.add-user-search-button:hover {
   background: #45a049;
 }
 

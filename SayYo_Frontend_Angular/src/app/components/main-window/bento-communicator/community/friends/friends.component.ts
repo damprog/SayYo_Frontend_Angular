@@ -21,7 +21,7 @@ import { ContextMenuService } from '../../../../../services/context-menu.service
 import { FriendshipService } from '../../../../../services/friendship.service';
 import { ModalService } from '../../../../../services/modal.service';
 import { AccountService } from '../../../../../services/account.service';
-import { finalize, of, Subscription, switchMap } from 'rxjs';
+import { finalize, Observable, of, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-friends',
@@ -123,6 +123,7 @@ export class FriendsComponent implements OnInit, OnDestroy {
               .pipe(
                 switchMap((confirmed) => {
                   if (confirmed) {
+                    this._chatService.closeChat_1(info);
                     console.log('Potwierdzono usunięcie znajomego');
                     return this._friendshipService.deleteFriendship(
                       info.members[0].friendshipGuid
@@ -158,21 +159,25 @@ export class FriendsComponent implements OnInit, OnDestroy {
       });
       menuInfo.menuItems.push({
         label: 'Odrzuć',
-        action: () =>
-          this._friendshipService.updateFriendshipStatus(
+        action: () => {
+          this._chatService.closeChat_1(info);
+          return this._friendshipService.updateFriendshipStatus(
             info.members[0].guid,
             2,
             1,
             info.members[0].userBlockedMe
-          ),
+          );
+        },
       });
     } else {
       menuInfo.menuItems.push({
         label: 'Anuluj',
-        action: () =>
-          this._friendshipService.deleteFriendship(
+        action: () => {
+          this._chatService.closeChat_1(info);
+          return this._friendshipService.deleteFriendship(
             info.members[0].friendshipGuid
-          ),
+          );
+        },
       });
     }
 
@@ -198,10 +203,12 @@ export class FriendsComponent implements OnInit, OnDestroy {
       });
       menuInfo.menuItems.push({
         label: 'Usuń',
-        action: () =>
-          this._friendshipService.deleteFriendship(
+        action: () => {
+          this._chatService.closeChat_1(info);
+          return this._friendshipService.deleteFriendship(
             info.members[0].friendshipGuid
-          ),
+          );
+        },
       });
     } else {
       // No options for blocked user
@@ -369,9 +376,17 @@ export class FriendsComponent implements OnInit, OnDestroy {
   }
 
   searchUsers(): void {
+    var func: () => Observable<Array<SY_StrangerDTO>>;
+
+    if(!this.searchName || this.searchName.trim() === ''){
+      func = () => this._contacts.getStrangers(10);
+    }else{
+      func = () => this._contacts
+      .getStrangersWithFilter(this.searchName);
+    }
+
     this.spinnerService.show();
-    this._contacts
-      .getStrangersWithFilter(this.searchName)
+    func()
       .pipe(finalize(() => this.spinnerService.hide()))
       .subscribe({
         next: (data) => {
