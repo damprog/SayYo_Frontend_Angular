@@ -7,9 +7,9 @@
   display: block;
   float: left;
   margin: auto;
-  max-width: 98%;
-  min-width: 98%;
-  height: 98%;
+  max-width: 100%;
+  min-width: 100%;
+  height: 100%;
   padding: 0;
   background-color: rgba(255, 255, 255, 0.1);
   border-top-left-radius: 22px;
@@ -298,75 +298,4 @@
 .writearea button:active {
   transform: scale(0.95);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/*  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-
-/* Hello screen */
-.default .hello-container {
-  background-color: #333;
-}
-
-.default .hello {
-  color: #fff;
-}
-
-.default .hello .say {
-  background-color: #ffcc00;
-}
-
-.default .hello .yo {
-  background-color: #00ccff;
-}
-
-/* Hello screen */
-.hello-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 94%;
-}
-
-.hello {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 48px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.hello .say {
-  padding: 5px 20px;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  animation: bounce 2s infinite alternate ease-in-out;
-  color: #d2ffc9;
-}
-
-.hello .yo {
-  padding: 5px 20px;
-  border-radius: 10px;
-  animation: bounce 2s infinite alternate ease-in-out;
-  color: #ffd1d1;
-}
-
-.author {
-  position: absolute;
-  display: block;
-  bottom: 0;
-  color: #757575;
-  font-weight: bold;
-  font-size: 10px;
-}
-
-@keyframes bounce {
-  0% {
-    transform: translateY(0);
-  }
-
-  100% {
-    transform: translateY(-20px);
-  }
 }

@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -26,6 +27,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('messagesContainer', { static: false })
   private messagesContainer!: ElementRef;
   private messageSubscription!: Subscription;
+
+  @Input() chat!: Chat;
 
   private isScrolledToBottom(): boolean {
     if (!this.messagesContainer) return false;

@@ -4,11 +4,7 @@
 
 <!-- ------------------------------------------------------------------------------------------------------------------ -->
 
-<div
-  class="chat-item default"
-  *ngFor="let chat of chatService.activeChats; let i = index"
-  [attr.data-index]="i"
->
+<div class="chat-item default">
   <ng-container *ngIf="!chatService.helloContainerActive && chat">
     <ng-container>
       <div class="blockname-container">
@@ -83,15 +79,3 @@
     </div>
   </ng-container>
 </div>
-
-<!-- ------------------------------------------------------------------------------------------------------------------ -->
-
-<div class="hello-container" *ngIf="chatService.helloContainerActive">
-  <div class="hello">
-    <div class="say">Say</div>
-    <div class="yo">Yo</div>
-  </div>
-  <p class="author">Copyright © 2024 Damian Filipiak</p>
-</div>
-
-<!-- ------------------------------------------------------------------------------------------------------------------ -->
