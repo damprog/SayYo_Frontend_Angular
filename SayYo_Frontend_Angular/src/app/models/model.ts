@@ -19,11 +19,8 @@ export interface UserAccount {
 // CONTACTS SERVICE
 // --------------------------------------
 
-export interface FriendsChats {
-  items: Array<SY_ChatDTO>;
-}
-
-export interface GroupChats {
+export interface Chats {
+  refreshNeeded: boolean;
   items: Array<SY_ChatDTO>;
 }
 

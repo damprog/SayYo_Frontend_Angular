@@ -14,7 +14,7 @@ import { ConnectionService } from './connection.service';
 import { HttpClient } from '@angular/common/http';
 import { AccountService } from './account.service';
 import { FriendshipService } from './friendship.service';
-import { MessageHubService } from './message-hub.service';
+import { SignalRService } from './signalR.service';
 import { Observable, Subscription } from 'rxjs';
 import { MembershipService } from './membership.service';
 
@@ -28,7 +28,7 @@ export class ChatService {
     private _conn: ConnectionService,
     private _account: AccountService,
     private _friendshipService: FriendshipService,
-    private _messageHubService: MessageHubService,
+    private _signalRService: SignalRService,
     private _http: HttpClient
   ) {}
 
@@ -41,10 +41,8 @@ export class ChatService {
   activeChats: Array<Chat> = [];
   helloContainerActive: Boolean = true;
 
-  messageHubSetup() {
-    this._messageHubService.startConnection(this._account.account.userGuid);
-
-    this._messageHubService.onReceiveMessage((message) => {
+  setupChatService() {
+    this._signalRService.onReceiveMessage((message) => {
       this.handleNewMessage(message);
       this.onNewMessage.emit();
     });
@@ -57,7 +55,6 @@ export class ChatService {
     }
     this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
       this.releaseChats();
-      this.stopSignalRConnection();
     });
   }
 
@@ -255,10 +252,6 @@ export class ChatService {
     this.activeChats = [];
     this.cachedChats = [];
     console.log("Released chats", this.activeChats, this.cachedChats);
-  }
-
-  stopSignalRConnection() {
-    this._messageHubService.stopConnection();
   }
 
   checkHelloContainer() {

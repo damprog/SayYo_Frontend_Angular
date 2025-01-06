@@ -1,5 +1,11 @@
-import { finalize, Observable, of, switchMap } from 'rxjs';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { finalize, Observable, of, Subscription, switchMap } from 'rxjs';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import {
@@ -21,11 +27,12 @@ import { ChatService } from '../../../../../services/chat.service';
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.css',
 })
-export class GroupsComponent implements OnInit {
+export class GroupsComponent implements OnInit, OnDestroy {
   searchOpen: boolean = false;
   searchPattern: string = '';
   groupChats: Array<SY_ChatDTO> = [];
   Object = Object;
+  onRefreshGroups_Subscription!: Subscription;
 
   constructor(
     private _chatService: ChatService,
@@ -93,22 +100,23 @@ export class GroupsComponent implements OnInit {
         {
           label: 'Opuść grupe',
           action: () =>
-             this._modalService
+            this._modalService
               .confirmPopup(
                 `Czy na pewno chcesz opuścić grupę ${chatInfo.chatName}?`
-              ).pipe(
+              )
+              .pipe(
                 switchMap((confirmed) => {
-                if (confirmed && accountMember) {
-                  console.log('Potwierdzono opuszczenie grupy');
-                  return this._membershipService.deleteChatMember(
-                    accountMember.membershipGuid
-                  );
-                } else {
-                  console.log('Anulowno opuszczenie grupy');
-                  return of(null);
-                }
-              })
-            ),
+                  if (confirmed && accountMember) {
+                    console.log('Potwierdzono opuszczenie grupy');
+                    return this._membershipService.deleteChatMember(
+                      accountMember.membershipGuid
+                    );
+                  } else {
+                    console.log('Anulowno opuszczenie grupy');
+                    return of(null);
+                  }
+                })
+              ),
         },
       ],
     };
@@ -118,19 +126,21 @@ export class GroupsComponent implements OnInit {
       menuInfo.menuItems.push({
         label: 'Usuń grupę',
         action: () =>
-          this._modalService.confirmPopup(`Czy na pewno chcesz usunąć grupę ${chatInfo.chatName}?`)
-          .pipe(
-            switchMap((confirmed) => {
-              if (confirmed) {
-                console.log('Potwierdzono usunięcie grupy');
-                return this._chatService.deleteChat(chatInfo.chatGuid);
-              }
-              else{
-                console.log('Anulowano usuwanie grupy');
-                return of(null);
-              }
-            })
-          ),
+          this._modalService
+            .confirmPopup(
+              `Czy na pewno chcesz usunąć grupę ${chatInfo.chatName}?`
+            )
+            .pipe(
+              switchMap((confirmed) => {
+                if (confirmed) {
+                  console.log('Potwierdzono usunięcie grupy');
+                  return this._chatService.deleteChat(chatInfo.chatGuid);
+                } else {
+                  console.log('Anulowano usuwanie grupy');
+                  return of(null);
+                }
+              })
+            ),
       });
     }
 
@@ -180,10 +190,6 @@ export class GroupsComponent implements OnInit {
         this.spinnerService.hide();
       },
     });
-  }
-
-  ngOnInit() {
-    this.loadGroupChats();
   }
 
   // -------------------
@@ -286,5 +292,25 @@ export class GroupsComponent implements OnInit {
           console.error('Błąd podczas tworzenia grupy:', error);
         },
       });
+  }
+
+  // -----------------------------
+
+  ngOnInit() {
+    if (this._accountService.isLoggedIn) {
+      this.loadGroupChats();
+
+      // Add subscriptions
+      this.onRefreshGroups_Subscription =
+        this._contacts.onRefreshGroups.subscribe(() => {
+          this.loadGroupChats();
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if(this.onRefreshGroups_Subscription){
+      this.onRefreshGroups_Subscription.unsubscribe();
+    }
   }
 }

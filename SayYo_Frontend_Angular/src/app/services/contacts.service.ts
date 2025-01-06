@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -9,7 +9,8 @@ import {
   SY_StrangerDTO,
   SY_UserDTO,
 } from '../models/dto';
-import { FriendsChats, GroupChats } from '../models/model';
+import { Chats } from '../models/model';
+import { SignalRService } from './signalR.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,8 @@ export class ContactsService {
   constructor(
     private _conn: ConnectionService,
     private _account: AccountService,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _signalRService: SignalRService,
   ) {
     this.friendsChats_Ok.items = new Array<SY_ChatDTO>();
     this.friendsChats_Awaiting.items = new Array<SY_ChatDTO>();
@@ -26,27 +28,63 @@ export class ContactsService {
     this.groupChats.items = new Array<SY_ChatDTO>();
   }
 
+  public onRefreshActiveFriends: EventEmitter<void> = new EventEmitter<void>();
+  public onRefreshAwaitingFriends: EventEmitter<void> = new EventEmitter<void>();
+  public onRefreshBlockedFriends: EventEmitter<void> = new EventEmitter<void>();
+  public onRefreshGroups: EventEmitter<void> = new EventEmitter<void>();
+
   private cleanup_Subscription!: Subscription;
 
-  friendsChats_Ok: FriendsChats = {
+  friendsChats_Ok: Chats = {
+    refreshNeeded: true,
     items: [],
   };
 
-  friendsChats_Awaiting: FriendsChats = {
+  friendsChats_Awaiting: Chats = {
+    refreshNeeded: true,
     items: [],
   };
 
-  friendsChats_Blocked: FriendsChats = {
+  friendsChats_Blocked: Chats = {
+    refreshNeeded: true,
     items: [],
   };
 
-  groupChats: GroupChats = {
+  groupChats: Chats = {
+    refreshNeeded: true,
     items: [],
   };
 
-  // ActiveFriends: Array<SY_UserDTO> = [];
-  // AwaitingFriends: Array<SY_UserDTO> = [];
-  // BlockedFriends: Array<SY_UserDTO> = [];
+  setupContactsService() {
+    // Add subscription for cleaning chat
+    if (this.cleanup_Subscription) {
+      this.cleanup_Subscription.unsubscribe();
+    }
+    this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
+      this.releaseFriendChats();
+    });
+
+    // Register events
+    this._signalRService.onRefreshActiveFriends(()=>{
+      this.friendsChats_Ok.refreshNeeded = true;
+      this.onRefreshActiveFriends.emit();
+    });
+
+    this._signalRService.onRefreshAwaitingFriends(()=>{
+      this.friendsChats_Awaiting.refreshNeeded = true;
+      this.onRefreshAwaitingFriends.emit();
+    });
+
+    this._signalRService.onRefreshBlockedFriends(()=>{
+      this.friendsChats_Blocked.refreshNeeded = true;
+      this.onRefreshBlockedFriends.emit();
+    });
+
+    this._signalRService.onRefreshGroups(()=>{
+      this.groupChats.refreshNeeded = true;
+      this.onRefreshGroups.emit();
+    });
+  }
 
   releaseFriendChats() {
     console.log(
@@ -101,17 +139,9 @@ export class ContactsService {
   }
 
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
-    if (this.friendsChats_Ok.items.length == 0) {
-      // Add subscription for cleaning chat
-      if (this.cleanup_Subscription) {
-        this.cleanup_Subscription.unsubscribe();
-      }
-      this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(
-        () => {
-          this.releaseFriendChats();
-        }
-      );
-
+    if (this.friendsChats_Ok.refreshNeeded) {
+      this.friendsChats_Ok.items = [];
+      this.friendsChats_Ok.refreshNeeded=false;
       console.log('getFriendChats_ok');
 
       return this._getFriendChats_Ok_EDP().pipe(
@@ -147,7 +177,10 @@ export class ContactsService {
   }
 
   getFriendChats_Awaiting(): Observable<SY_ResponseStatus> {
-    if (this.friendsChats_Awaiting.items.length == 0) {
+    if (this.friendsChats_Awaiting.refreshNeeded) {
+      this.friendsChats_Awaiting.items = [];
+      this.friendsChats_Awaiting.refreshNeeded=false;
+
       console.log('getFriendChats_Awaiting');
 
       return this._getFriendChats_Awaiting_EDP().pipe(
@@ -186,7 +219,10 @@ export class ContactsService {
   }
 
   getFriendChats_Blocked(): Observable<SY_ResponseStatus> {
-    if (this.friendsChats_Blocked.items.length == 0) {
+    if (this.friendsChats_Blocked.refreshNeeded) {
+      this.friendsChats_Blocked.items = [];
+      this.friendsChats_Blocked.refreshNeeded=false;
+
       console.log('getFriendChats_Blocked');
 
       return this._getFriendChats_Blocked_EDP().pipe(
@@ -329,7 +365,10 @@ export class ContactsService {
   // }
 
   getGroupChats(): Observable<SY_ResponseStatus> {
-    if (this.groupChats.items.length == 0) {
+    if (this.groupChats.refreshNeeded) {
+      this.groupChats.items = [];
+      this.groupChats.refreshNeeded=false;
+
       console.log('loading groupChats');
 
       return this._getGroupChatsEDP().pipe(
@@ -366,8 +405,7 @@ export class ContactsService {
     }
   }
 
-  // ----------------------------------------------------------------------------------------------------------------------------------------------
-  // ENDPOINTS
+  // ---  ENDPOINTS  ---------------------------------------------------------------------------------------------------------------------------------
   //
   // EDP - endpoint
 

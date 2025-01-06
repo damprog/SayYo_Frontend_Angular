@@ -12,6 +12,7 @@ import { Observable, catchError, map, of } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { UserAccount } from '../models/model';
 import { Router } from '@angular/router';
+import { SignalRService } from './signalR.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class AccountService {
   constructor(
     private _http: HttpClient,
     private _conn: ConnectionService,
-    private _router: Router
+    private _router: Router,
   ) {}
 
   // ------------------------------------------------------------------------------------

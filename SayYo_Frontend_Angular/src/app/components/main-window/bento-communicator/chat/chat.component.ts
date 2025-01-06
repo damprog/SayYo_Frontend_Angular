@@ -65,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.accountService.isLoggedIn) {
-      this.chatService.messageHubSetup();
+      this.chatService.setupChatService();
       this.messageSubscription = this.chatService.onNewMessage.subscribe(() => {
         this.onNewMessage();
       });

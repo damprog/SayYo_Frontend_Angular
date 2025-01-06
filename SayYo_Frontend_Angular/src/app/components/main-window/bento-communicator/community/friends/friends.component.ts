@@ -1,5 +1,11 @@
 import { ContextMenu, MenuItem } from './../../../../../models/model';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
 import {
@@ -15,14 +21,14 @@ import { ContextMenuService } from '../../../../../services/context-menu.service
 import { FriendshipService } from '../../../../../services/friendship.service';
 import { ModalService } from '../../../../../services/modal.service';
 import { AccountService } from '../../../../../services/account.service';
-import { finalize, of, switchMap } from 'rxjs';
+import { finalize, of, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-friends',
   templateUrl: './friends.component.html',
   styleUrl: './friends.component.css',
 })
-export class FriendsComponent implements OnInit {
+export class FriendsComponent implements OnInit, OnDestroy {
   searchOpen: boolean = false;
   searchPattern: string = '';
   friendsChats_Ok: Array<SY_ChatDTO> = [];
@@ -31,6 +37,10 @@ export class FriendsComponent implements OnInit {
   selectedArea: any;
 
   friendsStatusComp$ = this._stateService.friendsStatus$;
+
+  onRefreshActiveFriends_Subscription!: Subscription;
+  onRefreshAwaitingFriends_Subscription!: Subscription;
+  onRefreshBlockedFriends_Subscription!: Subscription;
 
   constructor(
     protected _modalService: ModalService,
@@ -46,15 +56,6 @@ export class FriendsComponent implements OnInit {
       this.selectedArea = status;
     });
   }
-
-  // get filteredFriendsChats_Ok(): Array<SY_ChatDTO> {
-  //   console.log('Filtruj po: ' + this.searchPattern);
-  //   return this.filterList(
-  //     this.friendsChats_Ok,
-  //     this.searchPattern,
-  //     'chatName'
-  //   );
-  // }
 
   filterChats() {
     if (this.selectedArea.ok) this.loadActiveFriends();
@@ -130,7 +131,7 @@ export class FriendsComponent implements OnInit {
                     console.log('Anulowno usunięcie znajomego');
                     return of(null);
                   }
-                }),
+                })
               ),
         },
       ],
@@ -240,12 +241,6 @@ export class FriendsComponent implements OnInit {
     this.searchOpen = !this.searchOpen;
     this.searchPattern = '';
     this.filterChats();
-  }
-
-  ngOnInit() {
-    if (this._accountService.isLoggedIn) {
-      this.showFriends_StatusOk();
-    }
   }
 
   loadActiveFriends() {
@@ -397,7 +392,37 @@ export class FriendsComponent implements OnInit {
       () => console.log(`Zaproszono użytkownika o ID: ${userGuid}`),
       (error) => console.error('Błąd podczas zapraszania:', error)
     );
+
+    this._modalService.hideModal();
   }
 
   // -------------------
+
+  ngOnInit() {
+    if (this._accountService.isLoggedIn) {
+      this.showFriends_StatusOk();
+      // Add subscriptions
+      this.onRefreshActiveFriends_Subscription =
+        this._contacts.onRefreshActiveFriends.subscribe(() => {
+          this.loadActiveFriends();
+        });
+      this.onRefreshAwaitingFriends_Subscription =
+        this._contacts.onRefreshAwaitingFriends.subscribe(() => {
+          this.loadAwaitingFriends();
+        });
+      this.onRefreshBlockedFriends_Subscription =
+        this._contacts.onRefreshBlockedFriends.subscribe(() => {
+          this.loadBlockedFriends();
+        });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.onRefreshActiveFriends_Subscription)
+      this.onRefreshActiveFriends_Subscription.unsubscribe();
+    if (this.onRefreshAwaitingFriends_Subscription)
+      this.onRefreshAwaitingFriends_Subscription.unsubscribe();
+    if (this.onRefreshBlockedFriends_Subscription)
+      this.onRefreshBlockedFriends_Subscription.unsubscribe();
+  }
 }
