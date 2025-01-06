@@ -23,9 +23,13 @@ export class ContactsService {
     private _signalRService: SignalRService,
   ) {
     this.friendsChats_Ok.items = new Array<SY_ChatDTO>();
+    this.friendsChats_Ok.refreshNeeded = true;
     this.friendsChats_Awaiting.items = new Array<SY_ChatDTO>();
+    this.friendsChats_Awaiting.refreshNeeded = true;
     this.friendsChats_Blocked.items = new Array<SY_ChatDTO>();
+    this.friendsChats_Blocked.refreshNeeded = true;
     this.groupChats.items = new Array<SY_ChatDTO>();
+    this.groupChats.refreshNeeded = true;
   }
 
   public onRefreshActiveFriends: EventEmitter<void> = new EventEmitter<void>();
@@ -61,7 +65,7 @@ export class ContactsService {
       this.cleanup_Subscription.unsubscribe();
     }
     this.cleanup_Subscription = this._account.cleanup_Emitter.subscribe(() => {
-      this.releaseFriendChats();
+      this.cleanup();
     });
 
     // Register events
@@ -86,7 +90,7 @@ export class ContactsService {
     });
   }
 
-  releaseFriendChats() {
+  cleanup() {
     console.log(
       'Before Released FriendChats',
       this.friendsChats_Ok.items,
@@ -104,6 +108,15 @@ export class ContactsService {
       this.friendsChats_Awaiting.items,
       this.friendsChats_Blocked.items
     );
+
+    this.friendsChats_Ok.items = [];
+    this.friendsChats_Ok.refreshNeeded = true;
+    this.friendsChats_Awaiting.items = [];
+    this.friendsChats_Awaiting.refreshNeeded = true;
+    this.friendsChats_Blocked.items = [];
+    this.friendsChats_Blocked.refreshNeeded = true;
+    this.groupChats.items = [];
+    this.groupChats.refreshNeeded = true;
   }
 
   getStrangers(amount: number): Observable<Array<SY_StrangerDTO>> {
@@ -140,6 +153,8 @@ export class ContactsService {
   }
 
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
+    console.log('getFriendChats_ok - before if: ' + this.friendsChats_Ok.refreshNeeded);
+
     if (this.friendsChats_Ok.refreshNeeded) {
       this.friendsChats_Ok.items = [];
       this.friendsChats_Ok.refreshNeeded=false;

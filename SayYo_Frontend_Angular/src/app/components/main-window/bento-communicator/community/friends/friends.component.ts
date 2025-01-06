@@ -259,6 +259,8 @@ export class FriendsComponent implements OnInit, OnDestroy {
     this._contacts.getFriendChats_Ok().subscribe({
       next: (result: SY_ResponseStatus) => {
         if (result.success) {
+          console.log('loadActiveFriends result success');
+
           this.friendsChats_Ok = this._contacts.friendsChats_Ok.items;
           this.friendsChats_Ok = this.filterList(
             this.friendsChats_Ok,
@@ -266,6 +268,8 @@ export class FriendsComponent implements OnInit, OnDestroy {
             'chatName'
           );
         } else {
+          console.log('loadActiveFriends result else');
+
           this._modalService.showModal(result.message);
         }
       },

@@ -1,5 +1,6 @@
 import { ChatService } from './../../../../services/chat.service';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -16,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     protected chatService: ChatService,
     protected accountService: AccountService
@@ -76,5 +77,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
+  }
+
+  ngAfterViewInit(): void {
+      this.scrollToBottom();
   }
 }

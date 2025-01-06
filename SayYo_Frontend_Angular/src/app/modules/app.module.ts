@@ -16,14 +16,12 @@ import { StartWindowComponent } from '../components/start-window/start-window.co
 import { MainWindowComponent } from '../components/main-window/main-window.component';
 import { LoginWindowComponent } from '../components/start-window/login-window/login-window.component';
 import { RegistrationWindowComponent } from '../components/start-window/registration-window/registration-window.component';
-import { CommunicatorComponent } from './../components/main-window/communicator/communicator.component';
 import { BentoCommunicatorComponent } from '../components/main-window/bento-communicator/bento-communicator.component';
 import { ChatComponent } from '../components/main-window/bento-communicator/chat/chat.component';
 import { CommunityComponent } from '../components/main-window/bento-communicator/community/community.component';
 import { LeftMenuComponent } from '../components/main-window/bento-communicator/left-menu/left-menu.component';
 import { FriendsComponent } from '../components/main-window/bento-communicator/community/friends/friends.component';
 import { GroupsComponent } from '../components/main-window/bento-communicator/community/groups/groups.component';
-import { CommunicatorWindowComponent } from '../components/communicator-window/communicator-window.component';
 import { AccountComponent } from '../components/main-window/bento-communicator/community/account/account.component';
 import { JwtInterceptor } from '../inceptors/jwt.inceptor';
 
@@ -38,7 +36,6 @@ export function initializeApp(accountService: AccountService) {
     MainWindowComponent,
     LoginWindowComponent,
     RegistrationWindowComponent,
-    CommunicatorComponent,
     BentoCommunicatorComponent,
     ChatComponent,
     CommunityComponent,
@@ -46,7 +43,6 @@ export function initializeApp(accountService: AccountService) {
     FriendsComponent,
     GroupsComponent,
     LeftMenuComponent,
-    CommunicatorWindowComponent,
   ],
   imports: [
     BrowserModule,
