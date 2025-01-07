@@ -180,11 +180,11 @@ export class GroupsComponent implements OnInit, OnDestroy {
             'chatName'
           );
         } else {
-          this._modalService.showModal(result.message);
+          this._modalService.inform(result.message);
         }
       },
       error: (error) => {
-        this._modalService.showModal('Wystąpił błąd podczas ładowania czatów.');
+        this._modalService.inform('Wystąpił błąd podczas ładowania czatów.');
         console.error('Error during loading chats: ', error);
         this.spinnerService.hide();
       },

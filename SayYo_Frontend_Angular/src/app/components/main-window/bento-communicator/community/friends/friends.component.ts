@@ -270,13 +270,11 @@ export class FriendsComponent implements OnInit, OnDestroy {
         } else {
           console.log('loadActiveFriends result else');
 
-          this._modalService.showModal(result.message);
+          this._modalService.inform(result.message);
         }
       },
       error: (error) => {
-        this._modalService.showModal(
-          'Wystąpił błąd podczas ładowania znajomych.'
-        );
+        this._modalService.inform('Wystąpił błąd podczas ładowania znajomych.');
         console.error('Error during loading active friends: ', error);
         this.spinnerService.hide();
       },
@@ -303,11 +301,11 @@ export class FriendsComponent implements OnInit, OnDestroy {
             'chatName'
           );
         } else {
-          this._modalService.showModal(result.message);
+          this._modalService.inform(result.message);
         }
       },
       error: (error) => {
-        this._modalService.showModal(
+        this._modalService.inform(
           'Wystąpił błąd podczas ładowania oczekujących znajomych.'
         );
         console.error('Error during loading awaiting friends: ', error);
@@ -335,11 +333,11 @@ export class FriendsComponent implements OnInit, OnDestroy {
             'chatName'
           );
         } else {
-          this._modalService.showModal(result.message);
+          this._modalService.inform(result.message);
         }
       },
       error: (error) => {
-        this._modalService.showModal(
+        this._modalService.inform(
           'Wystąpił błąd podczas ładowania zablokowanych znajomych.'
         );
         console.error('Error during loading blocked friends: ', error);
@@ -382,11 +380,10 @@ export class FriendsComponent implements OnInit, OnDestroy {
   searchUsers(): void {
     var func: () => Observable<Array<SY_StrangerDTO>>;
 
-    if(!this.searchName || this.searchName.trim() === ''){
+    if (!this.searchName || this.searchName.trim() === '') {
       func = () => this._contacts.getStrangers(10);
-    }else{
-      func = () => this._contacts
-      .getStrangersWithFilter(this.searchName);
+    } else {
+      func = () => this._contacts.getStrangersWithFilter(this.searchName);
     }
 
     this.spinnerService.show();

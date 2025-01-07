@@ -2,6 +2,8 @@
 // GENERAL
 // --------------------------------------
 
+import { SafeUrl } from '@angular/platform-browser';
+
 export interface SY_ResponseStatus {
   success: boolean;
   message: string;
@@ -16,6 +18,7 @@ export interface SY_UserDTO {
   userName: string;
   email: string;
   isAdmin: boolean;
+  profilePicture: SafeUrl | null;
 }
 
 export interface SY_LoginDTO {
@@ -53,7 +56,7 @@ export interface SY_ChatDTO {
 }
 
 export interface SY_ChatMemberDTO {
-  guid: string;
+  guid: string; // UserGuid
   userName: string;
   membershipGuid: string;
   chatRole: number;
@@ -62,16 +65,17 @@ export interface SY_ChatMemberDTO {
   iBlockedUser: number;
   userBlockedMe: number;
   iInvited: boolean;
+  profilePicture: SafeUrl | null;
 }
 
 export interface SY_CreateGroupChatDTO {
-  chatName: string,
-  members: Array<SY_GroupChatMemberDTO>
+  chatName: string;
+  members: Array<SY_GroupChatMemberDTO>;
 }
 
 export interface SY_GroupChatMemberDTO {
-  userGuid: string,
-  role: number
+  userGuid: string;
+  role: number;
 }
 
 export interface SY_AddChatDTO {
@@ -120,9 +124,9 @@ export interface SY_MessageDTO {
 // --------------------------------------
 
 export interface SY_AddFriendshipDTO {
-  userGuid: string,
-  friendGuid: string,
-  status: number
+  userGuid: string;
+  friendGuid: string;
+  status: number;
 }
 
 export interface SY_UpdateFriendshipDTO {

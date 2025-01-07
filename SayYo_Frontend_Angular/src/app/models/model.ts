@@ -1,6 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { SY_ChatDTO } from "./dto";
 import { Observable } from 'rxjs';
+import { SafeUrl } from '@angular/platform-browser';
 
 
 // --------------------------------------
@@ -12,7 +13,7 @@ export interface UserAccount {
   userName: string;
   email: string;
   isAdmin: boolean;
-  photoFileName: any;
+  profilePicture: SafeUrl | null;
 }
 
 // --------------------------------------
@@ -57,5 +58,4 @@ export interface ContextMenu {
 export interface MenuItem {
   label: string;
   action: any;
-  //action: () => void | Observable<any>;
 }

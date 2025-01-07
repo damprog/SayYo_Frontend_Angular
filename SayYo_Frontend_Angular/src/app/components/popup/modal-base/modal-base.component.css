@@ -12,6 +12,11 @@
   font-size: 1rem;
 }
 
+.information{
+  width: fit-content;
+  height: fit-content;
+}
+
 .modal.show {
   display: block;
 }
@@ -53,7 +58,6 @@
 
 .cancel {
   background: #777;
-
 }
 
 .close {

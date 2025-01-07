@@ -47,9 +47,9 @@ export class RegistrationWindowComponent {
           next: (result: SY_ResponseStatus) => {
             if (result.success) {
               this._router.navigate(['/main']);
-              this._modalService.showModal(result.message);
+              this._modalService.inform(result.message);
             } else {
-              this._modalService.showModal(result.message);
+              this._modalService.inform(result.message);
             }
           },
           error: (error) => {
@@ -61,7 +61,7 @@ export class RegistrationWindowComponent {
         });
     } else {
       this.spinnerService.hide();
-      this._modalService.showModal('Niepoprawnie uzupełniony formularz rejestracji.');
+      this._modalService.inform('Niepoprawnie uzupełniony formularz rejestracji.');
     }
   }
 }

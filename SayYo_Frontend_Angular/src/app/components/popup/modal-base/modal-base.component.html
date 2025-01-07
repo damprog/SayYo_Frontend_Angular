@@ -1,9 +1,10 @@
-<!-- Modal base -->
+<!-- Modal information -->
 <div class="modal" [class.show]="visibleBase">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-content information" (click)="$event.stopPropagation()">
     <i class="bx bx-x close" (click)="hide()"></i>
     <ng-content></ng-content>
     <p>{{ content }}</p>
+    <button class="modal-button" (click)="hide()">Ok</button>
   </div>
 </div>
 

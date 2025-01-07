@@ -71,14 +71,12 @@
 
   <!-- friends ok -->
   <div id="ok-friends" *ngIf="state.ok">
-    <div
-      class="item"
-      *ngFor="let x of friendsChats_Ok"
-      (click)="showChat(x)"
-    >
+    <div class="item" *ngFor="let x of friendsChats_Ok" (click)="showChat(x)">
       <div class="content">
         <div class="photo-container">
-          <div class="photo"></div>
+          <div class="photo">
+            <img [src]="x.members[0].profilePicture" />
+          </div>
         </div>
 
         <div class="name">
@@ -105,7 +103,9 @@
     >
       <div class="content">
         <div class="photo-container">
-          <div class="photo"></div>
+          <div class="photo">
+            <img [src]="x.members[0].profilePicture" />
+          </div>
         </div>
 
         <div class="name">
@@ -132,7 +132,9 @@
     >
       <div class="content">
         <div class="photo-container">
-          <div class="photo"></div>
+          <div class="photo">
+            <img [src]="x.members[0].profilePicture" />
+          </div>
         </div>
 
         <div class="name">
@@ -164,10 +166,7 @@
       [(ngModel)]="searchName"
       (keydown.enter)="searchUsers()"
     />
-    <button
-      class="add-user-search-button"
-      (click)="searchUsers()"
-    >
+    <button class="add-user-search-button" (click)="searchUsers()">
       Szukaj
     </button>
   </div>

@@ -13,15 +13,19 @@ import { ConnectionService } from './connection.service';
 import { UserAccount } from '../models/model';
 import { Router } from '@angular/router';
 import { SignalRService } from './signalR.service';
+import { ModalService } from './modal.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
   constructor(
+    private _modalService: ModalService,
     private _http: HttpClient,
     private _conn: ConnectionService,
     private _router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   // ------------------------------------------------------------------------------------
@@ -29,7 +33,7 @@ export class AccountService {
 
   // Default config for not logged in user
   readonly DEFAULT_ACCOUNT_ID: string = '10'; // default user guid - 10 (that does not exist)
-  readonly DEFAULT_PHOTO: string = 'default.png';
+  readonly DEFAULT_PHOTO: SafeUrl | null = null;
   readonly API_URL: string = this._conn.API_URL;
 
   // SY_ - refers to DTO (data transfer object) from API
@@ -50,9 +54,40 @@ export class AccountService {
     userName: 'użytkowniku',
     email: '',
     isAdmin: false,
-    photoFileName: this.DEFAULT_PHOTO,
+    profilePicture: this.DEFAULT_PHOTO,
   };
   isLoggedIn: boolean = false;
+
+  loadProfilePicture(){
+    this.getProfilePicture(this.account.userGuid).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        this.account.profilePicture = this.sanitizer.bypassSecurityTrustUrl(url);
+      },
+      error: (err) => {
+        console.error('Błąd pobierania zdjęcia:', err);
+      },
+    });
+  }
+
+  // blob - download binary data
+  getProfilePicture(userGuid: string): Observable<Blob> {
+    return this._http.get(
+      this.API_URL + `sayyo/misc/getProfilePicture/${userGuid}`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  uploadProfilePicture(formData: FormData): void {
+    this._http
+      .post(this.API_URL + 'sayyo/misc/uploadProfilePicture', formData)
+      .subscribe({
+        next: () => this._modalService.inform('Zdjęcie zostało przesłane.'),
+        error: (err) => console.error('Błąd przesyłania zdjęcia:', err),
+      });
+  }
 
   cleanup(): void {
     this.cleanup_Emitter.emit();
@@ -60,7 +95,7 @@ export class AccountService {
 
   refreshToken(refreshToken: string): Observable<any> {
     console.log('refreshToken');
-    return this._http.post('/refreshToken', { refreshToken });
+    return this._http.post('refreshToken', { refreshToken });
   }
 
   logout(): void {
@@ -69,7 +104,7 @@ export class AccountService {
       userName: 'użytkowniku',
       email: '',
       isAdmin: false,
-      photoFileName: this.DEFAULT_PHOTO,
+      profilePicture: this.DEFAULT_PHOTO,
     };
     this.cleanup();
     this.isLoggedIn = false;
@@ -118,9 +153,12 @@ export class AccountService {
             userName: response.user.userName,
             email: response.user.email,
             isAdmin: response.user.isAdmin,
-            photoFileName: this.DEFAULT_PHOTO,
+            profilePicture: this.DEFAULT_PHOTO,
           };
           this.isLoggedIn = true;
+
+          this.loadProfilePicture();
+
           return {
             success: true,
             message: 'Pomyślnie zalogowano z pomoca tokena.',
@@ -165,10 +203,12 @@ export class AccountService {
             userName: response.user.userName,
             email: response.user.email,
             isAdmin: response.user.isAdmin,
-            photoFileName: this.DEFAULT_PHOTO,
+            profilePicture: this.DEFAULT_PHOTO,
           };
 
           this.isLoggedIn = true;
+
+          this.loadProfilePicture();
 
           return {
             success: true,

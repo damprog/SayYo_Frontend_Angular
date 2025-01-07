@@ -17,7 +17,7 @@ export class ModalService {
     }
   }
 
-  showModal(content: string){
+  inform(content: string){
     if(this.modalComponent){
       this.modalComponent.show(content);
     }

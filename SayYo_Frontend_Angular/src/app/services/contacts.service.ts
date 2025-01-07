@@ -2,15 +2,25 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subscription, catchError, map, of } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  catchError,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+} from 'rxjs';
 import {
   SY_ChatDTO,
+  SY_ChatMemberDTO,
   SY_ResponseStatus,
   SY_StrangerDTO,
   SY_UserDTO,
 } from '../models/dto';
 import { Chats } from '../models/model';
 import { SignalRService } from './signalR.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +31,7 @@ export class ContactsService {
     private _account: AccountService,
     private _http: HttpClient,
     private _signalRService: SignalRService,
+    private sanitizer: DomSanitizer
   ) {
     this.friendsChats_Ok.items = new Array<SY_ChatDTO>();
     this.friendsChats_Ok.refreshNeeded = true;
@@ -33,7 +44,8 @@ export class ContactsService {
   }
 
   public onRefreshActiveFriends: EventEmitter<void> = new EventEmitter<void>();
-  public onRefreshAwaitingFriends: EventEmitter<void> = new EventEmitter<void>();
+  public onRefreshAwaitingFriends: EventEmitter<void> =
+    new EventEmitter<void>();
   public onRefreshBlockedFriends: EventEmitter<void> = new EventEmitter<void>();
   public onRefreshGroups: EventEmitter<void> = new EventEmitter<void>();
 
@@ -69,22 +81,22 @@ export class ContactsService {
     });
 
     // Register events
-    this._signalRService.onRefreshActiveFriends(()=>{
+    this._signalRService.onRefreshActiveFriends(() => {
       this.friendsChats_Ok.refreshNeeded = true;
       this.onRefreshActiveFriends.emit();
     });
 
-    this._signalRService.onRefreshAwaitingFriends(()=>{
+    this._signalRService.onRefreshAwaitingFriends(() => {
       this.friendsChats_Awaiting.refreshNeeded = true;
       this.onRefreshAwaitingFriends.emit();
     });
 
-    this._signalRService.onRefreshBlockedFriends(()=>{
+    this._signalRService.onRefreshBlockedFriends(() => {
       this.friendsChats_Blocked.refreshNeeded = true;
       this.onRefreshBlockedFriends.emit();
     });
 
-    this._signalRService.onRefreshGroups(()=>{
+    this._signalRService.onRefreshGroups(() => {
       this.groupChats.refreshNeeded = true;
       this.onRefreshGroups.emit();
     });
@@ -152,29 +164,61 @@ export class ContactsService {
       );
   }
 
+  loadProfilePictureForUsers(users: Array<SY_ChatMemberDTO>): Observable<Array<SY_ChatMemberDTO>> {
+    const observables = users.map((user) => {
+      if (!user.guid) {
+        console.error('Brak userGuid dla użytkownika:', user);
+        return of(user);
+      }
+
+      return this._account.getProfilePicture(user.guid).pipe(
+        map((blob) => {
+          const url = URL.createObjectURL(blob);
+          user.profilePicture = this.sanitizer.bypassSecurityTrustUrl(url);
+          return user;
+        }),
+        catchError((error) => {
+          console.error('Błąd pobierania zdjęcia:', error);
+          return of(user);
+        })
+      );
+    });
+
+    return forkJoin(observables);
+  }
+
   getFriendChats_Ok(): Observable<SY_ResponseStatus> {
-    console.log('getFriendChats_ok - before if: ' + this.friendsChats_Ok.refreshNeeded);
+    console.log(
+      'getFriendChats_ok - before if: ' + this.friendsChats_Ok.refreshNeeded
+    );
 
     if (this.friendsChats_Ok.refreshNeeded) {
       this.friendsChats_Ok.items = [];
-      this.friendsChats_Ok.refreshNeeded=false;
+      this.friendsChats_Ok.refreshNeeded = false;
       console.log('getFriendChats_ok');
 
       return this._getFriendChats_Ok_EDP().pipe(
-        map((response: Array<SY_ChatDTO>) => {
-          response.forEach((x) => {
-            const newChat: SY_ChatDTO = {
-              chatGuid: x.chatGuid,
-              chatType: x.chatType,
-              chatName: x.chatName,
-              members: x.members,
-            };
-            this.friendsChats_Ok.items.push(newChat);
-          });
-          return {
-            success: true,
-            message: '',
-          } as SY_ResponseStatus;
+        switchMap((response: Array<SY_ChatDTO>) => {
+          const chatObservables = response.map((chat) =>
+            this.loadProfilePictureForUsers(chat.members).pipe(
+              map((membersWithPictures) => {
+                const newChat: SY_ChatDTO = {
+                  chatGuid: chat.chatGuid,
+                  chatType: chat.chatType,
+                  chatName: chat.chatName,
+                  members: membersWithPictures,
+                };
+                this.friendsChats_Ok.items.push(newChat);
+              })
+            )
+          );
+
+          return forkJoin(chatObservables).pipe(
+            map(() => ({
+              success: true,
+              message: '',
+            } as SY_ResponseStatus))
+          );
         }),
         catchError((error: HttpErrorResponse) => {
           console.error('While getting friends chats: ', error.message);
@@ -195,31 +239,35 @@ export class ContactsService {
   getFriendChats_Awaiting(): Observable<SY_ResponseStatus> {
     if (this.friendsChats_Awaiting.refreshNeeded) {
       this.friendsChats_Awaiting.items = [];
-      this.friendsChats_Awaiting.refreshNeeded=false;
+      this.friendsChats_Awaiting.refreshNeeded = false;
 
       console.log('getFriendChats_Awaiting');
 
       return this._getFriendChats_Awaiting_EDP().pipe(
-        map((response: Array<SY_ChatDTO>) => {
-          response.forEach((x) => {
-            const newChat: SY_ChatDTO = {
-              chatGuid: x.chatGuid,
-              chatType: x.chatType,
-              chatName: x.chatName,
-              members: x.members,
-            };
-            this.friendsChats_Awaiting.items.push(newChat);
-          });
-          return {
-            success: true,
-            message: '',
-          } as SY_ResponseStatus;
+        switchMap((response: Array<SY_ChatDTO>) => {
+          const chatObservables = response.map((chat) =>
+            this.loadProfilePictureForUsers(chat.members).pipe(
+              map((membersWithPictures) => {
+                const newChat: SY_ChatDTO = {
+                  chatGuid: chat.chatGuid,
+                  chatType: chat.chatType,
+                  chatName: chat.chatName,
+                  members: membersWithPictures,
+                };
+                this.friendsChats_Awaiting.items.push(newChat);
+              })
+            )
+          );
+
+          return forkJoin(chatObservables).pipe(
+            map(() => ({
+              success: true,
+              message: '',
+            } as SY_ResponseStatus))
+          );
         }),
         catchError((error: HttpErrorResponse) => {
-          console.error(
-            'While getting awaiting friends chats: ',
-            error.message
-          );
+          console.error('While getting friends chats: ', error.message);
           return of({
             success: false,
             message: error.error,
@@ -237,28 +285,35 @@ export class ContactsService {
   getFriendChats_Blocked(): Observable<SY_ResponseStatus> {
     if (this.friendsChats_Blocked.refreshNeeded) {
       this.friendsChats_Blocked.items = [];
-      this.friendsChats_Blocked.refreshNeeded=false;
+      this.friendsChats_Blocked.refreshNeeded = false;
 
       console.log('getFriendChats_Blocked');
 
       return this._getFriendChats_Blocked_EDP().pipe(
-        map((response: Array<SY_ChatDTO>) => {
-          response.forEach((x) => {
-            const newChat: SY_ChatDTO = {
-              chatGuid: x.chatGuid,
-              chatType: x.chatType,
-              chatName: x.chatName,
-              members: x.members,
-            };
-            this.friendsChats_Blocked.items.push(newChat);
-          });
-          return {
-            success: true,
-            message: '',
-          } as SY_ResponseStatus;
+        switchMap((response: Array<SY_ChatDTO>) => {
+          const chatObservables = response.map((chat) =>
+            this.loadProfilePictureForUsers(chat.members).pipe(
+              map((membersWithPictures) => {
+                const newChat: SY_ChatDTO = {
+                  chatGuid: chat.chatGuid,
+                  chatType: chat.chatType,
+                  chatName: chat.chatName,
+                  members: membersWithPictures,
+                };
+                this.friendsChats_Blocked.items.push(newChat);
+              })
+            )
+          );
+
+          return forkJoin(chatObservables).pipe(
+            map(() => ({
+              success: true,
+              message: '',
+            } as SY_ResponseStatus))
+          );
         }),
         catchError((error: HttpErrorResponse) => {
-          console.error('While getting blocked friends chats: ', error.message);
+          console.error('While getting friends chats: ', error.message);
           return of({
             success: false,
             message: error.error,
@@ -273,117 +328,10 @@ export class ContactsService {
     }
   }
 
-  // getActiveFriends(): Observable<SY_ResponseStatus> {
-  //   if (this.ActiveFriends.length == 0) {
-  //     console.log('getActiveFriends');
-
-  //     return this._getActiveFriendsEDP().pipe(
-  //       map((response: Array<SY_UserDTO>) => {
-  //         response.forEach((x) => {
-  //           const friend: SY_UserDTO = {
-  //             guid: x.guid,
-  //             userName: x.userName,
-  //             email: x.email,
-  //             isAdmin: x.isAdmin,
-  //           };
-  //           this.ActiveFriends.push(friend);
-  //         });
-  //         return {
-  //           success: true,
-  //           message: '',
-  //         } as SY_ResponseStatus;
-  //       }),
-  //       catchError((error: HttpErrorResponse) => {
-  //         console.error('While getting active friends: ', error.message);
-  //         return of({
-  //           success: false,
-  //           message: error.error,
-  //         } as SY_ResponseStatus);
-  //       })
-  //     );
-  //   } else {
-  //     return of({
-  //       success: true,
-  //       message: '',
-  //     } as SY_ResponseStatus);
-  //   }
-  // }
-
-  // getAwaitingFriends(): Observable<SY_ResponseStatus> {
-  //   if (this.AwaitingFriends.length == 0) {
-  //     console.log('getAwaitingFriends');
-
-  //     return this._getAwaitingFriendsEDP().pipe(
-  //       map((response: Array<SY_UserDTO>) => {
-  //         response.forEach((x) => {
-  //           const friend: SY_UserDTO = {
-  //             guid: x.guid,
-  //             userName: x.userName,
-  //             email: x.email,
-  //             isAdmin: x.isAdmin,
-  //           };
-  //           this.AwaitingFriends.push(friend);
-  //         });
-  //         return {
-  //           success: true,
-  //           message: '',
-  //         } as SY_ResponseStatus;
-  //       }),
-  //       catchError((error: HttpErrorResponse) => {
-  //         console.error('While getting awaiting friends: ', error.message);
-  //         return of({
-  //           success: false,
-  //           message: error.error,
-  //         } as SY_ResponseStatus);
-  //       })
-  //     );
-  //   } else {
-  //     return of({
-  //       success: true,
-  //       message: '',
-  //     } as SY_ResponseStatus);
-  //   }
-  // }
-
-  // getBlockedFriends(): Observable<SY_ResponseStatus> {
-  //   if (this.BlockedFriends.length == 0) {
-  //     console.log('getBlockedFriends');
-  //     return this._getBlockedFriendsEDP().pipe(
-  //       map((response: Array<SY_UserDTO>) => {
-  //         response.forEach((x) => {
-  //           const friend: SY_UserDTO = {
-  //             guid: x.guid,
-  //             userName: x.userName,
-  //             email: x.email,
-  //             isAdmin: x.isAdmin,
-  //           };
-  //           this.BlockedFriends.push(friend);
-  //         });
-  //         return {
-  //           success: true,
-  //           message: '',
-  //         } as SY_ResponseStatus;
-  //       }),
-  //       catchError((error: HttpErrorResponse) => {
-  //         console.error('While getting blocked friends: ', error.message);
-  //         return of({
-  //           success: false,
-  //           message: error.error,
-  //         } as SY_ResponseStatus);
-  //       })
-  //     );
-  //   } else {
-  //     return of({
-  //       success: true,
-  //       message: '',
-  //     } as SY_ResponseStatus);
-  //   }
-  // }
-
   getGroupChats(): Observable<SY_ResponseStatus> {
     if (this.groupChats.refreshNeeded) {
       this.groupChats.items = [];
-      this.groupChats.refreshNeeded=false;
+      this.groupChats.refreshNeeded = false;
 
       console.log('loading groupChats');
 
@@ -420,35 +368,6 @@ export class ContactsService {
       } as SY_ResponseStatus);
     }
   }
-
-  // ---  ENDPOINTS  ---------------------------------------------------------------------------------------------------------------------------------
-  //
-  // EDP - endpoint
-
-  // httpOptions not used
-  // private _getActiveFriendsEDP(): Observable<Array<SY_UserDTO>> {
-  //   return this._http.get<Array<SY_UserDTO>>(
-  //     this._conn.API_URL +
-  //       'sayyo/misc/getActiveFriends?userGuid=' +
-  //       this._account.TEST_UserGuid
-  //   );
-  // }
-
-  // private _getAwaitingFriendsEDP(): Observable<Array<SY_UserDTO>> {
-  //   return this._http.get<Array<SY_UserDTO>>(
-  //     this._conn.API_URL +
-  //       'sayyo/misc/getAwaitingFriends?userGuid=' +
-  //       this._account.TEST_UserGuid
-  //   );
-  // }
-
-  // private _getBlockedFriendsEDP(): Observable<Array<SY_UserDTO>> {
-  //   return this._http.get<Array<SY_UserDTO>>(
-  //     this._conn.API_URL +
-  //       'sayyo/misc/getBlockedFriends?userGuid=' +
-  //       this._account.TEST_UserGuid
-  //   );
-  // }
 
   private _getFriendChats_Ok_EDP(): Observable<Array<SY_ChatDTO>> {
     return this._http.get<Array<SY_ChatDTO>>(

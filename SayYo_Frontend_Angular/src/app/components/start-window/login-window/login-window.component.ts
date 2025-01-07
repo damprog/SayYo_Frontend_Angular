@@ -39,11 +39,11 @@ export class LoginWindowComponent implements OnInit {
             if (result.success) {
               this._router.navigate(['/main']);
             } else {
-              this._modalService.showModal(result.message);
+              this._modalService.inform(result.message);
             }
           },
           error: (error) => {
-            this._modalService.showModal(
+            this._modalService.inform(
               'Wystąpił błąd podczas próby logowania.'
             );
             console.error('Error during login: ', error);
@@ -55,7 +55,7 @@ export class LoginWindowComponent implements OnInit {
         });
     } else {
       this.spinnerService.hide();
-      this._modalService.showModal(
+      this._modalService.inform(
         'Niepoprawnie uzupełniony formularz logownia.'
       );
     }

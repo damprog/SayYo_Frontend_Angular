@@ -123,18 +123,22 @@
   width: 100%;
 }
 
-
 .photo-container {
   width: 40px;
-  height: 100%;
-  position: relative;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #aebe8b;;
 }
 
-.photo{
-  border-radius: 50%;
-  background-color: red;
-  height: 40px;
-  width: 40px;
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .name {

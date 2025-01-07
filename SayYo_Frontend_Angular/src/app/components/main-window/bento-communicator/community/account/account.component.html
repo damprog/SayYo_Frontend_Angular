@@ -1,1 +1,34 @@
-<p>Profil</p>
+<div class="profile-container">
+  <div class="profile-picture-container">
+    <img
+      *ngIf="_account.account.profilePicture"
+      [src]="_account.account.profilePicture"
+      alt="Profile Picture"
+    />
+  </div>
+
+  <p class="user-name">{{ _account.account.userName }}</p>
+
+  <div class="divider"></div>
+
+  <div class="update-picture-section">
+    <p class="section-title">Zaktualizuj zdjęcie</p>
+
+    <div class="button-group">
+      <label class="custom-file-upload">
+        Przeglądaj…
+        <input type="file" (change)="onFileSelected($event)" />
+      </label>
+
+      <span class="file-name" *ngIf="selectedFile">{{ selectedFile.name }}</span>
+
+      <button
+        class="upload-button"
+        (click)="uploadProfilePicture()"
+        [disabled]="!selectedFile"
+      >
+        Prześlij zdjęcie
+      </button>
+    </div>
+  </div>
+</div>
