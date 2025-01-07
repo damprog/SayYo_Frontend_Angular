@@ -30,6 +30,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() chat!: Chat;
 
+  getSenderName(senderGuid: string): string {
+    const senderName: string = this.chatService.getSenderName(senderGuid);
+    return senderName;
+  }
+
   private isScrolledToBottom(): boolean {
     if (!this.messagesContainer) return false;
     const { scrollTop, scrollHeight, clientHeight } =

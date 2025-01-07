@@ -1,12 +1,26 @@
-
-<div id="accountButton" class="container" (click)="showAccount()">
-  <i class='bx bxs-user-circle'></i>
-</div>
-<div id="friendsButton" class="container" (click)="showFriends()">
-  <i class='bx bxs-user'></i>
-</div>
-<div id="groupsButton" class="container" (click)="showGroups()">
-  <i class='bx bxs-group'></i>
+<div
+  id="accountButton"
+  class="container"
+  (click)="showAccount()"
+  [ngClass]="{ active: isAccountActive }"
+>
+  <i class="bx bxs-user-circle"></i>
 </div>
 
+<div
+  id="friendsButton"
+  class="container"
+  (click)="showFriends()"
+  [ngClass]="{ active: isFriendsActive }"
+>
+  <i class="bx bxs-user"></i>
+</div>
 
+<div
+  id="groupsButton"
+  class="container"
+  (click)="showGroups()"
+  [ngClass]="{ active: isGroupsActive }"
+>
+  <i class="bx bxs-group"></i>
+</div>

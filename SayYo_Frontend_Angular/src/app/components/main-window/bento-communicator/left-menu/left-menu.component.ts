@@ -20,4 +20,17 @@ export class LeftMenuComponent {
   showGroups(){
     this._stateService.showGroups();
   }
+
+  get isAccountActive(): boolean {
+    return this._stateService.communitySubject.getValue().account;
+  }
+
+  get isFriendsActive(): boolean {
+    return this._stateService.communitySubject.getValue().friends;
+  }
+
+  get isGroupsActive(): boolean {
+    return this._stateService.communitySubject.getValue().groups;
+  }
+
 }

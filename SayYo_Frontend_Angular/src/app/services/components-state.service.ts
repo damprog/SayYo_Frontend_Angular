@@ -12,14 +12,14 @@ export class ComponentsStateService {
 
   };
 
-  private friendsStatusSubject = new BehaviorSubject<any>({
+  public friendsStatusSubject = new BehaviorSubject<any>({
     ok: true,
     invitations: false,
     blocked: false,
   });
   friendsStatus$ = this.friendsStatusSubject.asObservable();
 
-  private communitySubject = new BehaviorSubject<any>({
+  public communitySubject = new BehaviorSubject<any>({
     account: false,
     friends: true,
     group: false,
@@ -49,19 +49,4 @@ export class ComponentsStateService {
   showGroups() {
     this.communitySubject.next({ account: false, friends: false, groups: true });
   }
-
-
-
-  // hideAll() {
-  //   this.community.account = false;
-  //   this.community.friends = false;
-  //   this.community.group = false;
-
-  //   this.friendsChats.ok = false;
-  //   this.friendsChats.invitations = false;
-  //   this.friendsChats.blocked = false;
-  // }
-
-  // chatsList: Array<string> = [];
-
 }

@@ -41,6 +41,17 @@ export class ChatService {
   activeChats: Array<Chat> = [];
   helloContainerActive: Boolean = true;
 
+  getSenderName(senderGuid: string): string {
+    for (const chat of this.activeChats) {
+      const member = chat.chatInfo.members.find((member) => member.guid === senderGuid);
+      if (member) {
+        return member.userName;
+      }
+    }
+    return '...';
+  }
+
+
   setupChatService() {
     this._signalRService.onReceiveMessage((message) => {
       this.handleNewMessage(message);

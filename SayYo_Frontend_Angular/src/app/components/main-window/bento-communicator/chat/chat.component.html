@@ -8,13 +8,13 @@
   <ng-container *ngIf="!chatService.helloContainerActive && chat">
     <ng-container>
       <div class="blockname-container">
-        <p class="blockname" [class.groupTypeChat] = "chat.chatInfo.chatType == 1">{{ chat.chatInfo.chatName }}</p>
         <p
-          class="close-chat"
-          (click)="chatService.closeChat(chat)"
+          class="blockname"
+          [class.groupTypeChat]="chat.chatInfo.chatType == 1"
         >
-          X
+          {{ chat.chatInfo.chatName }}
         </p>
+        <p class="close-chat" (click)="chatService.closeChat(chat)">X</p>
       </div>
     </ng-container>
 
@@ -35,8 +35,18 @@
               right: message.senderGuid === accountService.account.userGuid
             }"
           >
-            <span class="time">{{ message.time }}</span
-            ><br />
+            <div class="message-header">
+              <span
+                class="sender-name"
+                *ngIf="
+                  message.senderGuid !== accountService.account.userGuid &&
+                  chat.chatInfo.chatType == 1
+                "
+              >
+                {{ getSenderName(message.senderGuid) }}
+              </span>
+              <span class="time">{{ message.time }}</span>
+            </div>
             <p
               class="{{
                 message.senderGuid === accountService.account.userGuid
@@ -52,7 +62,13 @@
       </div>
 
       <!-- chatType 1 = group chat-->
-      <div class="writearea" *ngIf="chat.chatInfo.members[0].friendshipStatus != 2 || chat.chatInfo.chatType == 1">
+      <div
+        class="writearea"
+        *ngIf="
+          chat.chatInfo.members[0].friendshipStatus != 2 ||
+          chat.chatInfo.chatType == 1
+        "
+      >
         <input
           type="text"
           placeholder="Aa"

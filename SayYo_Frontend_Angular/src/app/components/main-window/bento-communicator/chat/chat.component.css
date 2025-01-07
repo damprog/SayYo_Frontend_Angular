@@ -111,10 +111,6 @@
   border: 2px solid transparent;
 }
 
-.messages .time {
-  font-size: 10px;
-}
-
 .messages .date {
   min-width: 100%;
   width: 100%;
@@ -189,17 +185,36 @@
   padding: 2%;
 }
 
-.messages div {
-  width: max-content;
-  max-width: 70%;
-  height: max-content;
+.message-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.sender-name {
+  font-size: 0.8rem;
+  color: #888;
+  margin-right: 10px;
+}
+
+.time {
+  font-size: 0.8rem;
+  color: #888;
+  flex: 1;
 }
 
 .messages div.left {
   float: left;
+  max-width: 70%;
 }
 
 .messages div.right {
+  float: right;
+  max-width: 70%;
+}
+
+.messages p.right {
   float: right;
 }
 
