@@ -1,10 +1,9 @@
-import { ContextMenu, MenuItem } from './../../../../../models/model';
+import { ContextMenu } from './../../../../../models/model';
 import {
   Component,
   OnDestroy,
   OnInit,
   TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { ContactsService } from '../../../../../services/contacts.service';
 import { SpinnerService } from '../../../../../services/spinner.service';
@@ -12,11 +11,9 @@ import {
   SY_ChatDTO,
   SY_ResponseStatus,
   SY_StrangerDTO,
-  SY_UserDTO,
 } from '../../../../../models/dto';
 import { ComponentsStateService } from '../../../../../services/components-state.service';
 import { ChatService } from '../../../../../services/chat.service';
-import { ContextMenuComponent } from '../../../../popup/context-menu/context-menu.component';
 import { ContextMenuService } from '../../../../../services/context-menu.service';
 import { FriendshipService } from '../../../../../services/friendship.service';
 import { ModalService } from '../../../../../services/modal.service';

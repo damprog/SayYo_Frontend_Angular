@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
 import { AccountService } from './account.service';
 import { HttpClient } from '@angular/common/http';
-import { SY_AddChatMemberDTO, SY_CreateGroupChatDTO } from '../models/dto';
-import { Observable } from 'rxjs';
+import { SY_AddChatMemberDTO } from '../models/dto';
 
 @Injectable({
   providedIn: 'root',

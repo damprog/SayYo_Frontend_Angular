@@ -6,13 +6,12 @@ import {
   SY_UserDTO,
   SY_LoginResponseDTO,
 } from './../models/dto';
-import { EventEmitter, Injectable, Input } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { ConnectionService } from './connection.service';
 import { UserAccount } from '../models/model';
 import { Router } from '@angular/router';
-import { SignalRService } from './signalR.service';
 import { ModalService } from './modal.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 

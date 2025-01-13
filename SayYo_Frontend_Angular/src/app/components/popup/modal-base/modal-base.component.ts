@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, TemplateRef } from '@angular/core';
+import { AfterViewInit, Component, TemplateRef } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
 import { Subject } from 'rxjs';
 

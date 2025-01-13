@@ -1,7 +1,6 @@
 import { ContextMenuService } from '../../../services/context-menu.service';
 import { ContextMenu, MenuItem } from '../../../models/model';
-import { Component, AfterViewInit, HostListener, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, AfterViewInit, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-context-menu',

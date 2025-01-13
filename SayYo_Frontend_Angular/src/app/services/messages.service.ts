@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ConnectionService } from './connection.service';
-import { HttpClient, HttpErrorResponse, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
-// import { SY_SendMessageDTO } from '../models/model';
 import { SY_SendMessageDTO, SY_MessageDTO, SY_ResponseStatus } from '../models/dto';
 import { AccountService } from './account.service';
 

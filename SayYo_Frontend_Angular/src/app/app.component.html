@@ -1,11 +1,16 @@
 <!-- <app-login-window></app-login-window> -->
 <!-- <app-main-window></app-main-window> -->
+
+
 <head>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
+<app-spinner></app-spinner>
+<router-outlet></router-outlet>
+
+
+
 <!-- Until login display background with login/registration forms -->
 <!-- After login display communicator window -->
 <!-- *ngIf="spinnerService.isLoading$ | async" -->
-<app-spinner></app-spinner>
-<router-outlet></router-outlet>

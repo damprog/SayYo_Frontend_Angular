@@ -4,9 +4,7 @@ import {
   SY_ChatDTO,
   SY_MessageDTO,
   SY_ResponseStatus,
-  SY_AddChatMemberDTO,
   SY_AddChatDTO,
-  SY_UpdateChatMemberDTO,
   SY_CreateGroupChatDTO,
 } from '../models/dto';
 import { MessagesService } from './messages.service';

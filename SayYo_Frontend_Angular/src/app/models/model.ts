@@ -1,6 +1,4 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { SY_ChatDTO } from "./dto";
-import { Observable } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 
 

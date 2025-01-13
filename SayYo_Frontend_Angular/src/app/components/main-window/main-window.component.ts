@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommunicatorService } from '../../services/communicator.service';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import { SignalRService } from '../../services/signalR.service';
 import { ContactsService } from '../../services/contacts.service';
 

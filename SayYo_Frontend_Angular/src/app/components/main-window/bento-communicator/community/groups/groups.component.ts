@@ -1,4 +1,4 @@
-import { finalize, Observable, of, Subscription, switchMap } from 'rxjs';
+import { finalize, of, Subscription, switchMap } from 'rxjs';
 import {
   Component,
   OnDestroy,
