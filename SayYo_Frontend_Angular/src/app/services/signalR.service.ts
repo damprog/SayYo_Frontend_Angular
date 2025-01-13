@@ -45,8 +45,8 @@ export class SignalRService {
 
     // Create connection config
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this._conn.API_URL + 'messageHub', {
-        accessTokenFactory: () => token || '', // Token automatically added as access_token in query like: "messagehub?my_token=${token}`"
+      .withUrl(this._conn.API_URL + 'signalRHub', {
+        accessTokenFactory: () => token || '', // Token automatically added as access_token in query like: "signalRHub?my_token=${token}`"
       })
       .build();
 

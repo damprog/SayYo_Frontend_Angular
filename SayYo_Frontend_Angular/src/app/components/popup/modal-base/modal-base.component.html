@@ -12,11 +12,9 @@
 <div class="modal" [class.show]="visibleTemplate">
   <div class="modal-content">
     <i class="bx bx-x close" (click)="hide()"></i>
-    <!-- <ng-container *ngIf="modalTemplate"> -->
     <ng-container
       *ngTemplateOutlet="modalTemplate; context: templateContext"
     ></ng-container>
-    <!-- </ng-container> -->
   </div>
 </div>
 
