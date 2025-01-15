@@ -152,7 +152,7 @@ export class ContactsService {
       .get<Array<SY_StrangerDTO>>(
         `${this._conn.API_URL}sayyo/misc/getStrangersWithFilter?userGuid=${
           this._account.account.userGuid
-        }&amount=${1000}&search=${filter}`
+        }&amount=${50}&search=${filter}`
       )
       .pipe(
         map((response: Array<SY_StrangerDTO>) => {
